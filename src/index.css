@@ -1,0 +1,154 @@
+@import '@fontsource/alata/400.css';
+@import '@fontsource-variable/inter';
+@import 'tailwindcss';
+@import '@heroui/styles';
+
+/*
+ * Design tokens Domely — source : Charte graphique v1.0 (novembre 2026)
+ *  - Bleu nuit : structure / confiance (titres, navigation)
+ *  - Rouge     : actions principales / alertes
+ *  - Jaune     : visibilité / attention
+ *  - Vert      : succès / croissance
+ *  - Blanc     : clarté / espace
+ * Règle : pas de texte blanc sur le jaune ou le vert.
+ *
+ * Les couleurs sémantiques (background, foreground, surface, accent, success,
+ * warning, danger, muted, border…) sont celles de HeroUI : on n'en surcharge
+ * que les valeurs, plus bas, pour les thèmes clair et sombre.
+ */
+@theme {
+  /* Typographie */
+  --font-display: 'Alata', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+  /* Palette de marque brute (valeurs officielles en 500 / 900) */
+  --color-night-50: #f4f6fa;
+  --color-night-100: #e6eaf2;
+  --color-night-200: #c9d1e0;
+  --color-night-300: #9eabc4;
+  --color-night-400: #6b7c9e;
+  --color-night-500: #44567a;
+  --color-night-600: #2f3f60;
+  --color-night-700: #1f2e4b;
+  --color-night-800: #152643;
+  --color-night-900: #0b1e3b;
+  --color-night-950: #06122a;
+
+  --color-brand-red-500: #ff4444;
+  --color-brand-red-600: #e93434;
+  --color-brand-yellow-500: #ffd600;
+  --color-brand-green-500: #00e676;
+}
+
+/* Thème HeroUI aux couleurs Domely */
+@layer base {
+  :root,
+  .light,
+  [data-theme='light'] {
+    color-scheme: light;
+
+    --radius: 0.625rem;
+
+    --background: var(--color-night-50);
+    --foreground: var(--color-night-900);
+
+    --surface: #ffffff;
+    --surface-foreground: var(--foreground);
+    --surface-secondary: var(--color-night-50);
+    --surface-tertiary: var(--color-night-100);
+    --overlay: #ffffff;
+    --overlay-foreground: var(--foreground);
+
+    --muted: var(--color-night-400);
+
+    --default: var(--color-night-100);
+    --default-foreground: var(--color-night-900);
+
+    --accent: var(--color-brand-red-500);
+    --accent-foreground: #ffffff;
+
+    --success: var(--color-brand-green-500);
+    --success-foreground: var(--color-night-900);
+    --warning: var(--color-brand-yellow-500);
+    --warning-foreground: var(--color-night-900);
+    --danger: var(--color-brand-red-500);
+    --danger-foreground: #ffffff;
+
+    --field-background: #ffffff;
+    --field-foreground: var(--color-night-900);
+
+    --segment: #ffffff;
+    --segment-foreground: var(--color-night-900);
+
+    --border: var(--color-night-100);
+    --separator: var(--color-night-100);
+    --focus: var(--color-night-900);
+    --link: var(--color-night-900);
+  }
+
+  .dark,
+  [data-theme='dark'] {
+    color-scheme: dark;
+
+    --background: var(--color-night-950);
+    --foreground: #f4f6fa;
+
+    --surface: var(--color-night-900);
+    --surface-foreground: var(--foreground);
+    --surface-secondary: var(--color-night-800);
+    --surface-tertiary: var(--color-night-700);
+    --overlay: var(--color-night-800);
+    --overlay-foreground: var(--foreground);
+
+    --muted: var(--color-night-300);
+
+    --default: var(--color-night-700);
+    --default-foreground: #f4f6fa;
+
+    --accent: var(--color-brand-red-500);
+    --accent-foreground: #ffffff;
+
+    --success: var(--color-brand-green-500);
+    --success-foreground: var(--color-night-900);
+    --warning: var(--color-brand-yellow-500);
+    --warning-foreground: var(--color-night-900);
+    --danger: var(--color-brand-red-500);
+    --danger-foreground: #ffffff;
+
+    --field-background: var(--color-night-800);
+    --field-foreground: var(--foreground);
+
+    --segment: var(--color-night-600);
+    --segment-foreground: var(--foreground);
+
+    --border: var(--color-night-700);
+    --separator: var(--color-night-800);
+    --focus: var(--color-brand-yellow-500);
+    --link: var(--foreground);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display text-foreground;
+  }
+}
+
+/* Boutons HeroUI en Alata, conformément à la charte */
+@layer components {
+  .button {
+    @apply font-display;
+  }
+}

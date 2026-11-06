@@ -1,0 +1,50 @@
+{
+  "app": {
+    "name": "Domely",
+    "tagline": "Clarity for your real estate.",
+    "version": "Domely v{{version}}",
+    "versionShort": "v{{version}}"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "dashboard": "Dashboard",
+    "properties": "Properties",
+    "tenants": "Tenants",
+    "rents": "Rents",
+    "maintenance": "Maintenance",
+    "contracts": "Contracts",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "sidebar": {
+    "collapse": "Collapse",
+    "collapseLabel": "Collapse sidebar",
+    "expandLabel": "Expand sidebar"
+  },
+  "header": {
+    "notifications": "Notifications"
+  },
+  "theme": {
+    "label": "Interface theme",
+    "light": "Light theme",
+    "dark": "Dark theme",
+    "system": "System theme"
+  },
+  "language": {
+    "label": "Interface language",
+    "fr": "Français",
+    "en": "English"
+  },
+  "dashboard": {
+    "greeting": "Hello,",
+    "subtitle": "Here is an overview of your portfolio."
+  },
+  "placeholder": {
+    "comingSoon": "Module coming soon."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist.",
+    "back": "Back to dashboard"
+  }
+}

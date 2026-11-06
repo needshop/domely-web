@@ -1,0 +1,50 @@
+{
+  "app": {
+    "name": "Domely",
+    "tagline": "La clarté au service de votre immobilier.",
+    "version": "Domely v{{version}}",
+    "versionShort": "v{{version}}"
+  },
+  "nav": {
+    "label": "Navigation principale",
+    "dashboard": "Tableau de bord",
+    "properties": "Biens",
+    "tenants": "Locataires",
+    "rents": "Loyers",
+    "maintenance": "Interventions",
+    "contracts": "Contrats",
+    "reports": "Rapports",
+    "settings": "Paramètres"
+  },
+  "sidebar": {
+    "collapse": "Réduire",
+    "collapseLabel": "Réduire la barre latérale",
+    "expandLabel": "Déplier la barre latérale"
+  },
+  "header": {
+    "notifications": "Notifications"
+  },
+  "theme": {
+    "label": "Thème de l’interface",
+    "light": "Thème clair",
+    "dark": "Thème sombre",
+    "system": "Thème du système"
+  },
+  "language": {
+    "label": "Langue de l’interface",
+    "fr": "Français",
+    "en": "English"
+  },
+  "dashboard": {
+    "greeting": "Bonjour,",
+    "subtitle": "Voici la vue d’ensemble de votre patrimoine."
+  },
+  "placeholder": {
+    "comingSoon": "Module à venir."
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "La page que vous cherchez n’existe pas.",
+    "back": "Retour au tableau de bord"
+  }
+}
