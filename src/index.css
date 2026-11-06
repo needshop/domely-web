@@ -84,6 +84,11 @@
     --separator: var(--color-night-100);
     --focus: var(--color-night-900);
     --link: var(--color-night-900);
+
+    /* Graphiques */
+    --chart-bar: var(--color-night-700);
+    --chart-highlight: var(--color-brand-red-500);
+    --chart-grid: var(--color-night-100);
   }
 
   .dark,
@@ -125,6 +130,11 @@
     --separator: var(--color-night-800);
     --focus: var(--color-brand-yellow-500);
     --link: var(--foreground);
+
+    /* Graphiques */
+    --chart-bar: var(--color-night-300);
+    --chart-highlight: var(--color-brand-red-500);
+    --chart-grid: var(--color-night-800);
   }
 
   html {

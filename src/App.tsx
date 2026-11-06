@@ -2,6 +2,7 @@ import { I18nProvider } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 import { RouterProvider } from 'react-router'
 import { router } from '@/app/router'
+import { CurrencyProvider } from '@/app/CurrencyProvider'
 
 export default function App() {
   const { i18n } = useTranslation()
@@ -9,7 +10,9 @@ export default function App() {
   return (
     // Aligne la locale React Aria / HeroUI (dates, nombres, sens de lecture) sur la langue i18next
     <I18nProvider locale={i18n.resolvedLanguage === 'en' ? 'en-US' : 'fr-FR'}>
-      <RouterProvider router={router} />
+      <CurrencyProvider>
+        <RouterProvider router={router} />
+      </CurrencyProvider>
     </I18nProvider>
   )
 }

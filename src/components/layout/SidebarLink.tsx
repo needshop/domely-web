@@ -8,6 +8,7 @@ import type { NavItem } from './navigation'
 interface SidebarLinkProps {
   item: NavItem
   collapsed: boolean
+  onNavigate?: () => void
 }
 
 /**
@@ -15,7 +16,7 @@ interface SidebarLinkProps {
  * Lien React Aria (navigation client via le RouterProvider d'AppLayout) afin que le
  * Tooltip HeroUI s'y accroche nativement ; le tooltip n'est actif qu'en mode réduit.
  */
-export function SidebarLink({ item, collapsed }: SidebarLinkProps) {
+export function SidebarLink({ item, collapsed, onNavigate }: SidebarLinkProps) {
   const { t } = useTranslation()
   const { key, to, icon: Icon } = item
   const label = t(`nav.${key}`)
@@ -26,6 +27,7 @@ export function SidebarLink({ item, collapsed }: SidebarLinkProps) {
     <Tooltip delay={0} closeDelay={0} isDisabled={!collapsed}>
       <Link
         href={to}
+        onPress={onNavigate}
         aria-label={collapsed ? label : undefined}
         aria-current={isActive ? 'page' : undefined}
         className={cn(

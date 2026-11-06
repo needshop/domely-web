@@ -19,7 +19,9 @@
   "sidebar": {
     "collapse": "Réduire",
     "collapseLabel": "Réduire la barre latérale",
-    "expandLabel": "Déplier la barre latérale"
+    "expandLabel": "Déplier la barre latérale",
+    "openMenu": "Afficher le menu",
+    "closeMenu": "Masquer le menu"
   },
   "header": {
     "notifications": "Notifications"
@@ -37,7 +39,87 @@
   },
   "dashboard": {
     "greeting": "Bonjour,",
-    "subtitle": "Voici la vue d’ensemble de votre patrimoine."
+    "subtitle": "Voici la vue d’ensemble de votre patrimoine.",
+    "addProperty": "Ajouter un bien",
+    "viewAll": "Tout voir",
+    "kpi": {
+      "properties": "Biens gérés",
+      "tenants": "Locataires actifs",
+      "collected": "Loyers encaissés ({{month}})",
+      "addedThisMonth_one": "+{{count}} ce mois-ci",
+      "addedThisMonth_other": "+{{count}} ce mois-ci",
+      "vsLastMonth": "{{delta}} vs mois dernier",
+      "unpaid": "Loyers impayés",
+      "unpaidTenants_one": "{{count}} locataire concerné",
+      "unpaidTenants_other": "{{count}} locataires concernés"
+    },
+    "collections": {
+      "title": "Loyers encaissés",
+      "subtitle": "12 derniers mois",
+      "rate": "Taux de recouvrement",
+      "tooltipCollected": "encaissés",
+      "tooltipExpected": "sur {{amount}} attendus",
+      "chartLabel": "Histogramme des loyers encaissés par mois, du {{from}} au {{to}}",
+      "tableToggle": "Voir les données",
+      "month": "Mois",
+      "collected": "Encaissé",
+      "expected": "Attendu"
+    },
+    "occupancy": {
+      "title": "Occupation du parc",
+      "subtitle": "{{count}} lots",
+      "rented": "Loués",
+      "vacant": "Vacants",
+      "underWorks": "En travaux"
+    },
+    "lateRents": {
+      "title": "Loyers en retard",
+      "subtitle": "{{amount}} à recouvrer",
+      "tenant": "Locataire",
+      "property": "Bien",
+      "amount": "Montant",
+      "delay": "Retard",
+      "days_one": "{{count}} jour",
+      "days_other": "{{count}} jours",
+      "remind": "Relancer",
+      "remindLabel": "Relancer {{tenant}}",
+      "empty": "Aucun loyer en retard. Bravo !"
+    },
+    "deadlines": {
+      "title": "Échéances à venir",
+      "in_one": "dans {{count}} jour",
+      "in_other": "dans {{count}} jours",
+      "kind": {
+        "leaseEnd": "Fin de bail",
+        "insurance": "Renouvellement assurance",
+        "rentReview": "Révision du loyer",
+        "inspection": "État des lieux"
+      }
+    },
+    "maintenance": {
+      "title": "Interventions en cours",
+      "status": {
+        "new": "Nouvelle",
+        "scheduled": "Planifiée",
+        "inProgress": "En cours"
+      },
+      "priority": {
+        "low": "Basse",
+        "normal": "Normale",
+        "urgent": "Urgente"
+      }
+    },
+    "recentProperties": {
+      "title": "Mes biens récents",
+      "units_one": "{{count}} logement",
+      "units_other": "{{count}} logements",
+      "occupied": "{{occupied}}/{{total}} occupés",
+      "type": {
+        "residence": "Résidence",
+        "house": "Maison",
+        "building": "Immeuble"
+      }
+    }
   },
   "placeholder": {
     "comingSoon": "Module à venir."
@@ -46,5 +128,18 @@
     "title": "Page introuvable",
     "description": "La page que vous cherchez n’existe pas.",
     "back": "Retour au tableau de bord"
+  },
+  "currency": {
+    "label": "Devise",
+    "names": {
+      "XOF": "Franc CFA (BCEAO)",
+      "EUR": "Euro",
+      "GNF": "Franc guinéen"
+    },
+    "rate": {
+      "XOF": "Devise de référence",
+      "EUR": "1 € = {{value}} F CFA · parité fixe",
+      "GNF": "1 F CFA ≈ {{value}} GNF · taux indicatif"
+    }
   }
 }

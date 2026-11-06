@@ -19,7 +19,9 @@
   "sidebar": {
     "collapse": "Collapse",
     "collapseLabel": "Collapse sidebar",
-    "expandLabel": "Expand sidebar"
+    "expandLabel": "Expand sidebar",
+    "openMenu": "Show menu",
+    "closeMenu": "Hide menu"
   },
   "header": {
     "notifications": "Notifications"
@@ -37,7 +39,87 @@
   },
   "dashboard": {
     "greeting": "Hello,",
-    "subtitle": "Here is an overview of your portfolio."
+    "subtitle": "Here is an overview of your portfolio.",
+    "addProperty": "Add a property",
+    "viewAll": "View all",
+    "kpi": {
+      "properties": "Managed properties",
+      "tenants": "Active tenants",
+      "collected": "Rent collected ({{month}})",
+      "addedThisMonth_one": "+{{count}} this month",
+      "addedThisMonth_other": "+{{count}} this month",
+      "vsLastMonth": "{{delta}} vs last month",
+      "unpaid": "Unpaid rent",
+      "unpaidTenants_one": "{{count}} tenant affected",
+      "unpaidTenants_other": "{{count}} tenants affected"
+    },
+    "collections": {
+      "title": "Rent collected",
+      "subtitle": "Last 12 months",
+      "rate": "Collection rate",
+      "tooltipCollected": "collected",
+      "tooltipExpected": "of {{amount}} expected",
+      "chartLabel": "Bar chart of rent collected per month, from {{from}} to {{to}}",
+      "tableToggle": "View data",
+      "month": "Month",
+      "collected": "Collected",
+      "expected": "Expected"
+    },
+    "occupancy": {
+      "title": "Portfolio occupancy",
+      "subtitle": "{{count}} units",
+      "rented": "Rented",
+      "vacant": "Vacant",
+      "underWorks": "Under works"
+    },
+    "lateRents": {
+      "title": "Late rents",
+      "subtitle": "{{amount}} to recover",
+      "tenant": "Tenant",
+      "property": "Property",
+      "amount": "Amount",
+      "delay": "Overdue",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days",
+      "remind": "Remind",
+      "remindLabel": "Remind {{tenant}}",
+      "empty": "No late rent. Well done!"
+    },
+    "deadlines": {
+      "title": "Upcoming deadlines",
+      "in_one": "in {{count}} day",
+      "in_other": "in {{count}} days",
+      "kind": {
+        "leaseEnd": "Lease end",
+        "insurance": "Insurance renewal",
+        "rentReview": "Rent review",
+        "inspection": "Property inspection"
+      }
+    },
+    "maintenance": {
+      "title": "Ongoing maintenance",
+      "status": {
+        "new": "New",
+        "scheduled": "Scheduled",
+        "inProgress": "In progress"
+      },
+      "priority": {
+        "low": "Low",
+        "normal": "Normal",
+        "urgent": "Urgent"
+      }
+    },
+    "recentProperties": {
+      "title": "Recent properties",
+      "units_one": "{{count}} unit",
+      "units_other": "{{count}} units",
+      "occupied": "{{occupied}}/{{total}} occupied",
+      "type": {
+        "residence": "Residence",
+        "house": "House",
+        "building": "Building"
+      }
+    }
   },
   "placeholder": {
     "comingSoon": "Module coming soon."
@@ -46,5 +128,18 @@
     "title": "Page not found",
     "description": "The page you are looking for does not exist.",
     "back": "Back to dashboard"
+  },
+  "currency": {
+    "label": "Currency",
+    "names": {
+      "XOF": "CFA franc (BCEAO)",
+      "EUR": "Euro",
+      "GNF": "Guinean franc"
+    },
+    "rate": {
+      "XOF": "Reference currency",
+      "EUR": "€1 = F CFA {{value}} · fixed peg",
+      "GNF": "F CFA 1 ≈ GNF {{value}} · indicative rate"
+    }
   }
 }

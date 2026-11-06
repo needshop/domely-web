@@ -98,6 +98,15 @@ const { t } = useTranslation()
 return <h1>{t('dashboard.greeting')}</h1>
 ```
 
+## Devises
+
+- Les montants sont stockés en **XOF** (devise de référence, `BASE_CURRENCY`) ; c'est aussi la devise affichée par défaut.
+- Le sélecteur de l'en-tête (`CurrencySwitcher`) **convertit** l'affichage en **EUR** ou **GNF** ; le choix est mémorisé (`localStorage` « domely-currency »).
+- Taux (`src/lib/currency.ts`) : EUR = parité fixe 1 € = 655,957 F CFA ; GNF = **taux indicatif** (`GNF_PER_XOF`), à fournir par l'API.
+- Format (`useFormatters`) : montants complets sous 1 M, abrégés au-delà (15 250 000 → « 15,25 M F CFA », 2,5 Md…).
+  - `f.money(xof)` / `f.moneyExact(xof)` : convertit un montant XOF puis le formate.
+  - `f.formatAmount(v)` : formate un montant déjà converti (graphiques).
+
 ## Tests E2E (Playwright)
 
 ```bash

@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const PORT = 5174
+// Les tests tournent sur le build de production (vite preview) : plus rapide et stable que le
+// serveur de dev, et sans conflit avec `npm run dev` (port 5174)
+const PORT = 4173
 const baseURL = `http://localhost:${PORT}`
 
 /**
@@ -23,8 +25,10 @@ export default defineConfig({
   },
   projects: [{ name: 'desktop-chrome', use: { ...devices['Desktop Chrome'], channel: 'chrome' } }],
   webServer: {
-    command: 'npm run dev',
+    command: `npm run build && npx vite preview --port ${PORT} --strictPort`,
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
+    // Toujours rebuilder : on ne veut jamais tester un ancien build resté ouvert
+    reuseExistingServer: false,
+    timeout: 180_000,
   },
 })

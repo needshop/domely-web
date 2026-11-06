@@ -32,3 +32,38 @@ test.describe('Sidebar', () => {
     await expect(nav.getByText('Biens')).toBeVisible()
   })
 })
+
+test.describe('Sidebar mobile', () => {
+  test.use({ viewport: { width: 390, height: 844 } })
+
+  test('s’affiche et se masque via le bouton du header', async ({ page }) => {
+    await page.goto('/')
+    const toggle = page.getByRole('button', { name: 'Afficher le menu' })
+    await expect(toggle).toBeVisible()
+    await expect(page.getByRole('navigation', { name: 'Navigation principale' })).toBeHidden()
+
+    await toggle.click()
+    const dialog = page.getByRole('dialog', { name: 'Navigation principale' })
+    await expect(dialog).toBeVisible()
+
+    await dialog.getByRole('button', { name: 'Masquer le menu' }).click()
+    await expect(dialog).toBeHidden()
+
+    // Un clic sur une section navigue et referme le menu
+    await toggle.click()
+    await dialog.getByRole('link', { name: 'Biens' }).click()
+    await expect(page).toHaveURL('/properties')
+    await expect(dialog).toBeHidden()
+  })
+
+  test('le bouton est masqué sur desktop', async ({ browser }) => {
+    const context = await browser.newContext({
+      locale: 'fr-FR',
+      viewport: { width: 1280, height: 800 },
+    })
+    const page = await context.newPage()
+    await page.goto('/')
+    await expect(page.getByRole('button', { name: 'Afficher le menu' })).toBeHidden()
+    await context.close()
+  })
+})
