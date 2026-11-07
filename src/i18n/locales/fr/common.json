@@ -141,5 +141,132 @@
       "EUR": "1 € = {{value}} F CFA · parité fixe",
       "GNF": "1 F CFA ≈ {{value}} GNF · taux indicatif"
     }
+  },
+  "properties": {
+    "title": "Biens",
+    "subtitle_one": "{{count}} bien dans votre patrimoine",
+    "subtitle_other": "{{count}} biens dans votre patrimoine",
+    "add": "Ajouter un bien",
+    "stats": {
+      "properties": "Biens",
+      "units": "Lots",
+      "occupancy": "Taux d’occupation",
+      "monthlyRent": "Loyers mensuels",
+      "rentedOf": "{{rented}} loués sur {{total}}",
+      "vacant_one": "{{count}} lot vacant",
+      "vacant_other": "{{count}} lots vacants",
+      "late_one": "{{count}} loyer en retard",
+      "late_other": "{{count}} loyers en retard",
+      "perMonth": "par mois, lots loués"
+    },
+    "filters": {
+      "search": "Rechercher un bien, une ville…",
+      "searchLabel": "Rechercher",
+      "type": "Type",
+      "allTypes": "Tous les types",
+      "city": "Ville",
+      "allCities": "Toutes les villes",
+      "occupancy": "Occupation",
+      "occupancyAll": "Toute occupation",
+      "occupancyVacant": "Avec lots vacants",
+      "occupancyFull": "Complets",
+      "sort": "Trier",
+      "sortRecent": "Plus récents",
+      "sortName": "Nom (A → Z)",
+      "sortRent": "Loyers mensuels",
+      "sortOccupancy": "Taux d’occupation",
+      "view": "Affichage",
+      "viewGrid": "Vue cartes",
+      "viewTable": "Vue tableau",
+      "reset": "Réinitialiser les filtres",
+      "results_one": "{{count}} résultat",
+      "results_other": "{{count}} résultats"
+    },
+    "empty": {
+      "title": "Aucun bien ne correspond à votre recherche",
+      "description": "Modifiez ou réinitialisez les filtres pour voir plus de biens."
+    },
+    "type": {
+      "building": "Immeuble",
+      "residence": "Résidence",
+      "apartment": "Appartement",
+      "house": "Maison / villa",
+      "commercial": "Local commercial",
+      "office": "Bureaux"
+    },
+    "unitKind": {
+      "apartment": "Appartement",
+      "studio": "Studio",
+      "house": "Maison",
+      "shop": "Boutique",
+      "office": "Bureau"
+    },
+    "unitStatus": {
+      "rented": "Loué",
+      "vacant": "Vacant",
+      "underWorks": "En travaux"
+    },
+    "card": {
+      "units_one": "{{count}} lot",
+      "units_other": "{{count}} lots",
+      "occupied": "{{rented}}/{{total}} loués",
+      "perMonth": "/ mois",
+      "vacant_one": "{{count}} vacant",
+      "vacant_other": "{{count}} vacants",
+      "late_one": "{{count}} retard",
+      "late_other": "{{count}} retards",
+      "open": "Voir la fiche de {{name}}"
+    },
+    "table": {
+      "property": "Bien",
+      "type": "Type",
+      "city": "Ville",
+      "units": "Lots",
+      "occupancy": "Occupation",
+      "rent": "Loyers / mois",
+      "alerts": "Alertes"
+    },
+    "detail": {
+      "back": "Retour aux biens",
+      "edit": "Modifier",
+      "notFound": "Ce bien est introuvable.",
+      "tabs": "Sections du bien",
+      "tabUnits": "Lots",
+      "tabInfo": "Informations",
+      "stats": {
+        "units": "Lots",
+        "occupancy": "Taux d’occupation",
+        "monthlyRent": "Loyers mensuels",
+        "late": "Loyers en retard",
+        "potential": "Potentiel : {{amount}}",
+        "allUpToDate": "Tous à jour"
+      },
+      "units": {
+        "label": "Lot",
+        "floor": "Étage",
+        "groundFloor": "RDC",
+        "floorN": "{{n}}ᵉ",
+        "area": "Surface",
+        "rooms": "Pièces",
+        "rent": "Loyer",
+        "charges": "+ {{amount}} charges",
+        "status": "Statut",
+        "tenant": "Locataire",
+        "leaseEnd": "Fin de bail {{date}}",
+        "late": "Loyer en retard",
+        "none": "—",
+        "floorFirst": "1ᵉʳ"
+      },
+      "info": {
+        "type": "Type de bien",
+        "address": "Adresse",
+        "acquiredAt": "Date d’acquisition",
+        "createdAt": "Ajouté dans Domely",
+        "totalArea": "Surface totale",
+        "units": "Nombre de lots",
+        "description": "Description",
+        "noDescription": "Aucune description."
+      }
+    }
   }
 }

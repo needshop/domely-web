@@ -6,9 +6,8 @@ import type { DashboardData } from './types'
  */
 export const dashboardMock: DashboardData = {
   kpis: {
-    properties: { total: 52, addedThisMonth: 2 },
-    tenants: { active: 48, newThisMonth: 3 },
-    occupancy: { rate: 0.96, previousRate: 0.94 },
+    properties: { addedThisMonth: 2 },
+    tenants: { newThisMonth: 3 },
     collected: { amount: 15_368_000, previousAmount: 13_720_000 },
   },
   collections: [
@@ -25,7 +24,6 @@ export const dashboardMock: DashboardData = {
     { month: '2026-10-01', collected: 13_720_000, expected: 15_560_000 },
     { month: '2026-11-01', collected: 15_368_000, expected: 16_040_000 },
   ],
-  occupancy: { rented: 50, vacant: 1, underWorks: 1 },
   lateRents: [
     {
       id: 'lr1',
@@ -91,25 +89,6 @@ export const dashboardMock: DashboardData = {
       status: 'new',
       priority: 'low',
       openedAt: '2026-11-05',
-    },
-  ],
-  recentProperties: [
-    {
-      id: 'p1',
-      name: 'Résidence Les Oliviers',
-      city: 'Lyon',
-      type: 'residence',
-      units: 12,
-      occupiedUnits: 12,
-    },
-    { id: 'p2', name: 'Villa Harmonie', city: 'Annecy', type: 'house', units: 1, occupiedUnits: 1 },
-    {
-      id: 'p3',
-      name: 'Immeuble Bellevue',
-      city: 'Grenoble',
-      type: 'building',
-      units: 24,
-      occupiedUnits: 22,
     },
   ],
 }

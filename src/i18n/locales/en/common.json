@@ -141,5 +141,132 @@
       "EUR": "€1 = F CFA {{value}} · fixed peg",
       "GNF": "F CFA 1 ≈ GNF {{value}} · indicative rate"
     }
+  },
+  "properties": {
+    "title": "Properties",
+    "subtitle_one": "{{count}} property in your portfolio",
+    "subtitle_other": "{{count}} properties in your portfolio",
+    "add": "Add a property",
+    "stats": {
+      "properties": "Properties",
+      "units": "Units",
+      "occupancy": "Occupancy rate",
+      "monthlyRent": "Monthly rent",
+      "rentedOf": "{{rented}} rented of {{total}}",
+      "vacant_one": "{{count}} vacant unit",
+      "vacant_other": "{{count}} vacant units",
+      "late_one": "{{count}} late rent",
+      "late_other": "{{count}} late rents",
+      "perMonth": "per month, rented units"
+    },
+    "filters": {
+      "search": "Search a property, a city…",
+      "searchLabel": "Search",
+      "type": "Type",
+      "allTypes": "All types",
+      "city": "City",
+      "allCities": "All cities",
+      "occupancy": "Occupancy",
+      "occupancyAll": "Any occupancy",
+      "occupancyVacant": "With vacant units",
+      "occupancyFull": "Fully let",
+      "sort": "Sort",
+      "sortRecent": "Most recent",
+      "sortName": "Name (A → Z)",
+      "sortRent": "Monthly rent",
+      "sortOccupancy": "Occupancy rate",
+      "view": "View",
+      "viewGrid": "Card view",
+      "viewTable": "Table view",
+      "reset": "Reset filters",
+      "results_one": "{{count}} result",
+      "results_other": "{{count}} results"
+    },
+    "empty": {
+      "title": "No property matches your search",
+      "description": "Change or reset the filters to see more properties."
+    },
+    "type": {
+      "building": "Building",
+      "residence": "Residence",
+      "apartment": "Apartment",
+      "house": "House / villa",
+      "commercial": "Retail space",
+      "office": "Offices"
+    },
+    "unitKind": {
+      "apartment": "Apartment",
+      "studio": "Studio",
+      "house": "House",
+      "shop": "Shop",
+      "office": "Office"
+    },
+    "unitStatus": {
+      "rented": "Rented",
+      "vacant": "Vacant",
+      "underWorks": "Under works"
+    },
+    "card": {
+      "units_one": "{{count}} unit",
+      "units_other": "{{count}} units",
+      "occupied": "{{rented}}/{{total}} rented",
+      "perMonth": "/ month",
+      "vacant_one": "{{count}} vacant",
+      "vacant_other": "{{count}} vacant",
+      "late_one": "{{count}} late",
+      "late_other": "{{count}} late",
+      "open": "Open {{name}}"
+    },
+    "table": {
+      "property": "Property",
+      "type": "Type",
+      "city": "City",
+      "units": "Units",
+      "occupancy": "Occupancy",
+      "rent": "Rent / month",
+      "alerts": "Alerts"
+    },
+    "detail": {
+      "back": "Back to properties",
+      "edit": "Edit",
+      "notFound": "This property could not be found.",
+      "tabs": "Property sections",
+      "tabUnits": "Units",
+      "tabInfo": "Details",
+      "stats": {
+        "units": "Units",
+        "occupancy": "Occupancy rate",
+        "monthlyRent": "Monthly rent",
+        "late": "Late rents",
+        "potential": "Potential: {{amount}}",
+        "allUpToDate": "All up to date"
+      },
+      "units": {
+        "label": "Unit",
+        "floor": "Floor",
+        "groundFloor": "Ground",
+        "floorN": "{{n}}",
+        "area": "Area",
+        "rooms": "Rooms",
+        "rent": "Rent",
+        "charges": "+ {{amount}} charges",
+        "status": "Status",
+        "tenant": "Tenant",
+        "leaseEnd": "Lease ends {{date}}",
+        "late": "Late rent",
+        "none": "—",
+        "floorFirst": "1"
+      },
+      "info": {
+        "type": "Property type",
+        "address": "Address",
+        "acquiredAt": "Acquisition date",
+        "createdAt": "Added to Domely",
+        "totalArea": "Total area",
+        "units": "Number of units",
+        "description": "Description",
+        "noDescription": "No description."
+      }
+    }
   }
 }

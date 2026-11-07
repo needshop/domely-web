@@ -45,6 +45,7 @@ export function useFormatters() {
     const monthShort = new Intl.DateTimeFormat(locale, { month: 'short' })
     const monthLong = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' })
     const dayMonth = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' })
+    const dayMonthYear = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' })
     const fullDate = new Intl.DateTimeFormat(locale, { dateStyle: 'full' })
 
     return {
@@ -68,6 +69,7 @@ export function useFormatters() {
       monthShort: (d: Date) => monthShort.format(d).replace('.', ''),
       monthLong: (d: Date) => monthLong.format(d),
       dayMonth: (d: Date) => dayMonth.format(d),
+      dayMonthYear: (d: Date) => dayMonthYear.format(d),
       fullDate: (d: Date) => fullDate.format(d),
     }
   }, [locale, currencyCode])

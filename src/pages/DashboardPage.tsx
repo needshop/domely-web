@@ -7,15 +7,27 @@ import { MaintenanceCard } from '@/features/dashboard/components/MaintenanceCard
 import { OccupancyCard } from '@/features/dashboard/components/OccupancyCard'
 import { RecentPropertiesCard } from '@/features/dashboard/components/RecentPropertiesCard'
 import { RentCollectionChart } from '@/features/dashboard/components/RentCollectionChart'
-import { StatTile } from '@/features/dashboard/components/StatTile'
+import { StatTile } from '@/components/StatTile'
 import { dashboardMock, MOCK_TODAY } from '@/features/dashboard/mockData'
+import { useProperties } from '@/features/properties/api'
+import { portfolioStats } from '@/features/properties/utils'
 import { useFormatters } from '@/lib/format'
 
 export function DashboardPage() {
   const { t } = useTranslation()
   const f = useFormatters()
-  const { kpis, collections, occupancy, lateRents, deadlines, maintenance, recentProperties } =
-    dashboardMock
+  const { kpis, collections, lateRents, deadlines, maintenance } = dashboardMock
+  // Biens, lots et occupation : mêmes données que le module Biens
+  const properties = useProperties()
+  const portfolio = portfolioStats(properties)
+  const occupancy = {
+    rented: portfolio.rented,
+    vacant: portfolio.vacant,
+    underWorks: portfolio.underWorks,
+  }
+  const recentProperties = [...properties]
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, 3)
   const today = MOCK_TODAY
 
   const collectedDelta =
@@ -38,7 +50,7 @@ export function DashboardPage() {
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 [&>*]:min-w-0">
         <StatTile
           label={t('dashboard.kpi.properties')}
-          value={f.number(kpis.properties.total)}
+          value={f.number(portfolio.properties)}
           icon={Building2}
           tone="red"
           delta={t('dashboard.kpi.addedThisMonth', { count: kpis.properties.addedThisMonth })}
@@ -46,7 +58,7 @@ export function DashboardPage() {
         />
         <StatTile
           label={t('dashboard.kpi.tenants')}
-          value={f.number(kpis.tenants.active)}
+          value={f.number(portfolio.rented)}
           icon={Users}
           tone="yellow"
           delta={t('dashboard.kpi.addedThisMonth', { count: kpis.tenants.newThisMonth })}

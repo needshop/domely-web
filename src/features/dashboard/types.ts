@@ -1,8 +1,14 @@
+/** Indicateurs propres au tableau de bord (biens, lots et occupation viennent du module Biens). */
 export interface DashboardKpis {
-  properties: { total: number; addedThisMonth: number }
-  tenants: { active: number; newThisMonth: number }
-  occupancy: { rate: number; previousRate: number }
+  properties: { addedThisMonth: number }
+  tenants: { newThisMonth: number }
   collected: { amount: number; previousAmount: number }
+}
+
+export interface Occupancy {
+  rented: number
+  vacant: number
+  underWorks: number
 }
 
 export interface MonthlyCollection {
@@ -10,12 +16,6 @@ export interface MonthlyCollection {
   month: string
   collected: number
   expected: number
-}
-
-export interface Occupancy {
-  rented: number
-  vacant: number
-  underWorks: number
 }
 
 export interface LateRent {
@@ -48,23 +48,10 @@ export interface MaintenanceRequest {
   openedAt: string
 }
 
-export type PropertyType = 'residence' | 'house' | 'building'
-
-export interface RecentProperty {
-  id: string
-  name: string
-  city: string
-  type: PropertyType
-  units: number
-  occupiedUnits: number
-}
-
 export interface DashboardData {
   kpis: DashboardKpis
   collections: MonthlyCollection[]
-  occupancy: Occupancy
   lateRents: LateRent[]
   deadlines: Deadline[]
   maintenance: MaintenanceRequest[]
-  recentProperties: RecentProperty[]
 }
