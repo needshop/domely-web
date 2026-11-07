@@ -49,6 +49,44 @@ test.describe('Biens — liste', () => {
   })
 })
 
+test.describe('Biens — pagination', () => {
+  const cards = (page: import('@playwright/test').Page) =>
+    page.getByRole('link', { name: /^Voir la fiche de/ })
+
+  test('9 biens par page, page 2 via la pagination', async ({ page }) => {
+    await page.goto('/properties')
+    await expect(cards(page)).toHaveCount(9)
+    await expect(page.getByText('1–9 sur 11')).toBeVisible()
+
+    await page.getByRole('button', { name: 'Page 2' }).click()
+    await expect(page).toHaveURL(/page=2/)
+    await expect(cards(page)).toHaveCount(2)
+    await expect(page.getByText('10–11 sur 11')).toBeVisible()
+
+    await page.getByRole('button', { name: 'Précédent' }).click()
+    await expect(cards(page)).toHaveCount(9)
+  })
+
+  test('un changement de filtre ramène à la page 1', async ({ page }) => {
+    await page.goto('/properties?page=2')
+    await expect(cards(page)).toHaveCount(2)
+    // Dakar : Les Oliviers, Baobab, Appartement Corniche
+    await page.getByRole('searchbox').fill('Dakar')
+    await expect(page).not.toHaveURL(/page=/)
+    await expect(cards(page)).toHaveCount(3)
+  })
+
+  test('pas de pagination quand tout tient sur une page', async ({ page }) => {
+    await page.goto('/properties?type=house')
+    await expect(page.getByRole('navigation', { name: 'Pagination' })).toHaveCount(0)
+  })
+
+  test('une page hors limites affiche la dernière page', async ({ page }) => {
+    await page.goto('/properties?page=99')
+    await expect(cards(page)).toHaveCount(2)
+  })
+})
+
 test.describe('Biens — fiche', () => {
   test('ouvre la fiche depuis la liste', async ({ page }) => {
     await page.goto('/properties')

@@ -267,6 +267,89 @@
         "description": "Description",
         "noDescription": "No description."
       }
+    },
+    "form": {
+      "createTitle": "Add a property",
+      "createSubtitle": "Enter the property details and its units.",
+      "editTitle": "Edit “{{name}}”",
+      "editSubtitle": "Update the property details and its units.",
+      "sections": {
+        "general": "General information",
+        "generalHint": "How this property will be identified in Domely.",
+        "address": "Address",
+        "addressHint": "Where the property is located.",
+        "units": "Units",
+        "unitsHint": "The rentable units of the property: apartments, studios, shops, offices…",
+        "unitsSingleHint": "A property of this type is rented as a single unit."
+      },
+      "fields": {
+        "name": "Property name",
+        "namePlaceholder": "e.g. Les Oliviers Residence",
+        "type": "Property type",
+        "description": "Description",
+        "descriptionPlaceholder": "Amenities, features, access…",
+        "acquiredAt": "Acquisition date",
+        "street": "Street",
+        "streetPlaceholder": "e.g. Route des Almadies",
+        "district": "District",
+        "districtPlaceholder": "e.g. Almadies",
+        "city": "City",
+        "cityPlaceholder": "e.g. Dakar",
+        "country": "Country",
+        "unitLabel": "Unit label",
+        "unitKind": "Kind",
+        "floor": "Floor",
+        "floorHint": "0 = ground floor",
+        "area": "Area (m²)",
+        "rooms": "Rooms",
+        "rent": "Monthly rent",
+        "charges": "Monthly charges",
+        "status": "Status",
+        "amountsHint": "Amounts are entered in CFA francs (XOF), the reference currency."
+      },
+      "units": {
+        "add": "Add a unit",
+        "remove": "Remove unit {{label}}",
+        "rentedBy": "Rented to {{name}}",
+        "rentedLocked": "Rented unit: status and removal are managed from the lease.",
+        "labelPrefix": "Unit",
+        "count_one": "{{count}} unit",
+        "count_other": "{{count}} units"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "create": "Create property",
+        "save": "Save",
+        "saving": "Saving…"
+      },
+      "toast": {
+        "created": "Property created",
+        "createdDescription": "“{{name}}” was added to your portfolio.",
+        "updated": "Changes saved",
+        "updatedDescription": "“{{name}}” was updated."
+      },
+      "leave": {
+        "title": "Leave without saving?",
+        "description": "Changes made to the form will be lost.",
+        "stay": "Keep editing",
+        "leave": "Leave"
+      },
+      "errors": {
+        "required": "This field is required.",
+        "positive": "The value must be greater than 0.",
+        "min0": "The value cannot be negative.",
+        "atLeastOneUnit": "Add at least one unit.",
+        "singleUnit": "A “{{type}}” property has a single unit. Remove the extra units.",
+        "duplicateLabel": "This label is already used by another unit.",
+        "summary": "The form has errors. Fix the highlighted fields."
+      }
     }
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{page}}",
+    "summary": "{{from}}–{{to}} of {{total}}"
   }
 }

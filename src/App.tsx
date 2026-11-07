@@ -1,3 +1,4 @@
+import { Toast } from '@heroui/react'
 import { I18nProvider } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 import { RouterProvider } from 'react-router'
@@ -12,6 +13,7 @@ export default function App() {
     <I18nProvider locale={i18n.resolvedLanguage === 'en' ? 'en-US' : 'fr-FR'}>
       <CurrencyProvider>
         <RouterProvider router={router} />
+        <Toast.Provider placement="bottom end" />
       </CurrencyProvider>
     </I18nProvider>
   )

@@ -1,4 +1,4 @@
-import { Breadcrumbs, Button, buttonVariants, Card, Chip, Tabs } from '@heroui/react'
+import { Breadcrumbs, buttonVariants, Card, Chip, Tabs } from '@heroui/react'
 import { AlertCircle, ArrowLeft, KeyRound, MapPin, Pencil, Percent, Wallet } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
@@ -62,10 +62,13 @@ export function PropertyDetailPage() {
             </p>
           </div>
         </div>
-        <Button variant="secondary">
+        <Link
+          to={`/properties/${property.id}/edit`}
+          className={buttonVariants({ variant: 'secondary' })}
+        >
           <Pencil className="size-4" aria-hidden />
           {t('properties.detail.edit')}
-        </Button>
+        </Link>
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 [&>*]:min-w-0">

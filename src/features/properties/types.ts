@@ -41,6 +41,7 @@ export interface Address {
   street: string
   district: string
   city: string
+  /** Code pays ISO 3166-1 (ex. SN, CI) */
   country: string
 }
 
@@ -50,7 +51,7 @@ export interface Property {
   type: PropertyType
   address: Address
   /** Date d'acquisition (ISO) */
-  acquiredAt: string
+  acquiredAt?: string
   /** Date d'ajout dans Domely (ISO) */
   createdAt: string
   description?: string

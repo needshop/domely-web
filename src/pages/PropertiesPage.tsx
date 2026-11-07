@@ -1,6 +1,9 @@
-import { Button } from '@heroui/react'
+import { Button, buttonVariants } from '@heroui/react'
 import { Building2, KeyRound, Percent, Plus, SearchX, Wallet } from 'lucide-react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ListPagination } from '@/components/ListPagination'
+import { Link } from 'react-router'
 import { StatTile } from '@/components/StatTile'
 import { useProperties } from '@/features/properties/api'
 import { PropertiesTable } from '@/features/properties/components/PropertiesTable'
@@ -9,7 +12,7 @@ import {
   type PropertiesView,
 } from '@/features/properties/components/PropertiesToolbar'
 import { PropertyCard } from '@/features/properties/components/PropertyCard'
-import { usePropertyFilters } from '@/features/properties/hooks/usePropertyFilters'
+import { PAGE_SIZE, usePropertyFilters } from '@/features/properties/hooks/usePropertyFilters'
 import { portfolioStats } from '@/features/properties/utils'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { useFormatters } from '@/lib/format'
@@ -18,7 +21,25 @@ export function PropertiesPage() {
   const { t } = useTranslation()
   const f = useFormatters()
   const properties = useProperties()
-  const { filters, setFilter, reset, cities, results, isFiltered } = usePropertyFilters(properties)
+  const {
+    filters,
+    setFilter,
+    reset,
+    cities,
+    results,
+    pageResults,
+    page,
+    pageCount,
+    setPage,
+    isFiltered,
+  } = usePropertyFilters(properties)
+  const listTop = useRef<HTMLParagraphElement>(null)
+
+  const changePage = (next: number) => {
+    setPage(next)
+    // Remonte en haut de la liste pour afficher la nouvelle page
+    listTop.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
   const [view, setView] = useLocalStorage<PropertiesView>('domely-properties-view', 'grid')
   const summary = portfolioStats(properties)
 
@@ -31,10 +52,10 @@ export function PropertiesPage() {
             {t('properties.subtitle', { count: summary.properties })}
           </p>
         </div>
-        <Button variant="primary">
+        <Link to="/properties/new" className={buttonVariants({ variant: 'primary' })}>
           <Plus className="size-4" aria-hidden />
           {t('properties.add')}
-        </Button>
+        </Link>
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 [&>*]:min-w-0">
@@ -77,7 +98,7 @@ export function PropertiesPage() {
         onViewChange={setView}
       />
 
-      <p className="-mt-2 text-sm text-muted" aria-live="polite">
+      <p ref={listTop} className="-mt-2 scroll-mt-20 text-sm text-muted" aria-live="polite">
         {t('properties.filters.results', { count: results.length })}
       </p>
 
@@ -94,21 +115,29 @@ export function PropertiesPage() {
         <>
           {/* Sur mobile, le tableau laisse place aux cartes */}
           <div className="hidden sm:block">
-            <PropertiesTable rows={results} />
+            <PropertiesTable rows={pageResults} />
           </div>
           <ul className="grid gap-4 sm:hidden">
-            {results.map(({ property, stats }) => (
+            {pageResults.map(({ property, stats }) => (
               <PropertyCard key={property.id} property={property} stats={stats} />
             ))}
           </ul>
         </>
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {results.map(({ property, stats }) => (
+          {pageResults.map(({ property, stats }) => (
             <PropertyCard key={property.id} property={property} stats={stats} />
           ))}
         </ul>
       )}
+
+      <ListPagination
+        page={page}
+        pageCount={pageCount}
+        pageSize={PAGE_SIZE}
+        total={results.length}
+        onPageChange={changePage}
+      />
     </div>
   )
 }

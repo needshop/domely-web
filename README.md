@@ -8,6 +8,7 @@ Interface web du SaaS de gestion immobilière **Domely** — _La clarté au serv
 - **Tailwind CSS v4** (plugin `@tailwindcss/vite`, thème dans `src/index.css`)
 - React Router (mode SPA, `createBrowserRouter`)
 - Design system **HeroUI v3** (`@heroui/react` + `@heroui/styles`)
+- Formulaires **react-hook-form** + validation **zod** (messages traduits)
 - Multilangue **react-i18next** (fr / en)
 - Icônes `lucide-react` (style ligne arrondie, conforme à la charte)
 - Polices auto-hébergées : **Alata** (titres, navigation, boutons) et **Inter** (texte courant)
@@ -97,6 +98,13 @@ Polices : `font-display` (Alata), `font-sans` (Inter).
 const { t } = useTranslation()
 return <h1>{t('dashboard.greeting')}</h1>
 ```
+
+## Formulaires
+
+- `src/components/form/fields.tsx` : champs HeroUI reliés à react-hook-form (`FormTextField`, `FormTextArea`,
+  `FormNumberField`, `FormSelect`, `FormDateField`). La validation vient du schéma zod, l'erreur s'affiche sous le champ.
+- Schémas : construits avec `t` pour des messages traduits (ex. `src/features/properties/form/schema.ts`).
+- Garde-fou : `useBlocker` (React Router) demande confirmation avant de quitter un formulaire modifié.
 
 ## Devises
 

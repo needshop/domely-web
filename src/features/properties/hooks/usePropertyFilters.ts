@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router'
+import { countrySearchText } from '@/lib/countries'
 import { type Property, type PropertyType, propertyTypes } from '../types'
 import { propertyStats } from '../utils'
 
@@ -8,6 +9,9 @@ export type OccupancyFilter = (typeof occupancyFilters)[number]
 
 export const sortOptions = ['recent', 'name', 'rent', 'occupancy'] as const
 export type SortOption = (typeof sortOptions)[number]
+
+/** Nombre de biens par page. */
+export const PAGE_SIZE = 9
 
 export interface PropertyFilters {
   q: string
@@ -51,6 +55,8 @@ export function usePropertyFilters(properties: Property[]) {
             value === '' || value === 'all' || (key === 'sort' && value === 'recent')
           if (isDefault) next.delete(key)
           else next.set(key, String(value))
+          // Un changement de filtre ou de tri ramène à la première page
+          next.delete('page')
           return next
         },
         { replace: true },
@@ -60,6 +66,18 @@ export function usePropertyFilters(properties: Property[]) {
   )
 
   const reset = useCallback(() => setParams({}, { replace: true }), [setParams])
+
+  const setPage = useCallback(
+    (page: number) => {
+      setParams((prev) => {
+        const next = new URLSearchParams(prev)
+        if (page <= 1) next.delete('page')
+        else next.set('page', String(page))
+        return next
+      })
+    },
+    [setParams],
+  )
 
   const cities = useMemo(
     () => [...new Set(properties.map((p) => p.address.city))].sort((a, b) => a.localeCompare(b)),
@@ -78,9 +96,13 @@ export function usePropertyFilters(properties: Property[]) {
       if (occupancy === 'full' && stats.rented < stats.units) return false
       if (query) {
         const haystack = normalize(
-          [p.name, p.address.street, p.address.district, p.address.city, p.address.country].join(
-            ' ',
-          ),
+          [
+            p.name,
+            p.address.street,
+            p.address.district,
+            p.address.city,
+            countrySearchText(p.address.country),
+          ].join(' '),
         )
         if (!haystack.includes(query)) return false
       }
@@ -103,5 +125,22 @@ export function usePropertyFilters(properties: Property[]) {
 
   const isFiltered = q !== '' || type !== 'all' || city !== 'all' || occupancy !== 'all'
 
-  return { filters, setFilter, reset, cities, results, isFiltered }
+  // Pagination : page demandée dans l'URL, ramenée dans les bornes
+  const pageCount = Math.max(1, Math.ceil(results.length / PAGE_SIZE))
+  const requestedPage = Number.parseInt(params.get('page') ?? '1', 10)
+  const page = Math.min(Math.max(Number.isNaN(requestedPage) ? 1 : requestedPage, 1), pageCount)
+  const pageResults = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
+  return {
+    filters,
+    setFilter,
+    reset,
+    cities,
+    results,
+    pageResults,
+    page,
+    pageCount,
+    setPage,
+    isFiltered,
+  }
 }

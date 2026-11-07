@@ -267,6 +267,89 @@
         "description": "Description",
         "noDescription": "Aucune description."
       }
+    },
+    "form": {
+      "createTitle": "Ajouter un bien",
+      "createSubtitle": "Renseignez les informations du bien et ses lots.",
+      "editTitle": "Modifier « {{name}} »",
+      "editSubtitle": "Mettez à jour les informations du bien et ses lots.",
+      "sections": {
+        "general": "Informations générales",
+        "generalHint": "Comment ce bien sera identifié dans Domely.",
+        "address": "Adresse",
+        "addressHint": "Localisation du bien.",
+        "units": "Lots",
+        "unitsHint": "Les unités louables du bien : appartements, studios, boutiques, bureaux…",
+        "unitsSingleHint": "Un bien de ce type est loué en un seul lot."
+      },
+      "fields": {
+        "name": "Nom du bien",
+        "namePlaceholder": "Ex. Résidence Les Oliviers",
+        "type": "Type de bien",
+        "description": "Description",
+        "descriptionPlaceholder": "Équipements, particularités, accès…",
+        "acquiredAt": "Date d’acquisition",
+        "street": "Rue / voie",
+        "streetPlaceholder": "Ex. Route des Almadies",
+        "district": "Quartier",
+        "districtPlaceholder": "Ex. Almadies",
+        "city": "Ville",
+        "cityPlaceholder": "Ex. Dakar",
+        "country": "Pays",
+        "unitLabel": "Libellé du lot",
+        "unitKind": "Nature",
+        "floor": "Étage",
+        "floorHint": "0 = rez-de-chaussée",
+        "area": "Surface (m²)",
+        "rooms": "Pièces",
+        "rent": "Loyer mensuel",
+        "charges": "Charges mensuelles",
+        "status": "Statut",
+        "amountsHint": "Montants saisis en francs CFA (XOF), devise de référence."
+      },
+      "units": {
+        "add": "Ajouter un lot",
+        "remove": "Supprimer le lot {{label}}",
+        "rentedBy": "Loué à {{name}}",
+        "rentedLocked": "Lot loué : le statut et la suppression se gèrent depuis le bail.",
+        "labelPrefix": "Lot",
+        "count_one": "{{count}} lot",
+        "count_other": "{{count}} lots"
+      },
+      "actions": {
+        "cancel": "Annuler",
+        "create": "Créer le bien",
+        "save": "Enregistrer",
+        "saving": "Enregistrement…"
+      },
+      "toast": {
+        "created": "Bien créé",
+        "createdDescription": "« {{name}} » a été ajouté à votre patrimoine.",
+        "updated": "Modifications enregistrées",
+        "updatedDescription": "« {{name}} » a été mis à jour."
+      },
+      "leave": {
+        "title": "Quitter sans enregistrer ?",
+        "description": "Les modifications apportées au formulaire seront perdues.",
+        "stay": "Continuer l’édition",
+        "leave": "Quitter"
+      },
+      "errors": {
+        "required": "Ce champ est obligatoire.",
+        "positive": "La valeur doit être supérieure à 0.",
+        "min0": "La valeur ne peut pas être négative.",
+        "atLeastOneUnit": "Ajoutez au moins un lot.",
+        "singleUnit": "Un bien de type « {{type}} » ne comporte qu’un seul lot. Supprimez les lots en trop.",
+        "duplicateLabel": "Ce libellé est déjà utilisé par un autre lot.",
+        "summary": "Le formulaire contient des erreurs. Corrigez les champs signalés."
+      }
     }
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page {{page}}",
+    "summary": "{{from}}–{{to}} sur {{total}}"
   }
 }

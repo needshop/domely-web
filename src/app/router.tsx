@@ -6,6 +6,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { PropertiesPage } from '@/pages/PropertiesPage'
 import { PropertyDetailPage } from '@/pages/PropertyDetailPage'
+import { PropertyFormPage } from '@/pages/PropertyFormPage'
 
 export const router = createBrowserRouter([
   {
@@ -14,7 +15,9 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardPage /> },
       { path: 'properties', element: <PropertiesPage /> },
+      { path: 'properties/new', element: <PropertyFormPage mode="create" /> },
       { path: 'properties/:id', element: <PropertyDetailPage /> },
+      { path: 'properties/:id/edit', element: <PropertyFormPage mode="edit" /> },
       // Modules à implémenter progressivement
       ...navigation
         .filter((item) => !['/', '/properties'].includes(item.to))

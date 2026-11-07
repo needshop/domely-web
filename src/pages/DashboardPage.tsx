@@ -1,6 +1,7 @@
-import { Button } from '@heroui/react'
+import { buttonVariants } from '@heroui/react'
 import { AlertCircle, Building2, Plus, Users, Wallet } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import { DeadlinesCard } from '@/features/dashboard/components/DeadlinesCard'
 import { LateRentsCard } from '@/features/dashboard/components/LateRentsCard'
 import { MaintenanceCard } from '@/features/dashboard/components/MaintenanceCard'
@@ -41,10 +42,10 @@ export function DashboardPage() {
           <h1 className="text-2xl">{t('dashboard.greeting')}</h1>
           <p className="mt-1 text-sm text-muted">{t('dashboard.subtitle')}</p>
         </div>
-        <Button variant="primary">
+        <Link to="/properties/new" className={buttonVariants({ variant: 'primary' })}>
           <Plus className="size-4" aria-hidden />
           {t('dashboard.addProperty')}
-        </Button>
+        </Link>
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 [&>*]:min-w-0">
