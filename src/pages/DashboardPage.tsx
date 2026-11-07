@@ -69,11 +69,13 @@ export function DashboardPage() {
         />
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-3 [&>*]:min-w-0">
+      {/* items-start : déplier le tableau du graphique n'étire pas la carte Occupation */}
+      <div className="grid gap-6 xl:grid-cols-3 xl:items-start [&>*]:min-w-0">
         <div className="xl:col-span-2">
           <RentCollectionChart data={collections} />
         </div>
-        <OccupancyCard occupancy={occupancy} />
+        {/* Hauteur fixe en desktop = hauteur de la carte du graphique, tableau fermé (368px) */}
+        <OccupancyCard occupancy={occupancy} className="xl:h-92" />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-3 [&>*]:min-w-0">

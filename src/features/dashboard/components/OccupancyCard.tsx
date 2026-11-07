@@ -1,10 +1,17 @@
 import { Card } from '@heroui/react'
 import { CircleCheck, CircleDashed, Hammer, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { cn } from '@/lib/cn'
 import { useFormatters } from '@/lib/format'
 import type { Occupancy } from '../types'
 
-export function OccupancyCard({ occupancy }: { occupancy: Occupancy }) {
+export function OccupancyCard({
+  occupancy,
+  className,
+}: {
+  occupancy: Occupancy
+  className?: string
+}) {
   const { t } = useTranslation()
   const f = useFormatters()
   const total = occupancy.rented + occupancy.vacant + occupancy.underWorks
@@ -17,7 +24,7 @@ export function OccupancyCard({ occupancy }: { occupancy: Occupancy }) {
   ]
 
   return (
-    <Card className="gap-4 p-5">
+    <Card className={cn('gap-4 p-5', className)}>
       <Card.Header>
         <Card.Title className="font-display text-base">{t('dashboard.occupancy.title')}</Card.Title>
         <Card.Description>{t('dashboard.occupancy.subtitle', { count: total })}</Card.Description>

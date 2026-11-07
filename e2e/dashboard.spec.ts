@@ -42,4 +42,23 @@ test.describe('Tableau de bord', () => {
     expect(scrollWidth).toBe(clientWidth)
     await context.close()
   })
+
+  test('déplier les données du graphique ne change pas la hauteur de la carte Occupation', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    const occupancy = page
+      .getByText('Occupation du parc', { exact: true })
+      .locator('xpath=ancestor::*[contains(concat(" ", @class, " "), " card ")][1]')
+    const chartCard = page
+      .getByRole('img', { name: /Histogramme/ })
+      .locator('xpath=ancestor::*[contains(concat(" ", @class, " "), " card ")][1]')
+    const before = await occupancy.boundingBox()
+    // Alignées tableau fermé
+    expect(before?.height).toBe((await chartCard.boundingBox())?.height)
+
+    await page.getByText('Voir les données').click()
+    await expect(page.getByRole('cell', { name: 'novembre 2026' })).toBeVisible()
+    expect((await occupancy.boundingBox())?.height).toBe(before?.height)
+  })
 })
