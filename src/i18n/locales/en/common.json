@@ -317,10 +317,8 @@
         "count_other": "{{count}} units"
       },
       "actions": {
-        "cancel": "Cancel",
         "create": "Create property",
-        "save": "Save",
-        "saving": "Saving…"
+        "save": "Save"
       },
       "toast": {
         "created": "Property created",
@@ -328,21 +326,207 @@
         "updated": "Changes saved",
         "updatedDescription": "“{{name}}” was updated."
       },
-      "leave": {
-        "title": "Leave without saving?",
-        "description": "Changes made to the form will be lost.",
-        "stay": "Keep editing",
-        "leave": "Leave"
-      },
       "errors": {
-        "required": "This field is required.",
         "positive": "The value must be greater than 0.",
         "min0": "The value cannot be negative.",
         "atLeastOneUnit": "Add at least one unit.",
         "singleUnit": "A “{{type}}” property has a single unit. Remove the extra units.",
-        "duplicateLabel": "This label is already used by another unit.",
-        "summary": "The form has errors. Fix the highlighted fields."
+        "duplicateLabel": "This label is already used by another unit."
       }
+    }
+  },
+  "tenants": {
+    "title": "Tenants",
+    "subtitle_one": "{{count}} tenant with an active lease",
+    "subtitle_other": "{{count}} tenants with an active lease",
+    "add": "Add a tenant",
+    "perMonth": "per month",
+    "noLease": "No active lease",
+    "otherUnits_one": "+ {{count}} other unit",
+    "otherUnits_other": "+ {{count}} other units",
+    "leaseEndsIn_one": "Ends in {{count}} day",
+    "leaseEndsIn_other": "Ends in {{count}} days",
+    "status": {
+      "active": "Up to date",
+      "late": "Rent overdue",
+      "inactive": "No lease"
+    },
+    "kind": {
+      "individual": "Individual",
+      "company": "Company"
+    },
+    "idDocument": {
+      "nationalId": "National ID card",
+      "passport": "Passport",
+      "residencePermit": "Residence permit",
+      "companyRegistration": "Trade register (RCCM)"
+    },
+    "relation": {
+      "spouse": "Spouse",
+      "parent": "Parent",
+      "sibling": "Sibling",
+      "child": "Child",
+      "friend": "Friend",
+      "other": "Other"
+    },
+    "stats": {
+      "active": "Active tenants",
+      "inactive_one": "{{count}} without an active lease",
+      "inactive_other": "{{count}} without an active lease",
+      "late": "Behind on rent",
+      "lateHint": "At least one unpaid rent",
+      "allUpToDate": "All up to date",
+      "endingSoon": "Leases ending soon",
+      "endingSoonHint": "Within the next {{days}} days",
+      "monthlyDue": "Rent and charges",
+      "monthlyDueHint": "Expected every month"
+    },
+    "filters": {
+      "searchLabel": "Search tenants",
+      "search": "Name, phone, email, property…",
+      "status": "Status",
+      "statuses": {
+        "all": "All statuses",
+        "active": "Active lease",
+        "late": "Rent overdue",
+        "endingSoon": "Lease ending soon",
+        "inactive": "No lease"
+      },
+      "kind": "Tenant type",
+      "allKinds": "All types",
+      "property": "Property",
+      "allProperties": "All properties",
+      "sort": "Sort by",
+      "sorts": {
+        "name": "Name (A → Z)",
+        "recent": "Most recent",
+        "rent": "Highest rent",
+        "leaseEnd": "Lease ending soonest"
+      },
+      "reset": "Reset filters",
+      "results_zero": "No results",
+      "results_one": "{{count}} result",
+      "results_other": "{{count}} results"
+    },
+    "empty": {
+      "title": "No tenant matches your search",
+      "description": "Change the search or filters to broaden the results."
+    },
+    "table": {
+      "tenant": "Tenant",
+      "contact": "Contact",
+      "housing": "Unit",
+      "monthly": "Rent + charges",
+      "leaseEnd": "Lease end",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "card": {
+      "open": "View {{name}}’s profile"
+    },
+    "detail": {
+      "back": "Back to tenants",
+      "notFound": "This tenant could not be found.",
+      "since": "Tenant since {{date}}",
+      "call": "Call",
+      "email": "Email",
+      "stats": {
+        "monthlyDue": "Rent + charges",
+        "monthlyDueHint": "Per month, all units",
+        "units": "Rented units",
+        "properties_one": "In {{count}} property",
+        "properties_other": "In {{count}} properties",
+        "nextLeaseEnd": "Next lease end",
+        "since": "Tenant since",
+        "sinceHint": "Start of first lease"
+      },
+      "leases": {
+        "title": "Active leases",
+        "emptyTitle": "No active lease",
+        "emptyDescription": "This tenant doesn’t currently rent any unit. Their history remains available here.",
+        "rent": "Rent",
+        "period": "Term",
+        "since": "Since {{date}}",
+        "elapsed": "Lease term elapsed"
+      },
+      "contact": {
+        "title": "Contact details",
+        "phone": "Phone",
+        "email": "Email",
+        "occupation": "Occupation",
+        "activity": "Business",
+        "contactPerson": "Contact person",
+        "idDocument": "ID document",
+        "emergency": "Emergency contact",
+        "notes": "Notes",
+        "noNotes": "No notes."
+      },
+      "edit": "Edit"
+    },
+    "form": {
+      "createTitle": "Add a tenant",
+      "createSubtitle": "Enter the tenant’s identity and contact details. The lease is then created from the Contracts module.",
+      "editTitle": "Edit “{{name}}”",
+      "editSubtitle": "Update the tenant’s information.",
+      "sections": {
+        "identity": "Identity",
+        "identityHint": "Individual or company, and how to identify them.",
+        "contact": "Contact details",
+        "contactHint": "To reach the tenant (reminders, rent notices…).",
+        "idDocument": "ID document",
+        "idDocumentHint": "Optional: useful when drafting the lease.",
+        "emergencyHint": "Optional: someone to contact in an emergency.",
+        "notesHint": "Internal information, only visible to your team."
+      },
+      "fields": {
+        "kind": "Tenant type",
+        "fullName": "Full name",
+        "fullNamePlaceholder": "e.g. Awa Diallo",
+        "companyName": "Company name",
+        "companyNamePlaceholder": "e.g. Sahel Distribution SARL",
+        "occupationPlaceholder": "e.g. Accountant",
+        "activityPlaceholder": "e.g. Retail",
+        "contactPersonHint": "The person to reach within the company.",
+        "phoneHint": "Include the country code, e.g. +221.",
+        "emailPlaceholder": "name@example.com",
+        "idType": "Document type",
+        "idNumber": "Number",
+        "emergencyName": "Name",
+        "emergencyRelation": "Relationship",
+        "emergencyPhone": "Phone",
+        "notesPlaceholder": "Preferences, history, things to watch…"
+      },
+      "actions": {
+        "create": "Create tenant",
+        "save": "Save"
+      },
+      "toast": {
+        "created": "Tenant created",
+        "createdDescription": "“{{name}}” has been added to your tenants.",
+        "updated": "Changes saved",
+        "updatedDescription": "“{{name}}”’s profile has been updated."
+      },
+      "errors": {
+        "duplicatePhone": "This number is already used by {{name}}."
+      }
+    }
+  },
+  "form": {
+    "actions": {
+      "cancel": "Cancel",
+      "saving": "Saving…"
+    },
+    "leave": {
+      "title": "Leave without saving?",
+      "description": "Your changes to this form will be lost.",
+      "stay": "Keep editing",
+      "leave": "Leave"
+    },
+    "errors": {
+      "required": "This field is required.",
+      "summary": "The form contains errors. Please fix the highlighted fields.",
+      "invalidEmail": "Invalid email address.",
+      "invalidPhone": "Invalid phone number (8 to 15 digits)."
     }
   },
   "pagination": {

@@ -5,20 +5,9 @@ import type { Property, Unit, UnitKind, UnitStatus } from './types'
  * Même forme que la future réponse : remplacer par un appel dans services/.
  */
 
-const tenants = [
-  'Awa Diallo',
-  'Moussa Traoré',
-  'Fatou Ndiaye',
-  'Koffi Mensah',
-  'Aïcha Koné',
-  'Ibrahima Sow',
-  'Mariam Ouattara',
-  'Yao Kouassi',
-  'Aminata Cissé',
-  'Serge Agbodjan',
-  'Ramatou Bah',
-  'Cheikh Fall',
-]
+/** Identifiants des locataires particuliers, attribués dans l'ordre des lots loués. */
+let nextTenant = 0
+const autoTenantId = () => `t${++nextTenant}`
 
 interface UnitsSpec {
   prefix: string
@@ -31,6 +20,8 @@ interface UnitsSpec {
   vacant?: number[]
   underWorks?: number[]
   late?: number[]
+  /** Locataire imposé pour certains lots (n° de lot → id), ex. une société */
+  tenantIds?: Record<number, string>
   seed: number
 }
 
@@ -45,7 +36,8 @@ function makeUnits(spec: UnitsSpec): Unit[] {
       : spec.vacant?.includes(n)
         ? 'vacant'
         : 'rented'
-    const leaseMonth = ((spec.seed + i * 5) % 12) + 1
+    const leaseMonth = String(((spec.seed + i * 5) % 12) + 1).padStart(2, '0')
+    const leaseDay = String(((i * 3) % 27) + 1).padStart(2, '0')
     return {
       id: `${spec.prefix.toLowerCase().replace(/\W+/g, '')}-${n}`,
       label: `${spec.prefix} ${n}`,
@@ -56,11 +48,12 @@ function makeUnits(spec: UnitsSpec): Unit[] {
       rent: spec.baseRent + (floor ?? 0) * 10_000 + ((i * 3) % 4) * 5_000,
       charges: Math.round((spec.baseRent * 0.08) / 1_000) * 1_000,
       status,
-      tenant:
+      lease:
         status === 'rented'
           ? {
-              name: tenants[(spec.seed + i) % tenants.length],
-              leaseEnd: `2027-${String(leaseMonth).padStart(2, '0')}-${String(((i * 3) % 27) + 1).padStart(2, '0')}`,
+              tenantId: spec.tenantIds?.[n] ?? autoTenantId(),
+              startDate: `${2025 - ((spec.seed + i) % 3)}-${leaseMonth}-${leaseDay}`,
+              endDate: `2027-${leaseMonth}-${leaseDay}`,
             }
           : undefined,
       isLate: status === 'rented' && spec.late?.includes(n),
@@ -184,6 +177,7 @@ export const propertiesMock: Property[] = [
       baseArea: 40,
       perFloor: 0,
       vacant: [5],
+      tenantIds: { 1: 'c4', 4: 'c5' },
       seed: 7,
     }),
   },
@@ -206,6 +200,7 @@ export const propertiesMock: Property[] = [
       baseRent: 650_000,
       baseArea: 120,
       perFloor: 1,
+      tenantIds: { 1: 'c1', 2: 'c2', 3: 'c3', 4: 'c3' },
       seed: 9,
     }),
   },
@@ -288,6 +283,7 @@ export const propertiesMock: Property[] = [
       baseRent: 200_000,
       baseArea: 28,
       perFloor: 0,
+      tenantIds: { 2: 'c5' },
       seed: 10,
     }),
   },

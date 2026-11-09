@@ -52,7 +52,7 @@ export function toFormValues(p: Property): PropertyFormValues {
       rent: u.rent,
       charges: u.charges,
       status: u.status,
-      tenantName: u.tenant?.name,
+      tenantId: u.lease?.tenantId,
     })),
   }
 }
@@ -76,7 +76,7 @@ export function fromFormValues(values: PropertyFormValues, existing?: Property):
       rent: u.rent ?? 0,
       charges: u.charges ?? 0,
       status: u.status,
-      tenant: u.status === 'rented' ? previous?.tenant : undefined,
+      lease: u.status === 'rented' ? previous?.lease : undefined,
       isLate: u.status === 'rented' ? previous?.isLate : undefined,
     }
   })

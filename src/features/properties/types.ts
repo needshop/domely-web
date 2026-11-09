@@ -12,10 +12,13 @@ export type PropertyType = (typeof propertyTypes)[number]
 export type UnitKind = 'apartment' | 'studio' | 'house' | 'shop' | 'office'
 export type UnitStatus = 'rented' | 'vacant' | 'underWorks'
 
-export interface UnitTenant {
-  name: string
-  /** Fin de bail (ISO) */
-  leaseEnd: string
+/** Bail en cours sur un lot (le locataire est décrit dans le module Locataires). */
+export interface UnitLease {
+  tenantId: string
+  /** Début du bail (ISO) */
+  startDate: string
+  /** Fin du bail (ISO) */
+  endDate: string
 }
 
 /** Lot : unité louable d'un bien (appartement, boutique, bureau…). */
@@ -32,7 +35,7 @@ export interface Unit {
   /** Charges mensuelles (XOF) */
   charges: number
   status: UnitStatus
-  tenant?: UnitTenant
+  lease?: UnitLease
   /** Loyer en retard */
   isLate?: boolean
 }

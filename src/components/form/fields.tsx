@@ -41,7 +41,13 @@ export function FormTextField<T extends FieldValues>({
   isDisabled,
   className,
   placeholder,
-}: BaseProps<T> & { placeholder?: string }) {
+  type,
+  autoComplete,
+}: BaseProps<T> & {
+  placeholder?: string
+  type?: 'text' | 'email' | 'tel' | 'url'
+  autoComplete?: string
+}) {
   return (
     <Controller
       control={control}
@@ -49,6 +55,8 @@ export function FormTextField<T extends FieldValues>({
       render={({ field, fieldState }) => (
         <TextField
           name={field.name}
+          type={type}
+          autoComplete={autoComplete}
           value={field.value ?? ''}
           onChange={field.onChange}
           onBlur={field.onBlur}

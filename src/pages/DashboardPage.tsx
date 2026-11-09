@@ -12,6 +12,8 @@ import { StatTile } from '@/components/StatTile'
 import { dashboardMock, MOCK_TODAY } from '@/features/dashboard/mockData'
 import { useProperties } from '@/features/properties/api'
 import { portfolioStats } from '@/features/properties/utils'
+import { useTenantRows } from '@/features/tenants/api'
+import { tenantsSummary } from '@/features/tenants/utils'
 import { useFormatters } from '@/lib/format'
 
 export function DashboardPage() {
@@ -21,6 +23,7 @@ export function DashboardPage() {
   // Biens, lots et occupation : mêmes données que le module Biens
   const properties = useProperties()
   const portfolio = portfolioStats(properties)
+  const tenants = tenantsSummary(useTenantRows())
   const occupancy = {
     rented: portfolio.rented,
     vacant: portfolio.vacant,
@@ -59,7 +62,7 @@ export function DashboardPage() {
         />
         <StatTile
           label={t('dashboard.kpi.tenants')}
-          value={f.number(portfolio.rented)}
+          value={f.number(tenants.active)}
           icon={Users}
           tone="yellow"
           delta={t('dashboard.kpi.addedThisMonth', { count: kpis.tenants.newThisMonth })}

@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router'
 import { countrySearchText } from '@/lib/countries'
+import { normalizeSearch as normalize } from '@/lib/search'
 import { type Property, type PropertyType, propertyTypes } from '../types'
 import { propertyStats } from '../utils'
 
@@ -23,13 +24,6 @@ export interface PropertyFilters {
 
 const oneOf = <T extends string>(list: readonly T[], value: string | null, fallback: T): T =>
   value && (list as readonly string[]).includes(value) ? (value as T) : fallback
-
-/** Normalise pour une recherche insensible à la casse et aux accents. */
-const normalize = (s: string) =>
-  s
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .toLowerCase()
 
 /**
  * Filtres de la liste des biens, stockés dans l'URL (?q=&type=&city=&occupancy=&sort=)

@@ -3,6 +3,7 @@ import { Lock, Plus, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { type Control, useFieldArray, useFormState, useWatch } from 'react-hook-form'
 import { FormNumberField, FormSelect, FormTextField } from '@/components/form/fields'
+import { useTenantNames } from '@/features/tenants/api'
 import { BASE_CURRENCY } from '@/lib/currency'
 import { emptyUnit } from './mapping'
 import { isSingleUnitType, type PropertyFormValues, unitKinds } from './schema'
@@ -15,6 +16,7 @@ const amountFormat: Intl.NumberFormatOptions = {
 
 export function UnitsFieldArray({ control }: { control: Control<PropertyFormValues> }) {
   const { t } = useTranslation()
+  const tenantName = useTenantNames()
   const { fields, append, remove } = useFieldArray({ control, name: 'units' })
   const type = useWatch({ control, name: 'type' })
   const units = useWatch({ control, name: 'units' })
@@ -36,6 +38,7 @@ export function UnitsFieldArray({ control }: { control: Control<PropertyFormValu
         {fields.map((field, index) => {
           const unit = units?.[index]
           const isRented = unit?.status === 'rented'
+          const tenant = tenantName(unit?.tenantId)
           const label = unit?.label || `#${index + 1}`
           return (
             <li
@@ -48,9 +51,9 @@ export function UnitsFieldArray({ control }: { control: Control<PropertyFormValu
                   <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-default font-display text-xs">
                     {index + 1}
                   </span>
-                  {isRented && unit?.tenantName && (
+                  {isRented && tenant && (
                     <Chip size="sm" variant="soft" color="success">
-                      {t('properties.form.units.rentedBy', { name: unit.tenantName })}
+                      {t('properties.form.units.rentedBy', { name: tenant })}
                     </Chip>
                   )}
                 </div>

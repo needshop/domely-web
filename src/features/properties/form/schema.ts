@@ -27,7 +27,7 @@ export const defaultUnitKind: Record<PropertyType, UnitKind> = {
 
 /** Schéma de validation du formulaire, messages traduits. */
 export function makePropertySchema(t: TFunction) {
-  const required = t('properties.form.errors.required')
+  const required = t('form.errors.required')
   const positive = t('properties.form.errors.positive')
   const min0 = t('properties.form.errors.min0')
 
@@ -47,7 +47,7 @@ export function makePropertySchema(t: TFunction) {
     charges: z.number().min(0, { error: min0 }).nullable(),
     status: z.enum(['rented', 'vacant', 'underWorks']),
     /** Locataire en place (lecture seule : géré par le module Locataires) */
-    tenantName: z.string().optional(),
+    tenantId: z.string().optional(),
   })
 
   return z

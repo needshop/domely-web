@@ -317,10 +317,8 @@
         "count_other": "{{count}} lots"
       },
       "actions": {
-        "cancel": "Annuler",
         "create": "Créer le bien",
-        "save": "Enregistrer",
-        "saving": "Enregistrement…"
+        "save": "Enregistrer"
       },
       "toast": {
         "created": "Bien créé",
@@ -328,21 +326,207 @@
         "updated": "Modifications enregistrées",
         "updatedDescription": "« {{name}} » a été mis à jour."
       },
-      "leave": {
-        "title": "Quitter sans enregistrer ?",
-        "description": "Les modifications apportées au formulaire seront perdues.",
-        "stay": "Continuer l’édition",
-        "leave": "Quitter"
-      },
       "errors": {
-        "required": "Ce champ est obligatoire.",
         "positive": "La valeur doit être supérieure à 0.",
         "min0": "La valeur ne peut pas être négative.",
         "atLeastOneUnit": "Ajoutez au moins un lot.",
         "singleUnit": "Un bien de type « {{type}} » ne comporte qu’un seul lot. Supprimez les lots en trop.",
-        "duplicateLabel": "Ce libellé est déjà utilisé par un autre lot.",
-        "summary": "Le formulaire contient des erreurs. Corrigez les champs signalés."
+        "duplicateLabel": "Ce libellé est déjà utilisé par un autre lot."
       }
+    }
+  },
+  "tenants": {
+    "title": "Locataires",
+    "subtitle_one": "{{count}} locataire avec un bail en cours",
+    "subtitle_other": "{{count}} locataires avec un bail en cours",
+    "add": "Ajouter un locataire",
+    "perMonth": "par mois",
+    "noLease": "Aucun bail en cours",
+    "otherUnits_one": "+ {{count}} autre lot",
+    "otherUnits_other": "+ {{count}} autres lots",
+    "leaseEndsIn_one": "Fin dans {{count}} jour",
+    "leaseEndsIn_other": "Fin dans {{count}} jours",
+    "status": {
+      "active": "À jour",
+      "late": "Loyer en retard",
+      "inactive": "Sans bail"
+    },
+    "kind": {
+      "individual": "Particulier",
+      "company": "Société"
+    },
+    "idDocument": {
+      "nationalId": "Carte nationale d’identité",
+      "passport": "Passeport",
+      "residencePermit": "Titre de séjour",
+      "companyRegistration": "RCCM"
+    },
+    "relation": {
+      "spouse": "Conjoint·e",
+      "parent": "Parent",
+      "sibling": "Frère / sœur",
+      "child": "Enfant",
+      "friend": "Ami·e",
+      "other": "Autre"
+    },
+    "stats": {
+      "active": "Locataires actifs",
+      "inactive_one": "{{count}} sans bail en cours",
+      "inactive_other": "{{count}} sans bail en cours",
+      "late": "En retard de paiement",
+      "lateHint": "Au moins un loyer impayé",
+      "allUpToDate": "Tous à jour",
+      "endingSoon": "Baux bientôt échus",
+      "endingSoonHint": "Dans les {{days}} prochains jours",
+      "monthlyDue": "Loyers et charges",
+      "monthlyDueHint": "Attendus chaque mois"
+    },
+    "filters": {
+      "searchLabel": "Rechercher un locataire",
+      "search": "Nom, téléphone, e-mail, bien…",
+      "status": "Situation",
+      "statuses": {
+        "all": "Toutes situations",
+        "active": "Bail en cours",
+        "late": "Loyer en retard",
+        "endingSoon": "Bail bientôt échu",
+        "inactive": "Sans bail"
+      },
+      "kind": "Type de locataire",
+      "allKinds": "Tous les types",
+      "property": "Bien",
+      "allProperties": "Tous les biens",
+      "sort": "Trier par",
+      "sorts": {
+        "name": "Nom (A → Z)",
+        "recent": "Plus récents",
+        "rent": "Loyer le plus élevé",
+        "leaseEnd": "Fin de bail la plus proche"
+      },
+      "reset": "Réinitialiser les filtres",
+      "results_zero": "Aucun résultat",
+      "results_one": "{{count}} résultat",
+      "results_other": "{{count}} résultats"
+    },
+    "empty": {
+      "title": "Aucun locataire ne correspond à votre recherche",
+      "description": "Modifiez la recherche ou les filtres pour élargir les résultats."
+    },
+    "table": {
+      "tenant": "Locataire",
+      "contact": "Contact",
+      "housing": "Logement",
+      "monthly": "Loyer + charges",
+      "leaseEnd": "Fin de bail",
+      "status": "Situation",
+      "actions": "Actions"
+    },
+    "card": {
+      "open": "Voir la fiche de {{name}}"
+    },
+    "detail": {
+      "back": "Retour aux locataires",
+      "notFound": "Ce locataire est introuvable.",
+      "since": "Locataire depuis le {{date}}",
+      "call": "Appeler",
+      "email": "Écrire",
+      "stats": {
+        "monthlyDue": "Loyer + charges",
+        "monthlyDueHint": "Par mois, tous lots confondus",
+        "units": "Lots loués",
+        "properties_one": "Dans {{count}} bien",
+        "properties_other": "Dans {{count}} biens",
+        "nextLeaseEnd": "Prochaine fin de bail",
+        "since": "Locataire depuis",
+        "sinceHint": "Début du premier bail"
+      },
+      "leases": {
+        "title": "Baux en cours",
+        "emptyTitle": "Aucun bail en cours",
+        "emptyDescription": "Ce locataire n’occupe actuellement aucun lot. Son historique reste consultable ici.",
+        "rent": "Loyer",
+        "period": "Période",
+        "since": "Depuis le {{date}}",
+        "elapsed": "Durée du bail écoulée"
+      },
+      "contact": {
+        "title": "Coordonnées",
+        "phone": "Téléphone",
+        "email": "E-mail",
+        "occupation": "Profession",
+        "activity": "Activité",
+        "contactPerson": "Interlocuteur",
+        "idDocument": "Pièce d’identité",
+        "emergency": "Personne à prévenir",
+        "notes": "Notes",
+        "noNotes": "Aucune note."
+      },
+      "edit": "Modifier"
+    },
+    "form": {
+      "createTitle": "Ajouter un locataire",
+      "createSubtitle": "Renseignez l’identité et les coordonnées du locataire. Le bail se crée ensuite depuis le module Contrats.",
+      "editTitle": "Modifier « {{name}} »",
+      "editSubtitle": "Mettez à jour les informations du locataire.",
+      "sections": {
+        "identity": "Identité",
+        "identityHint": "Particulier ou société, et comment l’identifier.",
+        "contact": "Coordonnées",
+        "contactHint": "Pour joindre le locataire (relances, avis d’échéance…).",
+        "idDocument": "Pièce d’identité",
+        "idDocumentHint": "Facultatif : utile pour la rédaction du bail.",
+        "emergencyHint": "Facultatif : un proche à contacter en cas d’urgence.",
+        "notesHint": "Informations internes, visibles uniquement par votre équipe."
+      },
+      "fields": {
+        "kind": "Type de locataire",
+        "fullName": "Nom complet",
+        "fullNamePlaceholder": "Ex. Awa Diallo",
+        "companyName": "Raison sociale",
+        "companyNamePlaceholder": "Ex. Sahel Distribution SARL",
+        "occupationPlaceholder": "Ex. Comptable",
+        "activityPlaceholder": "Ex. Commerce de détail",
+        "contactPersonHint": "La personne à joindre au sein de la société.",
+        "phoneHint": "Avec l’indicatif pays, ex. +221.",
+        "emailPlaceholder": "nom@exemple.com",
+        "idType": "Type de pièce",
+        "idNumber": "Numéro",
+        "emergencyName": "Nom",
+        "emergencyRelation": "Lien",
+        "emergencyPhone": "Téléphone",
+        "notesPlaceholder": "Préférences, historique, points d’attention…"
+      },
+      "actions": {
+        "create": "Créer le locataire",
+        "save": "Enregistrer"
+      },
+      "toast": {
+        "created": "Locataire créé",
+        "createdDescription": "« {{name}} » a été ajouté à vos locataires.",
+        "updated": "Modifications enregistrées",
+        "updatedDescription": "La fiche de « {{name}} » a été mise à jour."
+      },
+      "errors": {
+        "duplicatePhone": "Ce numéro est déjà utilisé par {{name}}."
+      }
+    }
+  },
+  "form": {
+    "actions": {
+      "cancel": "Annuler",
+      "saving": "Enregistrement…"
+    },
+    "leave": {
+      "title": "Quitter sans enregistrer ?",
+      "description": "Les modifications apportées au formulaire seront perdues.",
+      "stay": "Continuer l’édition",
+      "leave": "Quitter"
+    },
+    "errors": {
+      "required": "Ce champ est obligatoire.",
+      "summary": "Le formulaire contient des erreurs. Corrigez les champs signalés.",
+      "invalidEmail": "Adresse e-mail invalide.",
+      "invalidPhone": "Numéro de téléphone invalide (8 à 15 chiffres)."
     }
   },
   "pagination": {

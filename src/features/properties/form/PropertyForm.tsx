@@ -1,27 +1,18 @@
-import { Button, Card, Modal } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertCircle } from 'lucide-react'
-import { type ReactNode, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useBlocker } from 'react-router'
 import { FormDateField, FormSelect, FormTextArea, FormTextField } from '@/components/form/fields'
+import {
+  FormActionBar,
+  FormErrorSummary,
+  FormSection as Section,
+  LeaveGuard,
+} from '@/components/form/FormLayout'
 import { supportedCountries, useCountryName } from '@/lib/countries'
 import { propertyTypes } from '../types'
 import { isSingleUnitType, makePropertySchema, type PropertyFormValues } from './schema'
 import { UnitsFieldArray } from './UnitsFieldArray'
-
-function Section({ title, hint, children }: { title: string; hint: string; children: ReactNode }) {
-  return (
-    <Card className="gap-5 p-5 sm:p-6">
-      <Card.Header>
-        <Card.Title className="font-display text-base">{title}</Card.Title>
-        <Card.Description>{hint}</Card.Description>
-      </Card.Header>
-      <Card.Content>{children}</Card.Content>
-    </Card>
-  )
-}
 
 interface PropertyFormProps {
   defaultValues: PropertyFormValues
@@ -65,9 +56,6 @@ export function PropertyForm({
     }
   }, [type, getValues, setValue])
 
-  // Garde-fou : prévenir avant de quitter avec des modifications non enregistrées
-  const blocker = useBlocker(isDirty && !isSubmitting && !isSubmitSuccessful)
-
   const hasErrors = submitCount > 0 && Object.keys(errors).length > 0
 
   return (
@@ -76,15 +64,7 @@ export function PropertyForm({
       onSubmit={(e) => void handleSubmit(onSubmit)(e)}
       className="flex flex-col gap-6"
     >
-      {hasErrors && (
-        <div
-          role="alert"
-          className="flex items-center gap-2 rounded-xl bg-danger-soft px-4 py-3 text-sm text-danger-soft-foreground"
-        >
-          <AlertCircle className="size-4 shrink-0" aria-hidden />
-          {t('properties.form.errors.summary')}
-        </div>
-      )}
+      <FormErrorSummary show={hasErrors} />
 
       <Section
         title={t('properties.form.sections.general')}
@@ -169,41 +149,10 @@ export function PropertyForm({
         <UnitsFieldArray control={control} />
       </Section>
 
-      {/* Barre d'actions flottante, toujours visible en bas de l'écran */}
-      <div className="sticky bottom-4 z-10 flex justify-end gap-3 rounded-2xl border border-border bg-surface/90 px-4 py-3 shadow-overlay backdrop-blur">
-        <Button variant="tertiary" onPress={onCancel}>
-          {t('properties.form.actions.cancel')}
-        </Button>
-        <Button type="submit" variant="primary" isPending={isSubmitting}>
-          {isSubmitting ? t('properties.form.actions.saving') : submitLabel}
-        </Button>
-      </div>
+      <FormActionBar submitLabel={submitLabel} isSubmitting={isSubmitting} onCancel={onCancel} />
 
-      <Modal.Backdrop
-        isOpen={blocker.state === 'blocked'}
-        onOpenChange={(open) => {
-          if (!open && blocker.state === 'blocked') blocker.reset()
-        }}
-      >
-        <Modal.Container>
-          <Modal.Dialog className="sm:max-w-sm">
-            <Modal.Header>
-              <Modal.Heading>{t('properties.form.leave.title')}</Modal.Heading>
-            </Modal.Header>
-            <Modal.Body>
-              <p className="text-sm text-muted">{t('properties.form.leave.description')}</p>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="tertiary" onPress={() => blocker.reset?.()}>
-                {t('properties.form.leave.stay')}
-              </Button>
-              <Button variant="danger" onPress={() => blocker.proceed?.()}>
-                {t('properties.form.leave.leave')}
-              </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
+      {/* Prévenir avant de quitter avec des modifications non enregistrées */}
+      <LeaveGuard when={isDirty && !isSubmitting && !isSubmitSuccessful} />
     </form>
   )
 }

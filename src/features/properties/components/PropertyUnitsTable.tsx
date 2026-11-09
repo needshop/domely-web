@@ -1,6 +1,8 @@
 import { Chip } from '@heroui/react'
 import { AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
+import { useTenantNames } from '@/features/tenants/api'
 import { useFormatters } from '@/lib/format'
 import type { Unit, UnitStatus } from '../types'
 
@@ -13,6 +15,7 @@ const statusColor: Record<UnitStatus, 'success' | 'warning' | 'default'> = {
 export function PropertyUnitsTable({ units }: { units: Unit[] }) {
   const { t } = useTranslation()
   const f = useFormatters()
+  const tenantName = useTenantNames()
   const hasFloors = units.some((u) => u.floor !== undefined)
   const hasRooms = units.some((u) => u.rooms !== undefined)
 
@@ -75,10 +78,15 @@ export function PropertyUnitsTable({ units }: { units: Unit[] }) {
                 </Chip>
               </td>
               <td className="px-3 py-3">
-                {u.tenant ? (
+                {u.lease ? (
                   <>
                     <p className="flex items-center gap-1.5 font-medium">
-                      {u.tenant.name}
+                      <Link
+                        to={`/tenants/${u.lease.tenantId}`}
+                        className="outline-none hover:underline focus-visible:ring-2 focus-visible:ring-focus"
+                      >
+                        {tenantName(u.lease.tenantId) ?? '—'}
+                      </Link>
                       {u.isLate && (
                         <AlertTriangle
                           className="size-3.5 shrink-0 text-danger"
@@ -88,7 +96,7 @@ export function PropertyUnitsTable({ units }: { units: Unit[] }) {
                     </p>
                     <p className="text-xs text-muted">
                       {t('properties.detail.units.leaseEnd', {
-                        date: f.dayMonthYear(new Date(`${u.tenant.leaseEnd}T12:00:00`)),
+                        date: f.dayMonthYear(new Date(`${u.lease.endDate}T12:00:00`)),
                       })}
                     </p>
                   </>
