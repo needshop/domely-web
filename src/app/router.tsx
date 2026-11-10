@@ -14,6 +14,7 @@ import { PropertiesPage } from '@/pages/PropertiesPage'
 import { PropertyDetailPage } from '@/pages/PropertyDetailPage'
 import { PropertyFormPage } from '@/pages/PropertyFormPage'
 import { RentsPage } from '@/pages/RentsPage'
+import { ReportsPage } from '@/pages/ReportsPage'
 import { TenantDetailPage } from '@/pages/TenantDetailPage'
 import { TenantFormPage } from '@/pages/TenantFormPage'
 import { TenantsPage } from '@/pages/TenantsPage'
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
       { path: 'maintenance/:id', element: <InterventionDetailPage /> },
       { path: 'maintenance/:id/edit', element: <InterventionFormPage mode="edit" /> },
       { path: 'contracts', element: <ContractsPage /> },
+      { path: 'reports', element: <ReportsPage /> },
       { path: 'contracts/new', element: <ContractFormPage mode="create" /> },
       { path: 'contracts/:id', element: <ContractDetailPage /> },
       { path: 'contracts/:id/edit', element: <ContractFormPage mode="edit" /> },
@@ -45,9 +47,15 @@ export const router = createBrowserRouter([
       ...navigation
         .filter(
           (item) =>
-            !['/', '/properties', '/tenants', '/rents', '/maintenance', '/contracts'].includes(
-              item.to,
-            ),
+            ![
+              '/',
+              '/properties',
+              '/tenants',
+              '/rents',
+              '/maintenance',
+              '/contracts',
+              '/reports',
+            ].includes(item.to),
         )
         .map((item) => ({
           path: item.to.slice(1),

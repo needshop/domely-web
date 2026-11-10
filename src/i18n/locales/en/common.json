@@ -977,6 +977,69 @@
       }
     }
   },
+  "reports": {
+    "exportCsv": "Export (CSV)",
+    "exportMonthlyLabel": "Export monthly collections (CSV)",
+    "period": {
+      "label": "Period",
+      "last12": "Last 12 months",
+      "range": "From {{from}} to {{to}}"
+    },
+    "kpi": {
+      "collected": "Rent collected",
+      "collectedHint": "Of {{amount}} expected",
+      "rate": "Collection rate",
+      "rateHint": "{{amount}} unpaid over the period",
+      "rateFull": "No unpaid rent over the period",
+      "expenses": "Maintenance costs",
+      "expensesHint_zero": "No completed intervention",
+      "expensesHint_one": "{{count}} completed intervention",
+      "expensesHint_other": "{{count}} completed interventions",
+      "net": "Net result",
+      "netHint": "Collected − costs borne by the owner"
+    },
+    "expenses": {
+      "title": "Costs by category",
+      "subtitle": "Owner: {{owner}} · charged to tenant: {{tenant}}",
+      "none": "No completed intervention over the period.",
+      "count_one": "{{count}} intervention",
+      "count_other": "{{count}} interventions"
+    },
+    "performance": {
+      "title": "Performance by property",
+      "subtitle": "Rent over the period, unpaid rent, costs and net result; occupancy as of today."
+    },
+    "table": {
+      "property": "Property",
+      "occupancy": "Occupancy",
+      "expected": "Expected",
+      "collected": "Collected",
+      "rate": "Collection",
+      "overdue": "Unpaid",
+      "expenses": "Costs",
+      "net": "Net result",
+      "total": "Total"
+    },
+    "aging": {
+      "title": "Unpaid rent by age",
+      "subtitle": "As of today, all months.",
+      "bucket": {
+        "1-30": "1 to 30 days",
+        "31-60": "31 to 60 days",
+        "61-90": "61 to 90 days",
+        "90+": "Over 90 days"
+      },
+      "count_zero": "no due",
+      "count_one": "{{count}} due",
+      "count_other": "{{count}} dues"
+    },
+    "debtors": {
+      "title": "Top debtors",
+      "none": "No unpaid rent: all tenants are up to date.",
+      "dues_one": "{{count}} due",
+      "dues_other": "{{count}} dues"
+    }
+  },
   "form": {
     "actions": {
       "cancel": "Cancel",

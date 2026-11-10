@@ -4,7 +4,7 @@ Document de référence pour les agents (et les humains) qui travaillent sur Dom
 structure, spécifications techniques et fonctionnelles, conventions et pièges connus.
 **À tenir à jour à chaque fonctionnalité livrée** (sections 7, 8, 11 et 12 en particulier).
 
-> Dernière mise à jour : 11/11/2026 — front v0.1.0, modules Biens, Locataires, Contrats, Loyers et Interventions.
+> Dernière mise à jour : 11/11/2026 — front v0.1.0, modules Biens, Locataires, Contrats, Loyers, Interventions et Rapports.
 
 ---
 
@@ -23,7 +23,8 @@ propriétaires et gestionnaires de biens en **Afrique de l'Ouest** (zone UEMOA +
 - Adapté au contexte local : franc CFA (XOF) par défaut, EUR et GNF, pays de la zone,
   Mobile Money, WhatsApp, usage mobile important.
 - Suivre l'entretien : interventions (signalement, planification, prestataires, coûts).
-- À venir : rapports, paramètres, API, application mobile.
+- Analyser : rapports (revenus, recouvrement, impayés, dépenses, résultat par bien, export CSV).
+- À venir : paramètres, API, application mobile.
 
 ### Public et contexte d'usage
 
@@ -122,12 +123,13 @@ src/
 ├── app/            # router.tsx, CurrencyProvider (providers globaux)
 ├── assets/brand/   # logos et symboles SVG (couleur et blanc)
 ├── components/     # composants partagés (StatTile, FilterSelect, ListPagination…)
+│   ├── charts/     # RentCollectionChart (histogramme mensuel), HorizontalBars
 │   ├── form/       # champs RHF + HeroUI (fields.tsx) et mise en page (FormLayout.tsx)
 │   └── layout/     # AppLayout, Sidebar, MobileNav, navigation.ts
 ├── features/       # un dossier par module métier (voir ci-dessous)
 ├── hooks/          # hooks génériques (useLocalStorage)
 ├── i18n/           # configuration, types et traductions fr / en (common.json)
-├── lib/            # utilitaires : format, currency, dates, countries, search, cn, env
+├── lib/            # utilitaires : format, currency, dates, countries, search, csv, cn, env
 ├── pages/          # pages routées (assemblent les composants des features)
 └── services/       # (vide) futur client HTTP de l'API
 ```
@@ -145,7 +147,8 @@ src/
 | `components/` | Composants d'affichage du module                                                                          |
 | `form/`       | `schema.ts` (zod), `mapping.ts` (entité ↔ formulaire), formulaire                                         |
 
-Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenance`.
+Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenance`, `reports`
+(`reports` n'a pas de store : il agrège les données des autres modules).
 
 ### Flux de données
 
@@ -288,7 +291,7 @@ Valeurs :
   - Sur mobile, un tiroir s'ouvre depuis le bouton du header.
   - Header : devise, langue, thème, notifications (non branchées).
 - **Navigation** : Tableau de bord, Biens, Locataires, Loyers, Interventions, Contrats,
-  Rapports, Paramètres. Rapports et Paramètres sont des pages « à venir ».
+  Rapports, Paramètres. Paramètres est une page « à venir ».
 - **PWA** installable avec l'icône de l'application ; page 404 ; retour en haut de page à
   chaque navigation.
 
@@ -426,6 +429,26 @@ Valeurs :
     nouvelle la rend « planifiée » (et la retirer la ramène à « nouvelle »).
   - Pré-remplissage depuis `?property=` et `?unit=`.
 
+### Rapports (`/reports`)
+
+- **Filtres** (dans l'URL) : période (12 derniers mois glissants, année en cours ou l'une des
+  deux précédentes, sans dépasser le mois courant) et bien (tous ou un seul).
+- **Indicateurs** de la période : loyers encaissés sur l'attendu, taux de recouvrement et
+  impayés, dépenses d'entretien (interventions terminées, part du propriétaire), résultat net
+  (encaissé − dépenses du propriétaire).
+- **Loyers encaissés** par mois (histogramme partagé avec le tableau de bord, mois courant
+  en rouge s'il fait partie de la période), export CSV.
+- **Dépenses par catégorie** (barres horizontales), avec la part propriétaire / refacturée au
+  locataire.
+- **Performance par bien** : occupation à date, attendu, encaissé, recouvrement, impayés,
+  dépenses, résultat net, ligne de total ; trié par résultat net ; export CSV.
+- **Impayés par ancienneté** (1–30, 31–60, 61–90, plus de 90 jours) et **principaux débiteurs**,
+  à date (indépendants de la période).
+- Les loyers sont comptés par mois d'échéance (attendu et réglé pour ce mois), les dépenses
+  par date de fin d'intervention.
+- **CSV** : séparateur `;`, BOM UTF-8 (ouverture directe dans Excel en français), montants
+  bruts en XOF.
+
 ---
 
 ## 9. Règles métier clés (résumé)
@@ -443,9 +466,9 @@ Valeurs :
 
 ## 10. Tests
 
-- **Playwright e2e** dans `front/e2e/` (≈ 90 tests), fichiers par module : `smoke`, `theme`,
+- **Playwright e2e** dans `front/e2e/` (≈ 95 tests), fichiers par module : `smoke`, `theme`,
   `sidebar`, `i18n`, `dashboard`, `currency`, `properties`, `property-form`, `tenants`,
-  `tenant-form`, `contracts`, `rents`, `maintenance`.
+  `tenant-form`, `contracts`, `rents`, `maintenance`, `reports`.
 - Les tests tournent sur un **build de production** servi par `vite preview` sur le port
   **4173** (`reuseExistingServer: false`), sous Chrome système, en locale `fr-FR`.
   Le serveur de dev n'est pas utilisé : il est trop instable pour les tests.
@@ -464,6 +487,7 @@ Valeurs :
     fiche plutôt que des options de liste cachées.
   - Après un clic de navigation, attendre l'URL (`toHaveURL`) avant de vérifier le contenu.
   - Saisir une date : focaliser le premier segment du groupe puis taper `jjmmaaaa`.
+  - Export de fichiers : `page.waitForEvent('download')` puis lire `download.path()`.
 
 ---
 
@@ -507,6 +531,7 @@ Ressources pressenties (REST, montants en XOF, dates ISO) :
 | `/dashboard`      | agrégats (encaissements sur 12 mois, impayés, occupation)                                                      |
 | `/interventions`  | liste, détail, création, modification, transitions de statut (planifier, démarrer, terminer, annuler, rouvrir) |
 | `/providers`      | (plus tard) annuaire des prestataires                                                                          |
+| `/reports/*`      | agrégats par période et par bien ; exports CSV / PDF générés côté serveur                                      |
 
 Points à trancher côté API :
 
@@ -521,7 +546,8 @@ Points à trancher côté API :
 ## 13. Feuille de route
 
 **Déjà livré** : initialisation, PWA, thème clair et sombre, i18n, devises, tableau de bord, et
-les modules Biens, Locataires, Contrats, Loyers (encaissement et relance) et Interventions.
+les modules Biens, Locataires, Contrats, Loyers (encaissement et relance), Interventions et
+Rapports.
 
 **Prochaines étapes envisagées** :
 
@@ -535,7 +561,8 @@ les modules Biens, Locataires, Contrats, Loyers (encaissement et relance) et Int
 - Biens : suppression, photos.
 - Interventions : annuaire des prestataires, photos, lien avec le statut « en travaux » du
   lot, refacturation au locataire.
-- Rapports : revenus, impayés, occupation, exports.
+- Rapports : export PDF / impression, comparaison d'une période à l'autre, évolution de
+  l'occupation dans le temps, déclaration de revenus fonciers.
 - Paramètres : profil, organisation, devises et taux, modèles de messages.
 - API (`api/`) puis application mobile (`mobile/`).
 
@@ -543,16 +570,17 @@ les modules Biens, Locataires, Contrats, Loyers (encaissement et relance) et Int
 
 ## 14. Historique des livraisons (front, `main`)
 
-| Commit       | Contenu                                                                          |
-| ------------ | -------------------------------------------------------------------------------- |
-| `c0abb04`    | Initialisation : Vite, Tailwind, HeroUI, i18n, PWA, Playwright                   |
-| `a1be7bf`    | Tableau de bord, menu mobile, devises XOF / EUR / GNF                            |
-| `1ca4a85`    | Carte Occupation de hauteur fixe                                                 |
-| `2193478`    | Biens : liste et fiche                                                           |
-| `6842285`    | Biens : formulaire et pagination                                                 |
-| `a1a652a`    | Locataires : liste, fiche, formulaires                                           |
-| `44dc41c`    | Contrats : liste, fiche, création, modification, résiliation                     |
-| `091f681`    | Loyers : échéances, encaissements, impayés, relances ; dashboard branché         |
-| `8571a9e`    | `CLAUDE.md` du front (renvoie vers ce fichier)                                   |
-| `9194948`    | `AGENTS.md` déplacé dans `front/` (versionné avec le front)                      |
-| _à commiter_ | Interventions : liste, fiche, cycle de vie, formulaire ; onglet bien ; dashboard |
+| Commit       | Contenu                                                                                |
+| ------------ | -------------------------------------------------------------------------------------- |
+| `c0abb04`    | Initialisation : Vite, Tailwind, HeroUI, i18n, PWA, Playwright                         |
+| `a1be7bf`    | Tableau de bord, menu mobile, devises XOF / EUR / GNF                                  |
+| `1ca4a85`    | Carte Occupation de hauteur fixe                                                       |
+| `2193478`    | Biens : liste et fiche                                                                 |
+| `6842285`    | Biens : formulaire et pagination                                                       |
+| `a1a652a`    | Locataires : liste, fiche, formulaires                                                 |
+| `44dc41c`    | Contrats : liste, fiche, création, modification, résiliation                           |
+| `091f681`    | Loyers : échéances, encaissements, impayés, relances ; dashboard branché               |
+| `8571a9e`    | `CLAUDE.md` du front (renvoie vers ce fichier)                                         |
+| `9194948`    | `AGENTS.md` déplacé dans `front/` (versionné avec le front)                            |
+| `d108003`    | Interventions : liste, fiche, cycle de vie, formulaire ; onglet bien ; dashboard       |
+| _à commiter_ | Rapports : indicateurs, revenus mensuels, performance par bien, impayés, dépenses, CSV |

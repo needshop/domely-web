@@ -13,12 +13,7 @@ export interface Occupancy {
   underWorks: number
 }
 
-export interface MonthlyCollection {
-  /** Premier jour du mois (ISO) */
-  month: string
-  collected: number
-  expected: number
-}
+export type { MonthlyCollection } from '@/components/charts/RentCollectionChart'
 
 export interface LateRent {
   id: string

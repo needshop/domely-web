@@ -1,8 +1,15 @@
 import { Card } from '@heroui/react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useFormatters } from '@/lib/format'
-import type { MonthlyCollection } from '../types'
+
+/** Encaissements d'un mois. */
+export interface MonthlyCollection {
+  /** Premier jour du mois (ISO) */
+  month: string
+  collected: number
+  expected: number
+}
 
 const HEIGHT = 240
 const MARGIN = { top: 12, right: 8, bottom: 28 }
@@ -37,7 +44,23 @@ function useWidth<T extends HTMLElement>() {
   return [ref, width] as const
 }
 
-export function RentCollectionChart({ data: rawData }: { data: MonthlyCollection[] }) {
+interface RentCollectionChartProps {
+  data: MonthlyCollection[]
+  /** Sous-titre (par défaut « 12 derniers mois ») */
+  subtitle?: string
+  /** Mois mis en évidence (mois en cours) ; null = aucun. Par défaut : le dernier. */
+  highlightIndex?: number | null
+  /** Action affichée à droite de « Voir les données » (ex. export) */
+  action?: ReactNode
+}
+
+/** Histogramme des loyers encaissés par mois (tableau de bord, rapports). */
+export function RentCollectionChart({
+  data: rawData,
+  subtitle,
+  highlightIndex,
+  action,
+}: RentCollectionChartProps) {
   const { t } = useTranslation()
   const f = useFormatters()
   // Montants convertis dans la devise d'affichage : l'axe a ainsi des graduations « rondes »
@@ -60,8 +83,10 @@ export function RentCollectionChart({ data: rawData }: { data: MonthlyCollection
   }, [data])
 
   const innerH = HEIGHT - MARGIN.top - MARGIN.bottom
-  const step = niceStep(Math.max(...data.map((d) => d.collected)))
-  const yMax = Math.ceil(Math.max(...data.map((d) => d.collected)) / step) * step
+  // Au moins 1 : une période sans encaissement garde un axe valide
+  const maxValue = Math.max(1, ...data.map((d) => d.collected))
+  const step = niceStep(maxValue)
+  const yMax = Math.ceil(maxValue / step) * step
   const ticks = Array.from({ length: Math.round(yMax / step) + 1 }, (_, i) => i * step)
   // Marge gauche adaptée au plus long libellé d'axe (ex. « 15 M F CFA »)
   const marginLeft = Math.max(40, Math.max(...ticks.map((v) => f.formatAxis(v).length)) * 6.4 + 14)
@@ -72,6 +97,7 @@ export function RentCollectionChart({ data: rawData }: { data: MonthlyCollection
   const showEveryOther = band < 40
   const months = data.map((d) => new Date(`${d.month}T12:00:00`))
   const lastIndex = data.length - 1
+  const highlighted = highlightIndex === undefined ? lastIndex : highlightIndex
 
   const activeDatum = active !== null ? data[active] : null
 
@@ -82,7 +108,7 @@ export function RentCollectionChart({ data: rawData }: { data: MonthlyCollection
           <Card.Title className="font-display text-base">
             {t('dashboard.collections.title')}
           </Card.Title>
-          <Card.Description>{t('dashboard.collections.subtitle')}</Card.Description>
+          <Card.Description>{subtitle ?? t('dashboard.collections.subtitle')}</Card.Description>
         </div>
         <dl className="flex gap-6 text-right">
           <div>
@@ -135,7 +161,7 @@ export function RentCollectionChart({ data: rawData }: { data: MonthlyCollection
               {data.map((d, i) => {
                 const cx = marginLeft + band * i + band / 2
                 const top = y(d.collected)
-                const isCurrent = i === lastIndex
+                const isCurrent = i === highlighted
                 const isActive = active === i
                 return (
                   <g key={d.month}>
@@ -195,7 +221,7 @@ export function RentCollectionChart({ data: rawData }: { data: MonthlyCollection
                   className="h-0.5 w-3 rounded-full"
                   style={{
                     background:
-                      active === lastIndex ? 'var(--chart-highlight)' : 'var(--chart-bar)',
+                      active === highlighted ? 'var(--chart-highlight)' : 'var(--chart-bar)',
                   }}
                 />
                 <span className="text-sm font-semibold">
@@ -213,33 +239,38 @@ export function RentCollectionChart({ data: rawData }: { data: MonthlyCollection
         </div>
 
         {/* Vue tableau : les valeurs restent accessibles sans survol */}
-        <details className="mt-2 text-sm">
-          <summary className="cursor-pointer text-xs text-muted hover:text-foreground">
-            {t('dashboard.collections.tableToggle')}
-          </summary>
-          <table className="mt-2 w-full text-left text-xs tabular-nums">
-            <thead className="text-muted">
-              <tr>
-                <th className="py-1 font-normal">{t('dashboard.collections.month')}</th>
-                <th className="py-1 text-right font-normal">
-                  {t('dashboard.collections.collected')}
-                </th>
-                <th className="py-1 text-right font-normal">
-                  {t('dashboard.collections.expected')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((d, i) => (
-                <tr key={d.month} className="border-t border-separator">
-                  <td className="py-1 capitalize">{f.monthLong(months[i])}</td>
-                  <td className="py-1 text-right">{f.formatAmountExact(d.collected)}</td>
-                  <td className="py-1 text-right text-muted">{f.formatAmountExact(d.expected)}</td>
+        <div className="relative mt-2">
+          {action && <div className="absolute top-0 right-0">{action}</div>}
+          <details className="text-sm">
+            <summary className="cursor-pointer text-xs text-muted hover:text-foreground">
+              {t('dashboard.collections.tableToggle')}
+            </summary>
+            <table className="mt-2 w-full text-left text-xs tabular-nums">
+              <thead className="text-muted">
+                <tr>
+                  <th className="py-1 font-normal">{t('dashboard.collections.month')}</th>
+                  <th className="py-1 text-right font-normal">
+                    {t('dashboard.collections.collected')}
+                  </th>
+                  <th className="py-1 text-right font-normal">
+                    {t('dashboard.collections.expected')}
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </details>
+              </thead>
+              <tbody>
+                {data.map((d, i) => (
+                  <tr key={d.month} className="border-t border-separator">
+                    <td className="py-1 capitalize">{f.monthLong(months[i])}</td>
+                    <td className="py-1 text-right">{f.formatAmountExact(d.collected)}</td>
+                    <td className="py-1 text-right text-muted">
+                      {f.formatAmountExact(d.expected)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
+        </div>
       </Card.Content>
     </Card>
   )

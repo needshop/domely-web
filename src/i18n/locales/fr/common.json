@@ -977,6 +977,69 @@
       }
     }
   },
+  "reports": {
+    "exportCsv": "Exporter (CSV)",
+    "exportMonthlyLabel": "Exporter les encaissements mensuels (CSV)",
+    "period": {
+      "label": "Période",
+      "last12": "12 derniers mois",
+      "range": "Du {{from}} au {{to}}"
+    },
+    "kpi": {
+      "collected": "Loyers encaissés",
+      "collectedHint": "Sur {{amount}} attendus",
+      "rate": "Taux de recouvrement",
+      "rateHint": "{{amount}} d’impayés sur la période",
+      "rateFull": "Aucun impayé sur la période",
+      "expenses": "Dépenses d’entretien",
+      "expensesHint_zero": "Aucune intervention terminée",
+      "expensesHint_one": "{{count}} intervention terminée",
+      "expensesHint_other": "{{count}} interventions terminées",
+      "net": "Résultat net",
+      "netHint": "Encaissé − dépenses à la charge du propriétaire"
+    },
+    "expenses": {
+      "title": "Dépenses par catégorie",
+      "subtitle": "Propriétaire : {{owner}} · refacturé au locataire : {{tenant}}",
+      "none": "Aucune intervention terminée sur la période.",
+      "count_one": "{{count}} intervention",
+      "count_other": "{{count}} interventions"
+    },
+    "performance": {
+      "title": "Performance par bien",
+      "subtitle": "Loyers de la période, impayés, dépenses et résultat net ; occupation à date."
+    },
+    "table": {
+      "property": "Bien",
+      "occupancy": "Occupation",
+      "expected": "Attendu",
+      "collected": "Encaissé",
+      "rate": "Recouvrement",
+      "overdue": "Impayés",
+      "expenses": "Dépenses",
+      "net": "Résultat net",
+      "total": "Total"
+    },
+    "aging": {
+      "title": "Impayés par ancienneté",
+      "subtitle": "Situation à date, tous mois confondus.",
+      "bucket": {
+        "1-30": "1 à 30 jours",
+        "31-60": "31 à 60 jours",
+        "61-90": "61 à 90 jours",
+        "90+": "Plus de 90 jours"
+      },
+      "count_zero": "aucune échéance",
+      "count_one": "{{count}} échéance",
+      "count_other": "{{count}} échéances"
+    },
+    "debtors": {
+      "title": "Principaux débiteurs",
+      "none": "Aucun impayé : tous les locataires sont à jour.",
+      "dues_one": "{{count}} échéance",
+      "dues_other": "{{count}} échéances"
+    }
+  },
   "form": {
     "actions": {
       "cancel": "Annuler",
