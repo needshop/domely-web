@@ -11,7 +11,7 @@ test.describe('Tableau de bord', () => {
       'Loyers en retard',
       'Échéances à venir',
       'Mes biens récents',
-      'Interventions en cours',
+      'Interventions à traiter',
     ]) {
       await expect(page.getByText(title, { exact: true })).toBeVisible()
     }

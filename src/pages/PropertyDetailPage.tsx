@@ -1,5 +1,14 @@
 import { Breadcrumbs, buttonVariants, Card, Chip, Tabs } from '@heroui/react'
-import { AlertCircle, ArrowLeft, KeyRound, MapPin, Pencil, Percent, Wallet } from 'lucide-react'
+import {
+  AlertCircle,
+  ArrowLeft,
+  KeyRound,
+  MapPin,
+  Pencil,
+  Percent,
+  Wallet,
+  Wrench,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 import { StatTile } from '@/components/StatTile'
@@ -8,6 +17,9 @@ import { PropertyInfo } from '@/features/properties/components/PropertyInfo'
 import { PropertyUnitsTable } from '@/features/properties/components/PropertyUnitsTable'
 import { propertyVisual } from '@/features/properties/propertyVisual'
 import { propertyStats } from '@/features/properties/utils'
+import { useInterventionRows } from '@/features/maintenance/api'
+import { PropertyInterventions } from '@/features/maintenance/components/PropertyInterventions'
+import { isOpen } from '@/features/maintenance/utils'
 import { cn } from '@/lib/cn'
 import { useFormatters } from '@/lib/format'
 
@@ -16,6 +28,8 @@ export function PropertyDetailPage() {
   const f = useFormatters()
   const { id } = useParams()
   const property = useProperty(id)
+  const interventions = useInterventionRows().filter((r) => r.intervention.propertyId === id)
+  const openInterventions = interventions.filter((r) => isOpen(r.intervention.status)).length
 
   if (!property) {
     return (
@@ -62,13 +76,22 @@ export function PropertyDetailPage() {
             </p>
           </div>
         </div>
-        <Link
-          to={`/properties/${property.id}/edit`}
-          className={buttonVariants({ variant: 'secondary' })}
-        >
-          <Pencil className="size-4" aria-hidden />
-          {t('properties.detail.edit')}
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            to={`/maintenance/new?property=${property.id}`}
+            className={buttonVariants({ variant: 'tertiary' })}
+          >
+            <Wrench className="size-4" aria-hidden />
+            {t('maintenance.report')}
+          </Link>
+          <Link
+            to={`/properties/${property.id}/edit`}
+            className={buttonVariants({ variant: 'secondary' })}
+          >
+            <Pencil className="size-4" aria-hidden />
+            {t('properties.detail.edit')}
+          </Link>
+        </div>
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 [&>*]:min-w-0">
@@ -115,6 +138,11 @@ export function PropertyDetailPage() {
                 <span className="ml-1.5 text-xs text-muted tabular-nums">{stats.units}</span>
                 <Tabs.Indicator />
               </Tabs.Tab>
+              <Tabs.Tab id="maintenance">
+                {t('nav.maintenance')}
+                <span className="ml-1.5 text-xs text-muted tabular-nums">{openInterventions}</span>
+                <Tabs.Indicator />
+              </Tabs.Tab>
               <Tabs.Tab id="info">
                 {t('properties.detail.tabInfo')}
                 <Tabs.Indicator />
@@ -123,6 +151,9 @@ export function PropertyDetailPage() {
           </Tabs.ListContainer>
           <Tabs.Panel id="units" className="p-2 sm:p-3">
             <PropertyUnitsTable units={property.units} propertyId={property.id} />
+          </Tabs.Panel>
+          <Tabs.Panel id="maintenance" className="p-2 sm:p-3">
+            <PropertyInterventions rows={interventions} />
           </Tabs.Panel>
           <Tabs.Panel id="info" className="px-5 py-2">
             <PropertyInfo property={property} stats={stats} />

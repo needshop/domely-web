@@ -20,30 +20,4 @@ export const dashboardMock: DashboardData = {
     },
     { id: 'd4', kind: 'inspection', property: 'Immeuble Bellevue · Apt 18', date: '2026-12-10' },
   ],
-  maintenance: [
-    {
-      id: 'm1',
-      title: 'Fuite chauffe-eau',
-      property: 'Immeuble Bellevue · Apt 6',
-      status: 'inProgress',
-      priority: 'urgent',
-      openedAt: '2026-11-04',
-    },
-    {
-      id: 'm2',
-      title: 'Remplacement serrure',
-      property: 'Résidence Les Oliviers · Apt 2',
-      status: 'scheduled',
-      priority: 'normal',
-      openedAt: '2026-11-02',
-    },
-    {
-      id: 'm3',
-      title: 'Peinture cage d’escalier',
-      property: 'Immeuble Bellevue',
-      status: 'new',
-      priority: 'low',
-      openedAt: '2026-11-05',
-    },
-  ],
 }

@@ -97,17 +97,8 @@
       }
     },
     "maintenance": {
-      "title": "Interventions en cours",
-      "status": {
-        "new": "Nouvelle",
-        "scheduled": "Planifiée",
-        "inProgress": "En cours"
-      },
-      "priority": {
-        "low": "Basse",
-        "normal": "Normale",
-        "urgent": "Urgente"
-      }
+      "title": "Interventions à traiter",
+      "empty": "Aucune intervention à traiter."
     },
     "recentProperties": {
       "title": "Mes biens récents",
@@ -631,6 +622,177 @@
       "template": "Bonjour {{name}},\n\nSauf erreur de notre part, le loyer de {{month}} pour {{unit}} ({{property}}), d’un montant de {{amount}} et arrivé à échéance le {{date}}, n’a pas encore été réglé.\n\nMerci de procéder au règlement dans les meilleurs délais. Si le paiement a déjà été effectué, veuillez ne pas tenir compte de ce message.\n\nCordialement",
       "toast": "Relance enregistrée",
       "toastDescription": "{{tenant}} relancé par {{channel}}."
+    }
+  },
+  "maintenance": {
+    "subtitle_zero": "Aucune intervention à traiter",
+    "subtitle_one": "{{count}} intervention à traiter",
+    "subtitle_other": "{{count}} interventions à traiter",
+    "add": "Signaler une intervention",
+    "report": "Signaler une intervention",
+    "commonAreas": "Parties communes",
+    "overdue": "Passage prévu dépassé",
+    "doneOn": "Terminée le {{date}}",
+    "propertyEmpty": "Aucune intervention signalée pour ce bien.",
+    "status": {
+      "new": "Nouvelle",
+      "scheduled": "Planifiée",
+      "inProgress": "En cours",
+      "done": "Terminée",
+      "cancelled": "Annulée"
+    },
+    "priority": {
+      "urgent": "Urgente",
+      "normal": "Normale",
+      "low": "Basse"
+    },
+    "category": {
+      "plumbing": "Plomberie",
+      "electricity": "Électricité",
+      "airConditioning": "Climatisation",
+      "locksmith": "Serrurerie",
+      "painting": "Peinture",
+      "masonry": "Maçonnerie / toiture",
+      "appliances": "Électroménager",
+      "cleaning": "Nettoyage / assainissement",
+      "other": "Autre"
+    },
+    "reporter": {
+      "tenant": "Le locataire",
+      "owner": "Le propriétaire",
+      "manager": "Le gestionnaire"
+    },
+    "bearer": {
+      "owner": "Propriétaire",
+      "tenant": "Locataire"
+    },
+    "history": {
+      "new": "Demande signalée",
+      "scheduled": "Passage planifié",
+      "inProgress": "Travaux démarrés",
+      "done": "Intervention terminée",
+      "cancelled": "Intervention annulée"
+    },
+    "stats": {
+      "open": "À traiter",
+      "openHint": "{{new}} nouvelles · {{inProgress}} en cours",
+      "urgent": "Urgentes",
+      "urgentHint": "Parmi les interventions à traiter",
+      "scheduledSoon": "Passages à venir",
+      "scheduledSoonHint": "Planifiés dans les 7 jours",
+      "spent": "Dépenses de l’année",
+      "spentHint_one": "{{count}} intervention terminée",
+      "spentHint_other": "{{count}} interventions terminées"
+    },
+    "filters": {
+      "searchLabel": "Rechercher une intervention",
+      "search": "Titre, bien, lot, prestataire…",
+      "status": "Statut",
+      "statuses": {
+        "open": "À traiter",
+        "all": "Tous les statuts"
+      },
+      "priority": "Priorité",
+      "allPriorities": "Toutes priorités",
+      "category": "Catégorie",
+      "allCategories": "Toutes catégories",
+      "sort": "Trier par",
+      "sorts": {
+        "priority": "Les plus urgentes",
+        "recent": "Plus récentes",
+        "scheduled": "Date de passage"
+      }
+    },
+    "empty": {
+      "title": "Aucune intervention ne correspond",
+      "description": "Modifiez la recherche ou les filtres, ou signalez une nouvelle intervention."
+    },
+    "table": {
+      "intervention": "Intervention",
+      "location": "Logement",
+      "priority": "Priorité",
+      "reportedAt": "Signalée le",
+      "scheduledAt": "Passage",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "card": {
+      "open": "Voir l’intervention {{title}}"
+    },
+    "fields": {
+      "title": "Titre",
+      "unit": "Lot concerné",
+      "category": "Catégorie",
+      "priority": "Priorité",
+      "description": "Description",
+      "location": "Logement",
+      "reportedBy": "Signalée par",
+      "reportedAt": "Date du signalement",
+      "scheduledAt": "Date de passage",
+      "completedAt": "Date de fin",
+      "provider": "Prestataire",
+      "providerName": "Prestataire",
+      "providerPhone": "Téléphone du prestataire",
+      "estimatedCost": "Coût estimé",
+      "actualCost": "Coût réel",
+      "chargedTo": "À la charge de"
+    },
+    "detail": {
+      "back": "Retour aux interventions",
+      "notFound": "Cette intervention est introuvable.",
+      "edit": "Modifier",
+      "details": "Détails",
+      "planning": "Planification et coûts",
+      "history": "Historique",
+      "noDescription": "Aucune description.",
+      "reportedOn": "Le {{date}}"
+    },
+    "actions": {
+      "schedule": "Planifier",
+      "reschedule": "Replanifier",
+      "start": "Démarrer",
+      "complete": "Terminer",
+      "cancel": "Annuler l’intervention",
+      "reopen": "Rouvrir",
+      "scheduleTitle": "Planifier le passage",
+      "scheduleConfirm": "Planifier",
+      "completeTitle": "Terminer l’intervention",
+      "completeConfirm": "Marquer comme terminée",
+      "cancelTitle": "Annuler l’intervention",
+      "cancelConfirm": "Annuler l’intervention",
+      "cancelReason": "Motif (facultatif)",
+      "note": "Note (facultative)",
+      "toast": {
+        "schedule": "Passage planifié",
+        "start": "Travaux démarrés",
+        "complete": "Intervention terminée",
+        "cancel": "Intervention annulée",
+        "reopen": "Intervention rouverte"
+      },
+      "errors": {
+        "beforeReport": "La date ne peut pas précéder le signalement."
+      }
+    },
+    "form": {
+      "createTitle": "Signaler une intervention",
+      "createSubtitle": "Décrivez le problème ; vous pourrez planifier le passage maintenant ou plus tard.",
+      "editTitle": "Modifier {{reference}}",
+      "editSubtitle": "Mettez à jour la demande et sa planification. Le statut évolue depuis la fiche.",
+      "create": "Signaler",
+      "titlePlaceholder": "Ex. Fuite sous l’évier",
+      "descriptionPlaceholder": "Constat, localisation précise, disponibilités du locataire…",
+      "providerPlaceholder": "Ex. Plomberie Kouadio",
+      "noTenant": "Aucun locataire en place sur ce lot.",
+      "sections": {
+        "request": "Demande",
+        "requestHint": "Le problème, où il se situe et qui l’a signalé.",
+        "planningHint": "Facultatif : une date de passage rend l’intervention « planifiée »."
+      },
+      "toast": {
+        "created": "Intervention signalée",
+        "createdDescription": "L’intervention {{reference}} a été enregistrée.",
+        "updated": "Modifications enregistrées"
+      }
     }
   },
   "contracts": {

@@ -4,7 +4,7 @@ Document de référence pour les agents (et les humains) qui travaillent sur Dom
 structure, spécifications techniques et fonctionnelles, conventions et pièges connus.
 **À tenir à jour à chaque fonctionnalité livrée** (sections 7, 8, 11 et 12 en particulier).
 
-> Dernière mise à jour : 10/11/2026 — front v0.1.0, modules Biens, Locataires, Contrats et Loyers.
+> Dernière mise à jour : 11/11/2026 — front v0.1.0, modules Biens, Locataires, Contrats, Loyers et Interventions.
 
 ---
 
@@ -22,7 +22,8 @@ propriétaires et gestionnaires de biens en **Afrique de l'Ouest** (zone UEMOA +
   fins de bail).
 - Adapté au contexte local : franc CFA (XOF) par défaut, EUR et GNF, pays de la zone,
   Mobile Money, WhatsApp, usage mobile important.
-- À venir : interventions (maintenance), rapports, paramètres, API, application mobile.
+- Suivre l'entretien : interventions (signalement, planification, prestataires, coûts).
+- À venir : rapports, paramètres, API, application mobile.
 
 ### Public et contexte d'usage
 
@@ -144,7 +145,7 @@ src/
 | `components/` | Composants d'affichage du module                                                                          |
 | `form/`       | `schema.ts` (zod), `mapping.ts` (entité ↔ formulaire), formulaire                                         |
 
-Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`.
+Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenance`.
 
 ### Flux de données
 
@@ -247,17 +248,19 @@ Property (bien) 1───n Unit (lot)
 Unit 1───n Lease (contrat) n───1 Tenant (locataire)
 Lease 1───n RentDue (échéance mensuelle, calculée) 1───n Payment (encaissement)
 RentDue 1───n Reminder (relance)
+Property 1───n Intervention (sur un lot ou les parties communes) n───0..1 Tenant (signalement)
 ```
 
-| Entité     | Champs clés                                                                                                                                                                                           |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Property` | id, name, type, address { street, district, city, country ISO }, acquiredAt?, createdAt, description?, units[]                                                                                        |
-| `Unit`     | id (unique **dans le bien**), label, kind, floor?, area, rooms?, rent et charges (référence), status ; dérivés : lease?, isLate?                                                                      |
-| `Tenant`   | id, kind (individual / company), name, phone, email?, occupation?, contactPerson?, idDocument?, emergencyContact?, notes?, createdAt                                                                  |
-| `Lease`    | id, reference `BAIL-AAAA-NNNN`, propertyId, unitId, tenantId, type, startDate, endDate, rent, charges, deposit, paymentDay (1–28), tacitRenewal, terminatedAt?, terminationReason?, notes?, createdAt |
-| `RentDue`  | id `leaseId:AAAA-MM`, period, dueDate, amount (loyer + charges), paid, remaining, status, daysLate, payments[] — **calculé**                                                                          |
-| `Payment`  | id, leaseId, period, date, amount, method, reference?, note?                                                                                                                                          |
-| `Reminder` | id, leaseId, period, date, channel (whatsapp / sms / email)                                                                                                                                           |
+| Entité         | Champs clés                                                                                                                                                                                                                                                                                           |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Property`     | id, name, type, address { street, district, city, country ISO }, acquiredAt?, createdAt, description?, units[]                                                                                                                                                                                        |
+| `Unit`         | id (unique **dans le bien**), label, kind, floor?, area, rooms?, rent et charges (référence), status ; dérivés : lease?, isLate?                                                                                                                                                                      |
+| `Tenant`       | id, kind (individual / company), name, phone, email?, occupation?, contactPerson?, idDocument?, emergencyContact?, notes?, createdAt                                                                                                                                                                  |
+| `Lease`        | id, reference `BAIL-AAAA-NNNN`, propertyId, unitId, tenantId, type, startDate, endDate, rent, charges, deposit, paymentDay (1–28), tacitRenewal, terminatedAt?, terminationReason?, notes?, createdAt                                                                                                 |
+| `RentDue`      | id `leaseId:AAAA-MM`, period, dueDate, amount (loyer + charges), paid, remaining, status, daysLate, payments[] — **calculé**                                                                                                                                                                          |
+| `Payment`      | id, leaseId, period, date, amount, method, reference?, note?                                                                                                                                                                                                                                          |
+| `Reminder`     | id, leaseId, period, date, channel (whatsapp / sms / email)                                                                                                                                                                                                                                           |
+| `Intervention` | id, reference `INT-AAAA-NNNN`, propertyId, unitId? (absent = parties communes), title, description?, category, priority, status, reportedBy, tenantId?, reportedAt, scheduledAt?, completedAt?, provider { name, phone? }?, estimatedCost?, actualCost?, chargedTo, history[] { date, status, note? } |
 
 Valeurs :
 
@@ -267,6 +270,12 @@ Valeurs :
 - Statuts de lot : `rented` (dérivé du contrat), `vacant`, `underWorks`.
 - Natures de bail : `residential`, `commercial` (boutique), `professional` (bureau).
 - Moyens de paiement : `mobileMoney`, `cash`, `bankTransfer`, `check`.
+- Interventions :
+  - catégories : `plumbing`, `electricity`, `airConditioning`, `locksmith`, `painting`,
+    `masonry`, `appliances`, `cleaning`, `other` ;
+  - priorités : `urgent`, `normal`, `low` ;
+  - statuts : `new`, `scheduled`, `inProgress`, `done`, `cancelled` ;
+  - signalée par `tenant`, `owner` ou `manager` ; à la charge de `owner` ou `tenant`.
 
 ---
 
@@ -279,7 +288,7 @@ Valeurs :
   - Sur mobile, un tiroir s'ouvre depuis le bouton du header.
   - Header : devise, langue, thème, notifications (non branchées).
 - **Navigation** : Tableau de bord, Biens, Locataires, Loyers, Interventions, Contrats,
-  Rapports, Paramètres. Interventions, Rapports et Paramètres sont des pages « à venir ».
+  Rapports, Paramètres. Rapports et Paramètres sont des pages « à venir ».
 - **PWA** installable avec l'icône de l'application ; page 404 ; retour en haut de page à
   chaque navigation.
 
@@ -295,7 +304,8 @@ Valeurs :
 - Carte « Loyers en retard » : les 5 impayés les plus anciens. Son bouton « Relancer »
   **n'est pas branché**.
 - Biens récents.
-- Échéances (assurance, révision…) et interventions : **données fictives** du tableau de bord.
+- Carte « Interventions à traiter » : les 4 plus urgentes, avec lien vers chaque fiche.
+- Échéances (assurance, révision…) : **données fictives** du tableau de bord.
 
 ### Biens (`/properties`, `/properties/new`, `/properties/:id`, `/properties/:id/edit`)
 
@@ -306,7 +316,8 @@ Valeurs :
   - Vue cartes ou tableau (mémorisée), **9 biens par page**.
 - **Fiche**
   - Indicateurs : lots, occupation, loyers et potentiel, retards.
-  - Onglets Lots et Informations.
+  - Onglets Lots, Interventions (à traiter d'abord) et Informations.
+  - Bouton « Signaler une intervention » (pré-remplit le bien).
   - Le nom du locataire mène à sa fiche ; un lien **« Louer »** sur chaque lot vacant crée un
     contrat pré-rempli.
 - **Formulaire**
@@ -390,6 +401,31 @@ Valeurs :
   - La relance est enregistrée sur l'échéance (« Relancé le … »).
 - Les impayés alimentent le retard affiché sur les biens, les locataires et le tableau de bord.
 
+### Interventions (`/maintenance`, `/maintenance/new`, `/maintenance/:id`, `/maintenance/:id/edit`)
+
+- **Cycle de vie** et actions de la fiche :
+  - `new` → **Planifier** (date de passage, prestataire), **Démarrer** ou **Annuler** ;
+  - `scheduled` → **Démarrer**, **Replanifier** ou **Annuler** ;
+  - `inProgress` → **Terminer** (date de fin, pas dans le futur, et coût réel) ou **Annuler** ;
+  - `done` → **Rouvrir** (repasse en cours) ; `cancelled` → **Rouvrir** (repasse en nouvelle) ;
+  - chaque étape est inscrite dans l'**historique**, avec une note facultative (motif d'annulation…).
+- **Liste**
+  - Par défaut : interventions à traiter, urgentes d'abord.
+  - Indicateurs : à traiter (nouvelles, en cours), urgentes, passages dans les 7 jours,
+    dépenses de l'année (coûts réels des interventions terminées).
+  - Recherche (titre, référence, bien, lot, locataire, prestataire), filtres par statut,
+    priorité, catégorie et bien, tri. **10 par page**.
+  - Un passage prévu dépassé sans démarrage est signalé.
+- **Fiche** : détails (description, logement, signalement, prise en charge), planification et
+  coûts (prestataire avec lien `tel:`), historique.
+- **Formulaire**
+  - Bien, puis lot ou **parties communes** ; titre, catégorie, priorité, description.
+  - Signalée par le locataire (celui en place sur le lot), le propriétaire ou le gestionnaire.
+  - Planification facultative : date de passage, prestataire, coût estimé, prise en charge.
+  - Le statut évolue depuis la fiche. Exception : ajouter une date de passage à une demande
+    nouvelle la rend « planifiée » (et la retirer la ramène à « nouvelle »).
+  - Pré-remplissage depuis `?property=` et `?unit=`.
+
 ---
 
 ## 9. Règles métier clés (résumé)
@@ -400,15 +436,16 @@ Valeurs :
   celui du contrat.
 - Locataire « en retard » = au moins une échéance `late` ou `partial`.
 - Un « bail bientôt échu » se termine dans les **90 jours** (`LEASE_ENDING_DAYS`).
-- Références des contrats : `BAIL-<année de début>-<n° séquentiel sur 4 chiffres>`.
+- Références : contrats `BAIL-<année de début>-NNNN`, interventions `INT-<année du signalement>-NNNN`.
+- Intervention « à traiter » = `new`, `scheduled` ou `inProgress`.
 
 ---
 
 ## 10. Tests
 
-- **Playwright e2e** dans `front/e2e/` (≈ 80 tests), fichiers par module : `smoke`, `theme`,
+- **Playwright e2e** dans `front/e2e/` (≈ 90 tests), fichiers par module : `smoke`, `theme`,
   `sidebar`, `i18n`, `dashboard`, `currency`, `properties`, `property-form`, `tenants`,
-  `tenant-form`, `contracts`, `rents`.
+  `tenant-form`, `contracts`, `rents`, `maintenance`.
 - Les tests tournent sur un **build de production** servi par `vite preview` sur le port
   **4173** (`reuseExistingServer: false`), sous Chrome système, en locale `fr-FR`.
   Le serveur de dev n'est pas utilisé : il est trop instable pour les tests.
@@ -422,8 +459,11 @@ Valeurs :
   - Pour l'ancêtre « carte » d'un élément :
     `xpath=ancestor::*[contains(concat(" ",@class," ")," card ")][1]`
     (`contains(@class,"card")` attrape aussi `card__title`).
-  - Libellés ambigus : utiliser `exact: true` (ex. « Payé » / « Impayé ») et cibler les lignes
-    (`getByRole('row')`) plutôt que des options de liste cachées.
+  - Libellés ambigus : utiliser `exact: true` (ex. « Payé » / « Impayé », « Prestataire » /
+    « Téléphone du prestataire ») et cibler les lignes (`getByRole('row')`) ou l'en-tête de la
+    fiche plutôt que des options de liste cachées.
+  - Après un clic de navigation, attendre l'URL (`toHaveURL`) avant de vérifier le contenu.
+  - Saisir une date : focaliser le premier segment du groupe puis taper `jjmmaaaa`.
 
 ---
 
@@ -441,6 +481,8 @@ Valeurs :
   Toujours raisonner en `propertyId` + `unitId`.
 - **Hooks et effets** : éviter `setState` synchrone dans un effet (règle de lint). Initialiser
   l'état directement et remonter le composant via `key`.
+- **Cartes mobiles dans une grille** : un élément de grille garde la largeur de son contenu ;
+  mettre `min-w-0` sur le `<li>` pour que les textes `truncate` ne fassent pas déborder la page.
 - Après chaque `Write`/`Edit` d'un fichier formaté, Prettier peut reformater : relire avant
   une modification ciblée.
 
@@ -453,16 +495,18 @@ des appels HTTP (client dans `src/services/`, URL `VITE_API_URL`).
 
 Ressources pressenties (REST, montants en XOF, dates ISO) :
 
-| Ressource         | Opérations                                                                                        |
-| ----------------- | ------------------------------------------------------------------------------------------------- |
-| `/properties`     | liste (filtres, pagination), détail, création, modification                                       |
-| `/tenants`        | liste, détail, création, modification ; unicité du téléphone                                      |
-| `/leases`         | liste, détail, création (contrôle des chevauchements), modification, `POST /leases/:id/terminate` |
-| `/rent-dues`      | échéances calculées (par mois, impayés), indicateurs                                              |
-| `/payments`       | création, annulation                                                                              |
-| `/reminders`      | création, historique ; plus tard, envoi serveur (WhatsApp, SMS, e-mail)                           |
-| `/exchange-rates` | taux XOF → EUR / GNF                                                                              |
-| `/dashboard`      | agrégats (encaissements sur 12 mois, impayés, occupation)                                         |
+| Ressource         | Opérations                                                                                                     |
+| ----------------- | -------------------------------------------------------------------------------------------------------------- |
+| `/properties`     | liste (filtres, pagination), détail, création, modification                                                    |
+| `/tenants`        | liste, détail, création, modification ; unicité du téléphone                                                   |
+| `/leases`         | liste, détail, création (contrôle des chevauchements), modification, `POST /leases/:id/terminate`              |
+| `/rent-dues`      | échéances calculées (par mois, impayés), indicateurs                                                           |
+| `/payments`       | création, annulation                                                                                           |
+| `/reminders`      | création, historique ; plus tard, envoi serveur (WhatsApp, SMS, e-mail)                                        |
+| `/exchange-rates` | taux XOF → EUR / GNF                                                                                           |
+| `/dashboard`      | agrégats (encaissements sur 12 mois, impayés, occupation)                                                      |
+| `/interventions`  | liste, détail, création, modification, transitions de statut (planifier, démarrer, terminer, annuler, rouvrir) |
+| `/providers`      | (plus tard) annuaire des prestataires                                                                          |
 
 Points à trancher côté API :
 
@@ -477,7 +521,7 @@ Points à trancher côté API :
 ## 13. Feuille de route
 
 **Déjà livré** : initialisation, PWA, thème clair et sombre, i18n, devises, tableau de bord, et
-les modules Biens, Locataires, Contrats et Loyers (encaissement et relance).
+les modules Biens, Locataires, Contrats, Loyers (encaissement et relance) et Interventions.
 
 **Prochaines étapes envisagées** :
 
@@ -489,7 +533,8 @@ les modules Biens, Locataires, Contrats et Loyers (encaissement et relance).
   - révision annuelle des loyers.
 - Contrats : renouvellement d'un contrat échu, documents joints, état des lieux.
 - Biens : suppression, photos.
-- Interventions (maintenance) : demandes, priorités, suivi, prestataires.
+- Interventions : annuaire des prestataires, photos, lien avec le statut « en travaux » du
+  lot, refacturation au locataire.
 - Rapports : revenus, impayés, occupation, exports.
 - Paramètres : profil, organisation, devises et taux, modèles de messages.
 - API (`api/`) puis application mobile (`mobile/`).
@@ -498,15 +543,16 @@ les modules Biens, Locataires, Contrats et Loyers (encaissement et relance).
 
 ## 14. Historique des livraisons (front, `main`)
 
-| Commit       | Contenu                                                                  |
-| ------------ | ------------------------------------------------------------------------ |
-| `c0abb04`    | Initialisation : Vite, Tailwind, HeroUI, i18n, PWA, Playwright           |
-| `a1be7bf`    | Tableau de bord, menu mobile, devises XOF / EUR / GNF                    |
-| `1ca4a85`    | Carte Occupation de hauteur fixe                                         |
-| `2193478`    | Biens : liste et fiche                                                   |
-| `6842285`    | Biens : formulaire et pagination                                         |
-| `a1a652a`    | Locataires : liste, fiche, formulaires                                   |
-| `44dc41c`    | Contrats : liste, fiche, création, modification, résiliation             |
-| `091f681`    | Loyers : échéances, encaissements, impayés, relances ; dashboard branché |
-| `8571a9e`    | `CLAUDE.md` du front (renvoie vers ce fichier)                           |
-| _à commiter_ | `AGENTS.md` déplacé dans `front/` (versionné avec le front)              |
+| Commit       | Contenu                                                                          |
+| ------------ | -------------------------------------------------------------------------------- |
+| `c0abb04`    | Initialisation : Vite, Tailwind, HeroUI, i18n, PWA, Playwright                   |
+| `a1be7bf`    | Tableau de bord, menu mobile, devises XOF / EUR / GNF                            |
+| `1ca4a85`    | Carte Occupation de hauteur fixe                                                 |
+| `2193478`    | Biens : liste et fiche                                                           |
+| `6842285`    | Biens : formulaire et pagination                                                 |
+| `a1a652a`    | Locataires : liste, fiche, formulaires                                           |
+| `44dc41c`    | Contrats : liste, fiche, création, modification, résiliation                     |
+| `091f681`    | Loyers : échéances, encaissements, impayés, relances ; dashboard branché         |
+| `8571a9e`    | `CLAUDE.md` du front (renvoie vers ce fichier)                                   |
+| `9194948`    | `AGENTS.md` déplacé dans `front/` (versionné avec le front)                      |
+| _à commiter_ | Interventions : liste, fiche, cycle de vie, formulaire ; onglet bien ; dashboard |

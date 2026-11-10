@@ -38,20 +38,7 @@ export interface Deadline {
   date: string
 }
 
-export type MaintenanceStatus = 'new' | 'scheduled' | 'inProgress'
-export type MaintenancePriority = 'low' | 'normal' | 'urgent'
-
-export interface MaintenanceRequest {
-  id: string
-  title: string
-  property: string
-  status: MaintenanceStatus
-  priority: MaintenancePriority
-  openedAt: string
-}
-
 export interface DashboardData {
   kpis: DashboardKpis
   deadlines: Deadline[]
-  maintenance: MaintenanceRequest[]
 }

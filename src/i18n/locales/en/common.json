@@ -97,17 +97,8 @@
       }
     },
     "maintenance": {
-      "title": "Ongoing maintenance",
-      "status": {
-        "new": "New",
-        "scheduled": "Scheduled",
-        "inProgress": "In progress"
-      },
-      "priority": {
-        "low": "Low",
-        "normal": "Normal",
-        "urgent": "Urgent"
-      }
+      "title": "Interventions to handle",
+      "empty": "No intervention to handle."
     },
     "recentProperties": {
       "title": "Recent properties",
@@ -631,6 +622,177 @@
       "template": "Hello {{name}},\n\nUnless we are mistaken, the rent for {{month}} for {{unit}} ({{property}}), amounting to {{amount}} and due on {{date}}, has not been paid yet.\n\nPlease settle it as soon as possible. If you have already paid, please disregard this message.\n\nKind regards",
       "toast": "Reminder logged",
       "toastDescription": "{{tenant}} reminded by {{channel}}."
+    }
+  },
+  "maintenance": {
+    "subtitle_zero": "No intervention to handle",
+    "subtitle_one": "{{count}} intervention to handle",
+    "subtitle_other": "{{count}} interventions to handle",
+    "add": "Report an issue",
+    "report": "Report an issue",
+    "commonAreas": "Common areas",
+    "overdue": "Planned visit overdue",
+    "doneOn": "Completed on {{date}}",
+    "propertyEmpty": "No intervention reported for this property.",
+    "status": {
+      "new": "New",
+      "scheduled": "Scheduled",
+      "inProgress": "In progress",
+      "done": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "priority": {
+      "urgent": "Urgent",
+      "normal": "Normal",
+      "low": "Low"
+    },
+    "category": {
+      "plumbing": "Plumbing",
+      "electricity": "Electrical",
+      "airConditioning": "Air conditioning",
+      "locksmith": "Locksmith",
+      "painting": "Painting",
+      "masonry": "Masonry / roofing",
+      "appliances": "Appliances",
+      "cleaning": "Cleaning / sanitation",
+      "other": "Other"
+    },
+    "reporter": {
+      "tenant": "The tenant",
+      "owner": "The owner",
+      "manager": "The manager"
+    },
+    "bearer": {
+      "owner": "Owner",
+      "tenant": "Tenant"
+    },
+    "history": {
+      "new": "Issue reported",
+      "scheduled": "Visit scheduled",
+      "inProgress": "Work started",
+      "done": "Intervention completed",
+      "cancelled": "Intervention cancelled"
+    },
+    "stats": {
+      "open": "To handle",
+      "openHint": "{{new}} new · {{inProgress}} in progress",
+      "urgent": "Urgent",
+      "urgentHint": "Among interventions to handle",
+      "scheduledSoon": "Upcoming visits",
+      "scheduledSoonHint": "Scheduled within 7 days",
+      "spent": "Spent this year",
+      "spentHint_one": "{{count}} completed intervention",
+      "spentHint_other": "{{count}} completed interventions"
+    },
+    "filters": {
+      "searchLabel": "Search interventions",
+      "search": "Title, property, unit, contractor…",
+      "status": "Status",
+      "statuses": {
+        "open": "To handle",
+        "all": "All statuses"
+      },
+      "priority": "Priority",
+      "allPriorities": "All priorities",
+      "category": "Category",
+      "allCategories": "All categories",
+      "sort": "Sort by",
+      "sorts": {
+        "priority": "Most urgent",
+        "recent": "Most recent",
+        "scheduled": "Visit date"
+      }
+    },
+    "empty": {
+      "title": "No matching intervention",
+      "description": "Change the search or filters, or report a new issue."
+    },
+    "table": {
+      "intervention": "Intervention",
+      "location": "Unit",
+      "priority": "Priority",
+      "reportedAt": "Reported on",
+      "scheduledAt": "Visit",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "card": {
+      "open": "View intervention {{title}}"
+    },
+    "fields": {
+      "title": "Title",
+      "unit": "Unit concerned",
+      "category": "Category",
+      "priority": "Priority",
+      "description": "Description",
+      "location": "Unit",
+      "reportedBy": "Reported by",
+      "reportedAt": "Report date",
+      "scheduledAt": "Visit date",
+      "completedAt": "Completion date",
+      "provider": "Contractor",
+      "providerName": "Contractor",
+      "providerPhone": "Contractor phone",
+      "estimatedCost": "Estimated cost",
+      "actualCost": "Actual cost",
+      "chargedTo": "Paid by"
+    },
+    "detail": {
+      "back": "Back to interventions",
+      "notFound": "This intervention could not be found.",
+      "edit": "Edit",
+      "details": "Details",
+      "planning": "Planning and costs",
+      "history": "History",
+      "noDescription": "No description.",
+      "reportedOn": "On {{date}}"
+    },
+    "actions": {
+      "schedule": "Schedule",
+      "reschedule": "Reschedule",
+      "start": "Start",
+      "complete": "Complete",
+      "cancel": "Cancel intervention",
+      "reopen": "Reopen",
+      "scheduleTitle": "Schedule the visit",
+      "scheduleConfirm": "Schedule",
+      "completeTitle": "Complete the intervention",
+      "completeConfirm": "Mark as completed",
+      "cancelTitle": "Cancel the intervention",
+      "cancelConfirm": "Cancel intervention",
+      "cancelReason": "Reason (optional)",
+      "note": "Note (optional)",
+      "toast": {
+        "schedule": "Visit scheduled",
+        "start": "Work started",
+        "complete": "Intervention completed",
+        "cancel": "Intervention cancelled",
+        "reopen": "Intervention reopened"
+      },
+      "errors": {
+        "beforeReport": "The date can’t be before the report."
+      }
+    },
+    "form": {
+      "createTitle": "Report an issue",
+      "createSubtitle": "Describe the problem; you can schedule the visit now or later.",
+      "editTitle": "Edit {{reference}}",
+      "editSubtitle": "Update the request and its planning. The status changes from the detail page.",
+      "create": "Report",
+      "titlePlaceholder": "e.g. Leak under the sink",
+      "descriptionPlaceholder": "Findings, exact location, tenant availability…",
+      "providerPlaceholder": "e.g. Kouadio Plumbing",
+      "noTenant": "No tenant currently in this unit.",
+      "sections": {
+        "request": "Request",
+        "requestHint": "The problem, where it is and who reported it.",
+        "planningHint": "Optional: a visit date makes the intervention “scheduled”."
+      },
+      "toast": {
+        "created": "Issue reported",
+        "createdDescription": "Intervention {{reference}} has been recorded.",
+        "updated": "Changes saved"
+      }
     }
   },
   "contracts": {

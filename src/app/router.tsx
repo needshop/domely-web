@@ -5,6 +5,9 @@ import { ContractDetailPage } from '@/pages/ContractDetailPage'
 import { ContractFormPage } from '@/pages/ContractFormPage'
 import { ContractsPage } from '@/pages/ContractsPage'
 import { DashboardPage } from '@/pages/DashboardPage'
+import { InterventionDetailPage } from '@/pages/InterventionDetailPage'
+import { InterventionFormPage } from '@/pages/InterventionFormPage'
+import { MaintenancePage } from '@/pages/MaintenancePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { PropertiesPage } from '@/pages/PropertiesPage'
@@ -30,6 +33,10 @@ export const router = createBrowserRouter([
       { path: 'tenants/:id', element: <TenantDetailPage /> },
       { path: 'tenants/:id/edit', element: <TenantFormPage mode="edit" /> },
       { path: 'rents', element: <RentsPage /> },
+      { path: 'maintenance', element: <MaintenancePage /> },
+      { path: 'maintenance/new', element: <InterventionFormPage mode="create" /> },
+      { path: 'maintenance/:id', element: <InterventionDetailPage /> },
+      { path: 'maintenance/:id/edit', element: <InterventionFormPage mode="edit" /> },
       { path: 'contracts', element: <ContractsPage /> },
       { path: 'contracts/new', element: <ContractFormPage mode="create" /> },
       { path: 'contracts/:id', element: <ContractDetailPage /> },
@@ -37,7 +44,10 @@ export const router = createBrowserRouter([
       // Modules à implémenter progressivement
       ...navigation
         .filter(
-          (item) => !['/', '/properties', '/tenants', '/rents', '/contracts'].includes(item.to),
+          (item) =>
+            !['/', '/properties', '/tenants', '/rents', '/maintenance', '/contracts'].includes(
+              item.to,
+            ),
         )
         .map((item) => ({
           path: item.to.slice(1),

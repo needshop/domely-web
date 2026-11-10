@@ -14,6 +14,8 @@ import { dashboardMock } from '@/features/dashboard/mockData'
 import type { LateRent, MonthlyCollection } from '@/features/dashboard/types'
 import { useProperties } from '@/features/properties/api'
 import { portfolioStats } from '@/features/properties/utils'
+import { useInterventionRows } from '@/features/maintenance/api'
+import { isOpen, priorityOrder } from '@/features/maintenance/utils'
 import { useRentDues } from '@/features/rents/api'
 import { currentPeriod, isOverdue, periodsBetween, shiftPeriod } from '@/features/rents/utils'
 import { useTenantRows } from '@/features/tenants/api'
@@ -23,7 +25,7 @@ import { useFormatters } from '@/lib/format'
 export function DashboardPage() {
   const { t } = useTranslation()
   const f = useFormatters()
-  const { kpis, deadlines, maintenance } = dashboardMock
+  const { kpis, deadlines } = dashboardMock
   // Biens, lots et occupation : mêmes données que le module Biens
   const properties = useProperties()
   const portfolio = portfolioStats(properties)
@@ -38,6 +40,16 @@ export function DashboardPage() {
     .slice(0, 3)
   // Date de référence figée au montage (stable entre les rendus)
   const [today] = useState(() => new Date())
+
+  // Interventions à traiter : urgentes d'abord, puis les plus anciennes
+  const maintenance = useInterventionRows()
+    .filter((r) => isOpen(r.intervention.status))
+    .sort(
+      (a, b) =>
+        priorityOrder[a.intervention.priority] - priorityOrder[b.intervention.priority] ||
+        a.intervention.reportedAt.localeCompare(b.intervention.reportedAt),
+    )
+    .slice(0, 4)
 
   // Loyers : échéances calculées à partir des contrats et des encaissements
   const dues = useRentDues()
