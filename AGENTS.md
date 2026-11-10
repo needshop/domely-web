@@ -1,0 +1,512 @@
+# AGENTS.md — Domely
+
+Document de référence pour les agents (et les humains) qui travaillent sur Domely : objectifs,
+structure, spécifications techniques et fonctionnelles, conventions et pièges connus.
+**À tenir à jour à chaque fonctionnalité livrée** (sections 7, 8, 11 et 12 en particulier).
+
+> Dernière mise à jour : 10/11/2026 — front v0.1.0, modules Biens, Locataires, Contrats et Loyers.
+
+---
+
+## 1. Le projet
+
+**Domely** — _La clarté au service de votre immobilier._ SaaS de gestion locative pour les
+propriétaires et gestionnaires de biens en **Afrique de l'Ouest** (zone UEMOA + Guinée).
+
+### Objectifs globaux
+
+- Centraliser le patrimoine : biens, lots, locataires, contrats de bail.
+- Suivre les loyers : échéances, encaissements (Mobile Money, espèces, virement, chèque),
+  impayés et relances.
+- Donner une vision claire et immédiate : tableau de bord, indicateurs, alertes (retards,
+  fins de bail).
+- Adapté au contexte local : franc CFA (XOF) par défaut, EUR et GNF, pays de la zone,
+  Mobile Money, WhatsApp, usage mobile important.
+- À venir : interventions (maintenance), rapports, paramètres, API, application mobile.
+
+### Public et contexte d'usage
+
+- Propriétaires particuliers, gestionnaires et agences, multi-pays (SN, CI, TG, BJ, ML, BF,
+  NE, GW, GN).
+- Usage fréquent sur smartphone : chaque écran doit fonctionner dès 360 px de large.
+- Interface en **français** par défaut, **anglais** disponible.
+
+---
+
+## 2. Organisation du dépôt
+
+```
+domely/                      # racine de travail (pas un dépôt git)
+├── .mcp.json                # serveur MCP Playwright (tests navigateur)
+├── Domely_Brand_Kit/        # logos, icônes, palette, charte graphique (PDF)
+├── front/                   # SPA React — dépôt git : git@github.com:needshop/domely-web.git
+│   ├── AGENTS.md            # ce fichier
+│   └── CLAUDE.md            # consignes Claude Code (importe AGENTS.md)
+├── api/                     # API (à venir, vide)
+└── mobile/                  # application mobile (à venir, vide)
+```
+
+- `front/` a son propre dépôt git ; on travaille **directement sur `main`** pour l'instant.
+- Le brand kit fait foi pour les couleurs, logos et typographies.
+
+---
+
+## 3. Consignes de travail
+
+### Git
+
+- **Aucune attribution Claude** : pas de `Co-Authored-By: Claude …` dans les commits, pas de
+  « Generated with Claude Code » dans les PR.
+- Commit / push **uniquement à la demande** de l'utilisateur, sur `main`.
+- Messages de commit en français, préfixés : `feat(module): …`, `fix(module): …`.
+
+### Code
+
+- **URLs en anglais** (`/properties`, `/tenants`…), libellés traduits via i18n.
+- Aucun texte en dur dans les composants : tout passe par `react-i18next` (fr **et** en).
+- Commentaires et documentation en français.
+- Avant de livrer : `npm run typecheck`, `npm run lint`, `npm run format:check` et
+  `npx playwright test` doivent passer ; vérifier visuellement (desktop, mobile 375 px,
+  thème sombre si pertinent).
+
+### Environnement
+
+- Le serveur de dev tourne sur le port **5174** (souvent lancé par l'utilisateur : ne pas le tuer).
+- Ne jamais tuer de processus de manière large. Seul `pkill -f "vite preview --port 4173"`
+  (serveur de preview des tests) est autorisé.
+- macOS 13 : Chromium de Playwright non supporté → tests sur **Chrome système**
+  (`channel: 'chrome'`, MCP lancé avec `--browser chrome`).
+
+---
+
+## 4. Front — stack technique
+
+| Domaine       | Choix                                                                       |
+| ------------- | --------------------------------------------------------------------------- |
+| Framework     | React 19 + TypeScript 7, build **Vite 8** (SPA)                             |
+| Styles        | **Tailwind CSS v4** (`@tailwindcss/vite`, thème dans `src/index.css`)       |
+| Design system | **HeroUI v3** (`@heroui/react`, `@heroui/styles`), sans provider            |
+| Accessibilité | React Aria Components (sous HeroUI) ; `RouterProvider` RAC pour les liens   |
+| Routage       | React Router 8 (`createBrowserRouter`, `useSearchParams`, `useBlocker`)     |
+| Formulaires   | react-hook-form 7 + zod 4 (`@hookform/resolvers`), messages traduits        |
+| Dates         | `@internationalized/date` (DatePicker), dates métier en ISO `AAAA-MM-JJ`    |
+| i18n          | i18next + react-i18next, clés typées, détection `localStorage` → navigateur |
+| Icônes        | lucide-react                                                                |
+| Polices       | Alata (titres, navigation, boutons) et Inter (texte), auto-hébergées        |
+| Qualité       | oxlint, Prettier (+ tri des classes Tailwind)                               |
+| Tests         | Playwright 1.65 (e2e) + serveur MCP Playwright                              |
+| PWA           | `manifest.webmanifest`, icônes de l'application, installable                |
+
+### Commandes (`front/`)
+
+```bash
+npm run dev            # http://localhost:5174
+npm run build          # typecheck + build de production
+npm run typecheck      # tsc -b
+npm run lint           # oxlint
+npm run format         # prettier --write
+npx playwright test    # e2e (build + preview sur le port 4173)
+```
+
+- Variables d'environnement : `VITE_API_URL` (défaut `http://localhost:3000/api`),
+  voir `front/.env.example`. Version de l'app injectée via `__APP_VERSION__` (package.json).
+- Alias d'import : `@` → `front/src`.
+
+---
+
+## 5. Front — architecture
+
+```
+src/
+├── app/            # router.tsx, CurrencyProvider (providers globaux)
+├── assets/brand/   # logos et symboles SVG (couleur et blanc)
+├── components/     # composants partagés (StatTile, FilterSelect, ListPagination…)
+│   ├── form/       # champs RHF + HeroUI (fields.tsx) et mise en page (FormLayout.tsx)
+│   └── layout/     # AppLayout, Sidebar, MobileNav, navigation.ts
+├── features/       # un dossier par module métier (voir ci-dessous)
+├── hooks/          # hooks génériques (useLocalStorage)
+├── i18n/           # configuration, types et traductions fr / en (common.json)
+├── lib/            # utilitaires : format, currency, dates, countries, search, cn, env
+├── pages/          # pages routées (assemblent les composants des features)
+└── services/       # (vide) futur client HTTP de l'API
+```
+
+### Anatomie d'une feature (`src/features/<module>/`)
+
+| Fichier       | Rôle                                                                                                      |
+| ------------- | --------------------------------------------------------------------------------------------------------- |
+| `types.ts`    | Types du domaine, listes de valeurs (`as const`)                                                          |
+| `mockData.ts` | Données fictives réalistes, de même forme que la future API                                               |
+| `store.ts`    | Store en mémoire (`subscribe` / `getSnapshot`, `create`, `update`…)                                       |
+| `api.ts`      | **Seul point d'accès aux données** : hooks (`useX`, `useXRows`) et mutations async (`createX`, `updateX`) |
+| `utils.ts`    | Calculs métier purs (statuts, indicateurs, agrégats)                                                      |
+| `hooks/`      | État de liste dans l'URL (filtres, tri, page)                                                             |
+| `components/` | Composants d'affichage du module                                                                          |
+| `form/`       | `schema.ts` (zod), `mapping.ts` (entité ↔ formulaire), formulaire                                         |
+
+Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`.
+
+### Flux de données
+
+- Les stores en mémoire sont lus via `useSyncExternalStore` dans `api.ts`. Les composants
+  n'importent **jamais** un store ou un `mockData` directement.
+- Pour brancher l'API, on remplace l'implémentation des hooks de `api.ts` (ex. TanStack
+  Query) **sans toucher aux composants**.
+- Les données sont perdues au rechargement (assumé tant que l'API n'existe pas).
+- **Sources de vérité et états dérivés** :
+  - le **contrat** fait foi pour l'occupation : `useProperties()` applique les contrats aux
+    biens (`applyLeases`). Un lot est « loué » s'il a un contrat en cours, avec le loyer, les
+    charges et le locataire de ce contrat. `useRawProperties()` donne les biens bruts ;
+  - les **échéances de loyer** ne sont pas stockées : elles sont calculées à partir des
+    contrats (`buildDues`) ; seuls les **encaissements** et les **relances** sont stockés ;
+  - le **retard** d'un lot ou d'un locataire est déduit des échéances impayées
+    (`lateLeaseIds`).
+
+---
+
+## 6. Conventions transverses
+
+### UI et charte
+
+- Palette (`@theme` dans `src/index.css`) :
+  - **nuit** `#0B1E3B` (dominante, sidebar), **rouge** `#FF4444` (accent, actions principales) ;
+  - jaune `#FFD600` et vert `#00E676` en touches.
+- Les variables HeroUI (`--accent`, `--surface`…) sont surchargées pour le clair et le sombre.
+- Thème clair / sombre / système (`useTheme` HeroUI, clé `heroui-theme`), avec un script
+  anti-flash dans `index.html`.
+- Les statuts s'affichent **toujours avec une icône et un libellé**, jamais par la couleur seule.
+- Dataviz : les couleurs néon de la marque ne servent qu'aux statuts (contraste insuffisant
+  pour les séries). Graphique des loyers : barres nuit, mois courant en rouge, tableau de
+  données accessible (`<details>`).
+- Pages de liste :
+  - en-tête (titre, sous-titre, action principale), puis indicateurs (`StatTile`) ;
+  - ensuite barre d'outils (recherche, filtres), compteur de résultats, liste, pagination ;
+  - tableau sur desktop, cartes sur mobile.
+- Fiches détail : fil d'Ariane, en-tête avec statut et actions, indicateurs, cartes de contenu.
+- Formulaires :
+  - sections en cartes, bandeau d'erreurs après soumission ;
+  - barre d'actions flottante (sticky) ;
+  - confirmation avant de quitter avec des modifications (`LeaveGuard`).
+
+### État dans l'URL
+
+- Filtres, tri, page, vue et mois sont dans les paramètres d'URL (partageables, rechargeables).
+- La valeur par défaut est retirée de l'URL. Un changement de filtre ramène à la page 1, et une
+  page hors bornes est ramenée dans les bornes.
+- Préférences locales (`localStorage`) : `domely-lang`, `domely-currency`,
+  `domely-sidebar-collapsed`, `domely-properties-view`, `heroui-theme`.
+
+### Montants et devises
+
+- **Tous les montants sont stockés en XOF** (devise de référence).
+- L'affichage est converti vers la devise choisie (`CurrencySwitcher`) :
+  - EUR : `655,957 XOF = 1 €` (parité fixe) ;
+  - GNF : `1 XOF = 14,18 GNF` (taux **indicatif**, à fournir par l'API plus tard).
+- À partir de 1 million, notation abrégée à 2 décimales : `15 250 000 F CFA` s'affiche
+  « 15,25 M F CFA ».
+- Toujours formater via `useFormatters()` (`lib/format.ts`) : `money`, `moneyExact`, `number`,
+  `percent`, dates…
+
+### Dates
+
+- Dates métier en chaîne ISO `AAAA-MM-JJ`, mois en `AAAA-MM`. Les helpers sont dans
+  `lib/dates.ts` (`todayIso`, `daysUntil`, `addMonths`, `addDays`, `durationInMonths`).
+- Pour afficher une date ISO, la convertir avec `new Date(\`${iso}T12:00:00\`)` afin d'éviter
+  les décalages de fuseau.
+- Les données fictives (loyers) sont générées **par rapport à la date du jour**.
+
+### i18n
+
+- Un seul namespace `common` (`src/i18n/locales/{fr,en}/common.json`) avec des clés typées.
+  Les fichiers fr et en doivent avoir **exactement les mêmes clés** (vérifié au typecheck).
+- Pluriels i18next (`_one`, `_other`, `_zero`). Les traductions s'ajoutent **avant** d'utiliser
+  la clé, sinon le typecheck échoue.
+- Les schémas zod sont construits avec `t` (`makeXSchema(t)`) pour des messages traduits.
+
+### Formulaires
+
+- Utiliser les champs de `components/form/fields.tsx` :
+  - `FormTextField`, `FormTextArea`, `FormNumberField`, `FormSelect` ;
+  - `FormComboBox` (liste avec recherche), `FormDateField`, `FormSwitch`.
+- Ces champs sont en `validationBehavior="aria"` : la validation vient de zod.
+- Les champs « vides » valent `null` (nombres, sélections) ou `''` (textes) dans le formulaire.
+- Les valeurs initiales sont figées au montage (`useMemo` sur l'id).
+
+### Accessibilité
+
+- Lignes de tableau cliquables, mais c'est le lien de la ligne qui porte la navigation au
+  clavier ; libellés `aria-label` explicites sur les boutons-icônes.
+- Zones `aria-live` pour les compteurs de résultats, `role="meter"` pour les jauges.
+
+---
+
+## 7. Modèle de domaine
+
+```
+Property (bien) 1───n Unit (lot)
+Unit 1───n Lease (contrat) n───1 Tenant (locataire)
+Lease 1───n RentDue (échéance mensuelle, calculée) 1───n Payment (encaissement)
+RentDue 1───n Reminder (relance)
+```
+
+| Entité     | Champs clés                                                                                                                                                                                           |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Property` | id, name, type, address { street, district, city, country ISO }, acquiredAt?, createdAt, description?, units[]                                                                                        |
+| `Unit`     | id (unique **dans le bien**), label, kind, floor?, area, rooms?, rent et charges (référence), status ; dérivés : lease?, isLate?                                                                      |
+| `Tenant`   | id, kind (individual / company), name, phone, email?, occupation?, contactPerson?, idDocument?, emergencyContact?, notes?, createdAt                                                                  |
+| `Lease`    | id, reference `BAIL-AAAA-NNNN`, propertyId, unitId, tenantId, type, startDate, endDate, rent, charges, deposit, paymentDay (1–28), tacitRenewal, terminatedAt?, terminationReason?, notes?, createdAt |
+| `RentDue`  | id `leaseId:AAAA-MM`, period, dueDate, amount (loyer + charges), paid, remaining, status, daysLate, payments[] — **calculé**                                                                          |
+| `Payment`  | id, leaseId, period, date, amount, method, reference?, note?                                                                                                                                          |
+| `Reminder` | id, leaseId, period, date, channel (whatsapp / sms / email)                                                                                                                                           |
+
+Valeurs :
+
+- Types de bien : `building`, `residence`, `apartment`, `house`, `commercial`, `office`. Les
+  terrains ne sont pas gérés. `apartment` et `house` n'ont qu'un seul lot.
+- Natures de lot : `apartment`, `studio`, `house`, `shop`, `office`.
+- Statuts de lot : `rented` (dérivé du contrat), `vacant`, `underWorks`.
+- Natures de bail : `residential`, `commercial` (boutique), `professional` (bureau).
+- Moyens de paiement : `mobileMoney`, `cash`, `bankTransfer`, `check`.
+
+---
+
+## 8. Spécifications fonctionnelles (livrées)
+
+### Transverse
+
+- **Layout**
+  - Sidebar nuit repliable en icônes (état mémorisé), avec la version de l'app en bas.
+  - Sur mobile, un tiroir s'ouvre depuis le bouton du header.
+  - Header : devise, langue, thème, notifications (non branchées).
+- **Navigation** : Tableau de bord, Biens, Locataires, Loyers, Interventions, Contrats,
+  Rapports, Paramètres. Interventions, Rapports et Paramètres sont des pages « à venir ».
+- **PWA** installable avec l'icône de l'application ; page 404 ; retour en haut de page à
+  chaque navigation.
+
+### Tableau de bord (`/`)
+
+- Indicateurs :
+  - biens gérés ;
+  - locataires actifs ;
+  - loyers encaissés du mois avec la variation par rapport au mois précédent ;
+  - loyers impayés et nombre de locataires concernés.
+- Graphique des loyers encaissés sur 12 mois (attendu et encaissé, taux de recouvrement,
+  tooltip, tableau de données). Carte d'occupation de hauteur fixe sur desktop.
+- Carte « Loyers en retard » : les 5 impayés les plus anciens. Son bouton « Relancer »
+  **n'est pas branché**.
+- Biens récents.
+- Échéances (assurance, révision…) et interventions : **données fictives** du tableau de bord.
+
+### Biens (`/properties`, `/properties/new`, `/properties/:id`, `/properties/:id/edit`)
+
+- **Liste**
+  - Indicateurs : biens, lots et vacants, taux d'occupation, loyers mensuels.
+  - Recherche insensible aux accents (nom, adresse, ville, pays en fr et en).
+  - Filtres : type, ville, occupation. Tri : récents, nom, loyer, occupation.
+  - Vue cartes ou tableau (mémorisée), **9 biens par page**.
+- **Fiche**
+  - Indicateurs : lots, occupation, loyers et potentiel, retards.
+  - Onglets Lots et Informations.
+  - Le nom du locataire mène à sa fiche ; un lien **« Louer »** sur chaque lot vacant crée un
+    contrat pré-rempli.
+- **Formulaire**
+  - Sections : informations générales, adresse, lots (ajout et suppression).
+  - Un type à lot unique impose un seul lot ; les libellés de lots doivent être uniques.
+  - Pour un lot loué, le statut, le loyer et la suppression sont verrouillés (gérés par le
+    contrat).
+  - Toast de confirmation, garde de sortie.
+
+### Locataires (`/tenants`, `/tenants/new`, `/tenants/:id`, `/tenants/:id/edit`)
+
+- **Liste**
+  - Indicateurs : actifs, en retard, baux bientôt échus (90 jours), loyers et charges attendus.
+  - Recherche : nom, téléphone avec ou sans espaces, e-mail, bien, lot.
+  - Filtres : situation (à jour, en retard, bail bientôt échu, sans bail), type, bien. Tri.
+  - **10 par page**.
+- **Fiche**
+  - Boutons Appeler (`tel:`) et Écrire (`mailto:`), Nouveau contrat, Modifier.
+  - Baux en cours avec l'avancement et un lien vers le contrat.
+  - Coordonnées, pièce d'identité, personne à prévenir, notes.
+- **Formulaire**
+  - Particulier ou société : les champs s'adaptent (raison sociale, interlocuteur, RCCM).
+  - Téléphone obligatoire, de 8 à 15 chiffres, **unique** (le doublon est signalé avec le nom).
+  - Pièce d'identité : type et numéro vont ensemble. Personne à prévenir : nom et téléphone vont
+    ensemble.
+
+### Contrats (`/contracts`, `/contracts/new`, `/contracts/:id`, `/contracts/:id/edit`)
+
+- **Statuts** :
+  - `upcoming` (à venir) ;
+  - `active` (en cours) ;
+  - `expired` (échu sans résiliation, le locataire occupe toujours le lot) ;
+  - `terminated` (résiliation effective).
+- **Liste**
+  - Par défaut, les baux en cours, échéance la plus proche en premier.
+  - Indicateurs : en cours et à venir, échéances proches, loyers et charges, dépôts de garantie.
+  - Filtres : situation, nature, bien. Tri. **10 par page**.
+- **Fiche**
+  - Conditions du bail, avancement, liens vers le locataire et le logement.
+  - Bandeaux selon la situation (échu, à venir, résilié, résiliation programmée).
+  - Historique des loyers avec encaissement.
+- **Résiliation** : date d'effet (pas avant le début du bail) et motif. Le lot est libéré à la
+  date d'effet.
+- **Formulaire**
+  - Champs : locataire (liste avec recherche), bien, puis lot (avec sa situation).
+  - Pré-remplissage depuis `?tenant=`, `?property=` et `?unit=`.
+  - Valeurs proposées :
+    - loyer, charges et nature du bail repris du lot ;
+    - dépôt d'usage : 2 mois de loyer en habitation, 3 en commercial ou professionnel ;
+    - début le 1ᵉʳ du mois suivant, fin un an plus tard (veille de la date anniversaire).
+  - **Refus des chevauchements** sur un même lot et des lots en travaux ; la fin doit suivre
+    le début.
+  - En modification, le locataire et le lot sont verrouillés ; un contrat résilié n'est plus
+    modifiable.
+
+### Loyers (`/rents`)
+
+- **Échéances** :
+  - une par mois et par contrat, au jour d'échéance, pour le loyer et les charges ;
+  - du premier mois du bail jusqu'au mois courant, ou jusqu'à la fin effective ;
+  - la date d'échéance est le début du bail s'il commence après le jour d'échéance ;
+  - pas de calcul au prorata.
+- **Situations** : `paid` (payé), `due` (à échoir), `partial` (échu, réglé en partie),
+  `late` (échu, rien réglé), avec les jours de retard.
+- **Vue « Échéances du mois »**
+  - Navigation par mois, sans dépasser le mois courant.
+  - Indicateurs : attendu, encaissé et taux, reste à encaisser, impayés tous mois confondus.
+  - Filtres : situation, bien. Les impayés s'affichent en premier.
+  - Action **Encaisser**.
+- **Vue « Impayés »** : toutes les échéances échues non soldées, de la plus ancienne à la plus
+  récente. Action **Relancer**.
+- **Encaissement**
+  - Le montant proposé est le reste dû, et il peut être partiel ; il ne peut pas dépasser le
+    reste dû.
+  - La date ne peut pas être dans le futur.
+  - On renseigne le moyen de paiement et une référence (n° Mobile Money, de chèque…).
+- **Relance**
+  - Le message est pré-rédigé, modifiable et traduit.
+  - Envoi par WhatsApp (`wa.me`), SMS (`sms:`) ou e-mail (`mailto:`) depuis l'appareil de
+    l'utilisateur.
+  - La relance est enregistrée sur l'échéance (« Relancé le … »).
+- Les impayés alimentent le retard affiché sur les biens, les locataires et le tableau de bord.
+
+---
+
+## 9. Règles métier clés (résumé)
+
+- Un lot ne peut avoir qu'**un contrat à la fois** : pas de chevauchement de périodes entre
+  contrats non résiliés.
+- Occupation d'un lot = contrat `active` ou `expired`. Le loyer affiché pour un lot loué est
+  celui du contrat.
+- Locataire « en retard » = au moins une échéance `late` ou `partial`.
+- Un « bail bientôt échu » se termine dans les **90 jours** (`LEASE_ENDING_DAYS`).
+- Références des contrats : `BAIL-<année de début>-<n° séquentiel sur 4 chiffres>`.
+
+---
+
+## 10. Tests
+
+- **Playwright e2e** dans `front/e2e/` (≈ 80 tests), fichiers par module : `smoke`, `theme`,
+  `sidebar`, `i18n`, `dashboard`, `currency`, `properties`, `property-form`, `tenants`,
+  `tenant-form`, `contracts`, `rents`.
+- Les tests tournent sur un **build de production** servi par `vite preview` sur le port
+  **4173** (`reuseExistingServer: false`), sous Chrome système, en locale `fr-FR`.
+  Le serveur de dev n'est pas utilisé : il est trop instable pour les tests.
+- Le serveur MCP Playwright sert aux vérifications visuelles (captures desktop et mobile,
+  débordement horizontal).
+- Bonnes pratiques :
+  - Les données étant en mémoire, **pas de `page.goto` après une mutation** : naviguer par
+    clic pour conserver l'état.
+  - Les montants des loyers dépendent de la date du jour : tester des comportements ou des
+    variations relatives, pas des totaux figés.
+  - Pour l'ancêtre « carte » d'un élément :
+    `xpath=ancestor::*[contains(concat(" ",@class," ")," card ")][1]`
+    (`contains(@class,"card")` attrape aussi `card__title`).
+  - Libellés ambigus : utiliser `exact: true` (ex. « Payé » / « Impayé ») et cibler les lignes
+    (`getByRole('row')`) plutôt que des options de liste cachées.
+
+---
+
+## 11. Pièges connus
+
+- **`NumberField` et `step`** : React Aria arrondit la valeur au multiple de `step`. Ne jamais
+  mettre de `step` sur un montant (383 000 deviendrait 385 000).
+- **Fenêtres avec validation** : effacer une erreur au blur fait rétrécir la fenêtre sous le
+  curseur, et le clic sur le bouton tombe à côté. Utiliser `reValidateMode: 'onSubmit'` dans
+  les fenêtres de formulaire.
+- **`useSearchParams`** : une mise à jour fonctionnelle lancée juste après une navigation
+  peut partir de paramètres périmés (course) ; dans les tests, attendre l'affichage du nouvel
+  état.
+- **Identifiants de lots** : uniques par bien seulement (`apt-1` existe dans plusieurs biens).
+  Toujours raisonner en `propertyId` + `unitId`.
+- **Hooks et effets** : éviter `setState` synchrone dans un effet (règle de lint). Initialiser
+  l'état directement et remonter le composant via `key`.
+- Après chaque `Write`/`Edit` d'un fichier formaté, Prettier peut reformater : relire avant
+  une modification ciblée.
+
+---
+
+## 12. Préparation de l'API (à venir — dossier `api/`)
+
+Le front est prêt à être branché : remplacer les implémentations de `features/*/api.ts` par
+des appels HTTP (client dans `src/services/`, URL `VITE_API_URL`).
+
+Ressources pressenties (REST, montants en XOF, dates ISO) :
+
+| Ressource         | Opérations                                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------- |
+| `/properties`     | liste (filtres, pagination), détail, création, modification                                       |
+| `/tenants`        | liste, détail, création, modification ; unicité du téléphone                                      |
+| `/leases`         | liste, détail, création (contrôle des chevauchements), modification, `POST /leases/:id/terminate` |
+| `/rent-dues`      | échéances calculées (par mois, impayés), indicateurs                                              |
+| `/payments`       | création, annulation                                                                              |
+| `/reminders`      | création, historique ; plus tard, envoi serveur (WhatsApp, SMS, e-mail)                           |
+| `/exchange-rates` | taux XOF → EUR / GNF                                                                              |
+| `/dashboard`      | agrégats (encaissements sur 12 mois, impayés, occupation)                                         |
+
+Points à trancher côté API :
+
+- authentification et comptes (multi-utilisateur, agences) ;
+- où sont calculées les échéances (serveur recommandé) et leur historisation ;
+- génération des quittances PDF ;
+- envoi des relances ;
+- téléversement des documents (bail signé, pièces d'identité, photos des biens).
+
+---
+
+## 13. Feuille de route
+
+**Déjà livré** : initialisation, PWA, thème clair et sombre, i18n, devises, tableau de bord, et
+les modules Biens, Locataires, Contrats et Loyers (encaissement et relance).
+
+**Prochaines étapes envisagées** :
+
+- Loyers :
+  - quittances de loyer (PDF / impression) ;
+  - annulation d'un encaissement ;
+  - brancher le bouton « Relancer » du tableau de bord ;
+  - prorata du premier mois ;
+  - révision annuelle des loyers.
+- Contrats : renouvellement d'un contrat échu, documents joints, état des lieux.
+- Biens : suppression, photos.
+- Interventions (maintenance) : demandes, priorités, suivi, prestataires.
+- Rapports : revenus, impayés, occupation, exports.
+- Paramètres : profil, organisation, devises et taux, modèles de messages.
+- API (`api/`) puis application mobile (`mobile/`).
+
+---
+
+## 14. Historique des livraisons (front, `main`)
+
+| Commit       | Contenu                                                                  |
+| ------------ | ------------------------------------------------------------------------ |
+| `c0abb04`    | Initialisation : Vite, Tailwind, HeroUI, i18n, PWA, Playwright           |
+| `a1be7bf`    | Tableau de bord, menu mobile, devises XOF / EUR / GNF                    |
+| `1ca4a85`    | Carte Occupation de hauteur fixe                                         |
+| `2193478`    | Biens : liste et fiche                                                   |
+| `6842285`    | Biens : formulaire et pagination                                         |
+| `a1a652a`    | Locataires : liste, fiche, formulaires                                   |
+| `44dc41c`    | Contrats : liste, fiche, création, modification, résiliation             |
+| `091f681`    | Loyers : échéances, encaissements, impayés, relances ; dashboard branché |
+| `8571a9e`    | `CLAUDE.md` du front (renvoie vers ce fichier)                           |
+| _à commiter_ | `AGENTS.md` déplacé dans `front/` (versionné avec le front)              |

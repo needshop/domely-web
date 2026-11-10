@@ -1,6 +1,6 @@
 # Domely — consignes Claude Code
 
-Structure, spécifications et conventions du projet : @../AGENTS.md (à tenir à jour à chaque livraison).
+Structure, spécifications et conventions du projet : @AGENTS.md (à tenir à jour à chaque livraison).
 
 ## Git
 
