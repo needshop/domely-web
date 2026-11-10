@@ -515,6 +515,124 @@
       }
     }
   },
+  "rents": {
+    "title": "Rents",
+    "subtitle": "Monthly lease dues and payment tracking.",
+    "views": "Rent views",
+    "viewMonth": "Monthly dues",
+    "viewUnpaid": "Unpaid",
+    "collect": "Collect",
+    "collectLabel": "Collect rent from {{tenant}}",
+    "collectPeriodLabel": "Collect rent for {{month}}",
+    "remind": "Remind",
+    "remindLabel": "Remind {{tenant}}",
+    "dueOn": "Due on {{date}}",
+    "paidOf": "{{paid}} paid of {{amount}}",
+    "daysLate_one": "{{count}} day late",
+    "daysLate_other": "{{count}} days late",
+    "unpaidNone": "No unpaid rent: all past dues are settled.",
+    "unpaidSummary_one": "{{count}} unpaid due, {{amount}} in total.",
+    "unpaidSummary_other": "{{count}} unpaid dues, {{amount}} in total.",
+    "status": {
+      "paid": "Paid",
+      "due": "Not yet due",
+      "partial": "Partial",
+      "late": "Unpaid"
+    },
+    "method": {
+      "mobileMoney": "Mobile Money",
+      "cash": "Cash",
+      "bankTransfer": "Bank transfer",
+      "check": "Check"
+    },
+    "period": {
+      "label": "Displayed month",
+      "previous": "Previous month",
+      "next": "Next month",
+      "current": "Current month"
+    },
+    "stats": {
+      "expected": "Expected",
+      "expectedHint_one": "{{count}} due",
+      "expectedHint_other": "{{count}} dues",
+      "collected": "Collected",
+      "collectedHint": "{{rate}} of expected",
+      "remaining": "Left to collect",
+      "remainingHint_one": "{{count}} due not settled",
+      "remainingHint_other": "{{count}} dues not settled",
+      "overdue": "Unpaid",
+      "overdueHint_one": "{{count}} due, all months",
+      "overdueHint_other": "{{count}} dues, all months"
+    },
+    "filters": {
+      "searchLabel": "Search rents",
+      "search": "Tenant, property, unit, contract…",
+      "status": "Status",
+      "allStatuses": "All statuses"
+    },
+    "table": {
+      "tenant": "Tenant and unit",
+      "dueDate": "Due date",
+      "period": "Month",
+      "amount": "Amount",
+      "paid": "Paid",
+      "remaining": "Balance",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "empty": {
+      "title": "No due matches your search",
+      "noDues": "No dues for {{month}}.",
+      "allPaidTitle": "All past rents are settled"
+    },
+    "history": {
+      "title": "Rents",
+      "upToDate": "Up to date with rent",
+      "overdue_one": "{{count}} unpaid due · {{amount}}",
+      "overdue_other": "{{count}} unpaid dues · {{amount}}",
+      "payments": "Payments",
+      "empty": "No dues yet.",
+      "showAll": "Show all {{count}} months",
+      "showLess": "Show less"
+    },
+    "payment": {
+      "title": "Collect rent",
+      "remaining": "Balance due",
+      "amount": "Amount received",
+      "date": "Payment date",
+      "method": "Payment method",
+      "reference": "Reference",
+      "referencePlaceholder": "Transaction or check number…",
+      "note": "Note",
+      "submit": "Record payment",
+      "toastFull": "Rent collected",
+      "toastPartial": "Partial payment recorded",
+      "toastDescription": "{{amount}} from {{tenant}} for {{month}}.",
+      "errors": {
+        "tooMuch": "The amount exceeds the balance due ({{amount}}).",
+        "future": "The date can’t be in the future."
+      }
+    },
+    "reminder": {
+      "title": "Remind {{tenant}}",
+      "message": "Message",
+      "sendWith": "Send with",
+      "channel": {
+        "whatsapp": "WhatsApp",
+        "sms": "SMS",
+        "email": "Email"
+      },
+      "hint": "The message opens in the chosen app; the reminder is logged on the due.",
+      "unavailable": "Missing contact details for this tenant",
+      "close": "Close",
+      "last": "Last reminder on {{date}} by {{channel}}",
+      "sentOn": "Reminded on {{date}}",
+      "subject": "Unpaid rent for {{month}}",
+      "template": "Hello {{name}},\n\nUnless we are mistaken, the rent for {{month}} for {{unit}} ({{property}}), amounting to {{amount}} and due on {{date}}, has not been paid yet.\n\nPlease settle it as soon as possible. If you have already paid, please disregard this message.\n\nKind regards",
+      "toast": "Reminder logged",
+      "toastDescription": "{{tenant}} reminded by {{channel}}."
+    }
+  },
   "contracts": {
     "title": "Contracts",
     "subtitle_one": "{{count}} active lease",

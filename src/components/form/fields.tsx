@@ -145,6 +145,8 @@ export function FormNumberField<T extends FieldValues>({
           isDisabled={isDisabled}
           formatOptions={formatOptions}
           minValue={minValue}
+          // Attention : React Aria arrondit la valeur au multiple de `step` le plus proche ;
+          // ne pas l'utiliser pour les montants (383 000 deviendrait 385 000).
           step={step}
           validationBehavior="aria"
           className={cn('w-full', className)}

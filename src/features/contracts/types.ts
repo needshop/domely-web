@@ -41,8 +41,6 @@ export interface Lease {
   /** Date d'effet de la résiliation (ISO) */
   terminatedAt?: string
   terminationReason?: TerminationReason
-  /** Loyer en retard (provisoire : viendra du module Loyers) */
-  isLate?: boolean
   notes?: string
   /** Date de création dans Domely (ISO) */
   createdAt: string

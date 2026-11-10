@@ -1,6 +1,8 @@
 import { useMemo, useSyncExternalStore } from 'react'
 import { leasesStore } from '@/features/contracts/store'
 import { applyLeases } from '@/features/contracts/utils'
+import { paymentsStore } from '@/features/rents/store'
+import { buildDues, lateLeaseIds } from '@/features/rents/utils'
 import { propertiesStore } from './store'
 import type { Property } from './types'
 
@@ -14,11 +16,15 @@ export function useRawProperties(): Property[] {
   return useSyncExternalStore(propertiesStore.subscribe, propertiesStore.getSnapshot)
 }
 
-/** Biens avec la situation locative de chaque lot (contrat en cours, loyer, locataire). */
+/** Biens avec la situation locative de chaque lot (contrat en cours, loyer, locataire, retard). */
 export function useProperties(): Property[] {
   const properties = useRawProperties()
   const leases = useSyncExternalStore(leasesStore.subscribe, leasesStore.getSnapshot)
-  return useMemo(() => applyLeases(properties, leases), [properties, leases])
+  const payments = useSyncExternalStore(paymentsStore.subscribe, paymentsStore.getSnapshot)
+  return useMemo(
+    () => applyLeases(properties, leases, lateLeaseIds(buildDues(leases, payments))),
+    [properties, leases, payments],
+  )
 }
 
 export function useProperty(id: string | undefined): Property | undefined {

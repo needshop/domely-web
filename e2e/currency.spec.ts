@@ -2,25 +2,27 @@ import { expect, test } from '@playwright/test'
 
 test.describe('Devise', () => {
   test('XOF par défaut, convertit en EUR puis GNF et mémorise le choix', async ({ page }) => {
-    await page.goto('/')
-    const unpaid = page
-      .getByText('Loyers impayés')
+    // Montant fixe d'un contrat fictif : 700 000 + 56 000 de charges
+    await page.goto('/contracts/l903')
+    const monthly = page
+      .getByText('Loyer + charges', { exact: true })
+      .first()
       .locator('xpath=ancestor::*[contains(@class,"card")][1]')
-    await expect(unpaid).toContainText('1,27 M F CFA')
+    await expect(monthly).toContainText('756 000 F CFA')
 
     const select = page.getByRole('button', { name: /Devise/ })
     await select.click()
     await page.getByRole('option', { name: /EUR/ }).click()
-    // 1 268 000 XOF / 655,957 = 1 933,07 €
-    await expect(unpaid).toContainText('1 933 €')
+    // 756 000 XOF / 655,957 = 1 152,52 €
+    await expect(monthly).toContainText('1 153 €')
 
     await page.reload()
-    await expect(unpaid).toContainText('1 933 €')
+    await expect(monthly).toContainText('1 153 €')
 
     await page.getByRole('button', { name: /Devise/ }).click()
     await page.getByRole('option', { name: /GNF/ }).click()
-    // 1 268 000 XOF × 14,18 = 17 980 240 GNF → abrégé au-delà du million
-    await expect(unpaid).toContainText('17,98 M GNF')
+    // 756 000 XOF × 14,18 = 10 720 080 GNF → abrégé au-delà du million
+    await expect(monthly).toContainText('10,72 M GNF')
   })
 
   test('pas de défilement horizontal du header sur mobile', async ({ browser }) => {

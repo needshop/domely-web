@@ -134,7 +134,6 @@ export function UnitsFieldArray({ control }: { control: Control<PropertyFormValu
                   description={isRented ? t('properties.form.units.rentFromLease') : undefined}
                   formatOptions={amountFormat}
                   minValue={0}
-                  step={5_000}
                   isRequired
                 />
                 <FormNumberField
@@ -144,7 +143,6 @@ export function UnitsFieldArray({ control }: { control: Control<PropertyFormValu
                   isDisabled={isRented}
                   formatOptions={amountFormat}
                   minValue={0}
-                  step={1_000}
                 />
               </div>
             </li>

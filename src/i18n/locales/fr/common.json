@@ -515,6 +515,124 @@
       }
     }
   },
+  "rents": {
+    "title": "Loyers",
+    "subtitle": "Échéances mensuelles des baux et suivi des encaissements.",
+    "views": "Vues des loyers",
+    "viewMonth": "Échéances du mois",
+    "viewUnpaid": "Impayés",
+    "collect": "Encaisser",
+    "collectLabel": "Encaisser le loyer de {{tenant}}",
+    "collectPeriodLabel": "Encaisser le loyer de {{month}}",
+    "remind": "Relancer",
+    "remindLabel": "Relancer {{tenant}}",
+    "dueOn": "Échéance le {{date}}",
+    "paidOf": "{{paid}} réglés sur {{amount}}",
+    "daysLate_one": "{{count}} jour de retard",
+    "daysLate_other": "{{count}} jours de retard",
+    "unpaidNone": "Aucun impayé : tous les loyers échus sont réglés.",
+    "unpaidSummary_one": "{{count}} échéance impayée, pour {{amount}} au total.",
+    "unpaidSummary_other": "{{count}} échéances impayées, pour {{amount}} au total.",
+    "status": {
+      "paid": "Payé",
+      "due": "À échoir",
+      "partial": "Partiel",
+      "late": "Impayé"
+    },
+    "method": {
+      "mobileMoney": "Mobile Money",
+      "cash": "Espèces",
+      "bankTransfer": "Virement",
+      "check": "Chèque"
+    },
+    "period": {
+      "label": "Mois affiché",
+      "previous": "Mois précédent",
+      "next": "Mois suivant",
+      "current": "Mois en cours"
+    },
+    "stats": {
+      "expected": "Attendu",
+      "expectedHint_one": "{{count}} échéance",
+      "expectedHint_other": "{{count}} échéances",
+      "collected": "Encaissé",
+      "collectedHint": "{{rate}} de l’attendu",
+      "remaining": "Reste à encaisser",
+      "remainingHint_one": "{{count}} échéance non soldée",
+      "remainingHint_other": "{{count}} échéances non soldées",
+      "overdue": "Impayés",
+      "overdueHint_one": "{{count}} échéance, tous mois confondus",
+      "overdueHint_other": "{{count}} échéances, tous mois confondus"
+    },
+    "filters": {
+      "searchLabel": "Rechercher un loyer",
+      "search": "Locataire, bien, lot, contrat…",
+      "status": "Situation",
+      "allStatuses": "Toutes situations"
+    },
+    "table": {
+      "tenant": "Locataire et lot",
+      "dueDate": "Échéance",
+      "period": "Mois",
+      "amount": "Montant",
+      "paid": "Réglé",
+      "remaining": "Reste dû",
+      "status": "Situation",
+      "actions": "Actions"
+    },
+    "empty": {
+      "title": "Aucune échéance ne correspond à votre recherche",
+      "noDues": "Aucune échéance pour {{month}}.",
+      "allPaidTitle": "Tous les loyers échus sont réglés"
+    },
+    "history": {
+      "title": "Loyers",
+      "upToDate": "À jour de ses loyers",
+      "overdue_one": "{{count}} échéance impayée · {{amount}}",
+      "overdue_other": "{{count}} échéances impayées · {{amount}}",
+      "payments": "Encaissements",
+      "empty": "Aucune échéance pour le moment.",
+      "showAll": "Afficher les {{count}} mois",
+      "showLess": "Afficher moins"
+    },
+    "payment": {
+      "title": "Encaisser un loyer",
+      "remaining": "Reste dû",
+      "amount": "Montant encaissé",
+      "date": "Date de l’encaissement",
+      "method": "Moyen de paiement",
+      "reference": "Référence",
+      "referencePlaceholder": "N° de transaction, de chèque…",
+      "note": "Note",
+      "submit": "Enregistrer l’encaissement",
+      "toastFull": "Loyer encaissé",
+      "toastPartial": "Paiement partiel enregistré",
+      "toastDescription": "{{amount}} de {{tenant}} pour {{month}}.",
+      "errors": {
+        "tooMuch": "Le montant dépasse le reste dû ({{amount}}).",
+        "future": "La date ne peut pas être dans le futur."
+      }
+    },
+    "reminder": {
+      "title": "Relancer {{tenant}}",
+      "message": "Message",
+      "sendWith": "Envoyer par",
+      "channel": {
+        "whatsapp": "WhatsApp",
+        "sms": "SMS",
+        "email": "E-mail"
+      },
+      "hint": "Le message s’ouvre dans l’application choisie ; la relance est notée sur l’échéance.",
+      "unavailable": "Coordonnée manquante pour ce locataire",
+      "close": "Fermer",
+      "last": "Dernière relance le {{date}} par {{channel}}",
+      "sentOn": "Relancé le {{date}}",
+      "subject": "Loyer de {{month}} impayé",
+      "template": "Bonjour {{name}},\n\nSauf erreur de notre part, le loyer de {{month}} pour {{unit}} ({{property}}), d’un montant de {{amount}} et arrivé à échéance le {{date}}, n’a pas encore été réglé.\n\nMerci de procéder au règlement dans les meilleurs délais. Si le paiement a déjà été effectué, veuillez ne pas tenir compte de ce message.\n\nCordialement",
+      "toast": "Relance enregistrée",
+      "toastDescription": "{{tenant}} relancé par {{channel}}."
+    }
+  },
   "contracts": {
     "title": "Contrats",
     "subtitle_one": "{{count}} bail en cours",

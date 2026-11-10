@@ -32,7 +32,6 @@ const current: Lease[] = propertiesMock.flatMap((property) =>
         deposit: unit.rent * (type === 'residential' ? 2 : 3),
         paymentDay: seq % 4 === 0 ? 10 : seq % 3 === 0 ? 1 : 5,
         tacitRenewal: seq % 6 !== 0,
-        isLate: unit.isLate || undefined,
         createdAt: unit.lease.startDate,
       },
     ]

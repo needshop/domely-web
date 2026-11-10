@@ -8,52 +8,7 @@ export const dashboardMock: DashboardData = {
   kpis: {
     properties: { addedThisMonth: 2 },
     tenants: { newThisMonth: 3 },
-    collected: { amount: 15_368_000, previousAmount: 13_720_000 },
   },
-  collections: [
-    { month: '2025-12-01', collected: 12_480_000, expected: 13_200_000 },
-    { month: '2026-01-01', collected: 12_820_000, expected: 13_200_000 },
-    { month: '2026-02-01', collected: 13_160_000, expected: 13_360_000 },
-    { month: '2026-03-01', collected: 13_240_000, expected: 13_600_000 },
-    { month: '2026-04-01', collected: 13_520_000, expected: 13_600_000 },
-    { month: '2026-05-01', collected: 13_840_000, expected: 14_080_000 },
-    { month: '2026-06-01', collected: 14_040_000, expected: 14_080_000 },
-    { month: '2026-07-01', collected: 13_680_000, expected: 14_400_000 },
-    { month: '2026-08-01', collected: 14_360_000, expected: 14_400_000 },
-    { month: '2026-09-01', collected: 14_680_000, expected: 15_000_000 },
-    { month: '2026-10-01', collected: 13_720_000, expected: 15_560_000 },
-    { month: '2026-11-01', collected: 15_368_000, expected: 16_040_000 },
-  ],
-  lateRents: [
-    {
-      id: 'lr1',
-      tenant: 'Awa Diallo',
-      property: 'Résidence Les Oliviers · Apt 4',
-      amount: 340_000,
-      dueDate: '2026-10-05',
-    },
-    {
-      id: 'lr2',
-      tenant: 'Marc Lefèvre',
-      property: 'Immeuble Bellevue · Apt 12',
-      amount: 288_000,
-      dueDate: '2026-10-28',
-    },
-    {
-      id: 'lr3',
-      tenant: 'Sarah Mbarga',
-      property: 'Immeuble Bellevue · Apt 3',
-      amount: 276_000,
-      dueDate: '2026-11-01',
-    },
-    {
-      id: 'lr4',
-      tenant: 'Julien Moreau',
-      property: 'Résidence Les Oliviers · Apt 9',
-      amount: 364_000,
-      dueDate: '2026-11-03',
-    },
-  ],
   deadlines: [
     { id: 'd1', kind: 'leaseEnd', property: 'Villa Harmonie', date: '2026-11-15' },
     { id: 'd2', kind: 'insurance', property: 'Immeuble Bellevue', date: '2026-11-22' },
@@ -92,6 +47,3 @@ export const dashboardMock: DashboardData = {
     },
   ],
 }
-
-/** Date de référence des données fictives (« aujourd'hui »). */
-export const MOCK_TODAY = new Date('2026-11-06T12:00:00')

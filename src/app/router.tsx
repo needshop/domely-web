@@ -10,6 +10,7 @@ import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { PropertiesPage } from '@/pages/PropertiesPage'
 import { PropertyDetailPage } from '@/pages/PropertyDetailPage'
 import { PropertyFormPage } from '@/pages/PropertyFormPage'
+import { RentsPage } from '@/pages/RentsPage'
 import { TenantDetailPage } from '@/pages/TenantDetailPage'
 import { TenantFormPage } from '@/pages/TenantFormPage'
 import { TenantsPage } from '@/pages/TenantsPage'
@@ -28,13 +29,16 @@ export const router = createBrowserRouter([
       { path: 'tenants/new', element: <TenantFormPage mode="create" /> },
       { path: 'tenants/:id', element: <TenantDetailPage /> },
       { path: 'tenants/:id/edit', element: <TenantFormPage mode="edit" /> },
+      { path: 'rents', element: <RentsPage /> },
       { path: 'contracts', element: <ContractsPage /> },
       { path: 'contracts/new', element: <ContractFormPage mode="create" /> },
       { path: 'contracts/:id', element: <ContractDetailPage /> },
       { path: 'contracts/:id/edit', element: <ContractFormPage mode="edit" /> },
       // Modules à implémenter progressivement
       ...navigation
-        .filter((item) => !['/', '/properties', '/tenants', '/contracts'].includes(item.to))
+        .filter(
+          (item) => !['/', '/properties', '/tenants', '/rents', '/contracts'].includes(item.to),
+        )
         .map((item) => ({
           path: item.to.slice(1),
           element: <PlaceholderPage navKey={item.key} />,

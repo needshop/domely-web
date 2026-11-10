@@ -35,9 +35,14 @@ export const periodsOverlap = (aStart: string, aEnd: string, bStart: string, bEn
 
 /**
  * Applique les contrats aux biens : un lot est « loué » s'il a un contrat en cours,
- * avec le loyer, les charges et le locataire de ce contrat.
+ * avec le loyer, les charges et le locataire de ce contrat. `lateLeases` : contrats ayant
+ * un loyer impayé (module Loyers).
  */
-export function applyLeases(properties: Property[], leases: Lease[]): Property[] {
+export function applyLeases(
+  properties: Property[],
+  leases: Lease[],
+  lateLeases: ReadonlySet<string> = new Set(),
+): Property[] {
   const today = todayIso()
   const occupying = new Map<string, Lease>()
   for (const lease of leases) {
@@ -69,7 +74,7 @@ export function applyLeases(properties: Property[], leases: Lease[]): Property[]
           startDate: lease.startDate,
           endDate: lease.endDate,
         },
-        isLate: lease.isLate,
+        isLate: lateLeases.has(lease.id) || undefined,
       }
     }),
   }))

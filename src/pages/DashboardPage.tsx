@@ -1,5 +1,6 @@
 import { buttonVariants } from '@heroui/react'
 import { AlertCircle, Building2, Plus, Users, Wallet } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { DeadlinesCard } from '@/features/dashboard/components/DeadlinesCard'
@@ -9,9 +10,12 @@ import { OccupancyCard } from '@/features/dashboard/components/OccupancyCard'
 import { RecentPropertiesCard } from '@/features/dashboard/components/RecentPropertiesCard'
 import { RentCollectionChart } from '@/features/dashboard/components/RentCollectionChart'
 import { StatTile } from '@/components/StatTile'
-import { dashboardMock, MOCK_TODAY } from '@/features/dashboard/mockData'
+import { dashboardMock } from '@/features/dashboard/mockData'
+import type { LateRent, MonthlyCollection } from '@/features/dashboard/types'
 import { useProperties } from '@/features/properties/api'
 import { portfolioStats } from '@/features/properties/utils'
+import { useRentDues } from '@/features/rents/api'
+import { currentPeriod, isOverdue, periodsBetween, shiftPeriod } from '@/features/rents/utils'
 import { useTenantRows } from '@/features/tenants/api'
 import { tenantsSummary } from '@/features/tenants/utils'
 import { useFormatters } from '@/lib/format'
@@ -19,7 +23,7 @@ import { useFormatters } from '@/lib/format'
 export function DashboardPage() {
   const { t } = useTranslation()
   const f = useFormatters()
-  const { kpis, collections, lateRents, deadlines, maintenance } = dashboardMock
+  const { kpis, deadlines, maintenance } = dashboardMock
   // Biens, lots et occupation : mêmes données que le module Biens
   const properties = useProperties()
   const portfolio = portfolioStats(properties)
@@ -32,11 +36,39 @@ export function DashboardPage() {
   const recentProperties = [...properties]
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     .slice(0, 3)
-  const today = MOCK_TODAY
+  // Date de référence figée au montage (stable entre les rendus)
+  const [today] = useState(() => new Date())
 
-  const collectedDelta =
-    (kpis.collected.amount - kpis.collected.previousAmount) / kpis.collected.previousAmount
-  const unpaidTotal = lateRents.reduce((sum, r) => sum + r.amount, 0)
+  // Loyers : échéances calculées à partir des contrats et des encaissements
+  const dues = useRentDues()
+  const thisMonth = currentPeriod()
+  const collections: MonthlyCollection[] = periodsBetween(
+    shiftPeriod(thisMonth, -11),
+    thisMonth,
+  ).map((period) => {
+    const inPeriod = dues.filter((r) => r.due.period === period)
+    return {
+      month: `${period}-01`,
+      expected: inPeriod.reduce((s, r) => s + r.due.amount, 0),
+      collected: inPeriod.reduce((s, r) => s + r.due.paid, 0),
+    }
+  })
+  const collected = collections[collections.length - 1].collected
+  const previousCollected = collections[collections.length - 2].collected
+  const collectedDelta = previousCollected ? (collected - previousCollected) / previousCollected : 0
+
+  const overdue = dues
+    .filter((r) => isOverdue(r.due))
+    .sort((a, b) => a.due.dueDate.localeCompare(b.due.dueDate))
+  const unpaidTotal = overdue.reduce((sum, r) => sum + r.due.remaining, 0)
+  const unpaidTenants = new Set(overdue.map((r) => r.lease.tenantId)).size
+  const lateRents: LateRent[] = overdue.slice(0, 5).map((r) => ({
+    id: r.due.id,
+    tenant: r.tenant?.name ?? '—',
+    property: `${r.property?.name ?? '—'} · ${r.unit?.label ?? '—'}`,
+    amount: r.due.remaining,
+    dueDate: r.due.dueDate,
+  }))
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-6">
@@ -70,7 +102,7 @@ export function DashboardPage() {
         />
         <StatTile
           label={t('dashboard.kpi.collected', { month: f.monthShort(today) })}
-          value={f.money(kpis.collected.amount)}
+          value={f.money(collected)}
           icon={Wallet}
           tone="green"
           delta={t('dashboard.kpi.vsLastMonth', { delta: f.signedPercent(collectedDelta) })}
@@ -81,7 +113,7 @@ export function DashboardPage() {
           value={f.money(unpaidTotal)}
           icon={AlertCircle}
           tone="night"
-          delta={t('dashboard.kpi.unpaidTenants', { count: lateRents.length })}
+          delta={t('dashboard.kpi.unpaidTenants', { count: unpaidTenants })}
         />
       </section>
 
@@ -96,7 +128,7 @@ export function DashboardPage() {
 
       <div className="grid gap-6 xl:grid-cols-3 [&>*]:min-w-0">
         <div className="xl:col-span-2">
-          <LateRentsCard items={lateRents} today={today} />
+          <LateRentsCard items={lateRents} total={unpaidTotal} today={today} />
         </div>
         <DeadlinesCard items={deadlines} today={today} />
       </div>

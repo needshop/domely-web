@@ -274,7 +274,6 @@ export function ContractForm({
             label={t('properties.form.fields.rent')}
             formatOptions={amountFormat}
             minValue={0}
-            step={5_000}
             isRequired
           />
           <FormNumberField
@@ -283,7 +282,6 @@ export function ContractForm({
             label={t('properties.form.fields.charges')}
             formatOptions={amountFormat}
             minValue={0}
-            step={1_000}
           />
           <FormNumberField
             control={control}
@@ -292,7 +290,6 @@ export function ContractForm({
             description={t('contracts.form.fields.depositHint')}
             formatOptions={amountFormat}
             minValue={0}
-            step={5_000}
           />
           <FormNumberField
             control={control}

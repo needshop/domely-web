@@ -7,10 +7,17 @@ import { daysBetween } from '../utils'
 import type { LateRent } from '../types'
 import { SectionCard } from './SectionCard'
 
-export function LateRentsCard({ items, today }: { items: LateRent[]; today: Date }) {
+interface LateRentsCardProps {
+  /** Impayés les plus anciens à afficher */
+  items: LateRent[]
+  /** Montant total des impayés (y compris ceux non affichés) */
+  total: number
+  today: Date
+}
+
+export function LateRentsCard({ items, total, today }: LateRentsCardProps) {
   const { t } = useTranslation()
   const f = useFormatters()
-  const total = items.reduce((s, r) => s + r.amount, 0)
 
   return (
     <SectionCard

@@ -1,8 +1,10 @@
-/** Indicateurs propres au tableau de bord (biens, lots et occupation viennent du module Biens). */
+/**
+ * Indicateurs propres au tableau de bord (biens, occupation, loyers et impayés viennent
+ * des modules Biens, Contrats et Loyers).
+ */
 export interface DashboardKpis {
   properties: { addedThisMonth: number }
   tenants: { newThisMonth: number }
-  collected: { amount: number; previousAmount: number }
 }
 
 export interface Occupancy {
@@ -50,8 +52,6 @@ export interface MaintenanceRequest {
 
 export interface DashboardData {
   kpis: DashboardKpis
-  collections: MonthlyCollection[]
-  lateRents: LateRent[]
   deadlines: Deadline[]
   maintenance: MaintenanceRequest[]
 }

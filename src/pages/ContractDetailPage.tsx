@@ -20,6 +20,7 @@ import { LeaseProgress } from '@/features/contracts/components/LeaseProgress'
 import { LeaseStatusChip } from '@/features/contracts/components/LeaseStatusChip'
 import { TerminateLeaseModal } from '@/features/contracts/components/TerminateLeaseModal'
 import { propertyVisual } from '@/features/properties/propertyVisual'
+import { LeaseRentHistory } from '@/features/rents/components/LeaseRentHistory'
 import { TenantAvatar } from '@/features/tenants/components/TenantAvatar'
 import { cn } from '@/lib/cn'
 import { daysUntil, durationInMonths } from '@/lib/dates'
@@ -312,6 +313,8 @@ export function ContractDetailPage() {
           </Card>
         </div>
       </div>
+
+      {status !== 'upcoming' && <LeaseRentHistory leaseId={lease.id} />}
 
       <TerminateLeaseModal lease={lease} isOpen={terminating} onOpenChange={setTerminating} />
     </div>
