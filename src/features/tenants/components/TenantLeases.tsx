@@ -1,19 +1,12 @@
 import { Chip } from '@heroui/react'
-import { AlertTriangle, ChevronRight, FileX } from 'lucide-react'
+import { AlertTriangle, ChevronRight, FileText, FileX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { propertyVisual } from '@/features/properties/propertyVisual'
 import { useFormatters } from '@/lib/format'
 import type { TenantLease } from '../types'
-import { daysUntil, todayIso } from '../utils'
-import { LeaseEnd } from './LeaseEnd'
-
-/** Part du bail déjà écoulée (0 → 1). */
-function leaseProgress(start: string, end: string) {
-  const total = daysUntil(end, start)
-  if (total <= 0) return 1
-  return Math.min(Math.max(daysUntil(todayIso(), start) / total, 0), 1)
-}
+import { LeaseEnd } from '@/features/contracts/components/LeaseEnd'
+import { LeaseProgress } from '@/features/contracts/components/LeaseProgress'
 
 /** Baux en cours du locataire : lot, bien, loyer et période. */
 export function TenantLeases({ leases }: { leases: TenantLease[] }) {
@@ -35,7 +28,6 @@ export function TenantLeases({ leases }: { leases: TenantLease[] }) {
     <ul className="divide-y divide-separator">
       {leases.map(({ property, unit, lease }) => {
         const { icon: Icon } = propertyVisual[property.type]
-        const progress = leaseProgress(lease.startDate, lease.endDate)
         return (
           <li key={unit.id} className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center">
             <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -53,8 +45,15 @@ export function TenantLeases({ leases }: { leases: TenantLease[] }) {
                 <p className="truncate text-xs text-muted">
                   {unit.label} · {t(`properties.unitKind.${unit.kind}`)} · {property.address.city}
                 </p>
+                <Link
+                  to={`/contracts/${lease.id}`}
+                  className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-accent outline-none hover:underline focus-visible:ring-2 focus-visible:ring-focus"
+                >
+                  <FileText className="size-3.5" aria-hidden />
+                  {t('tenants.detail.leases.viewContract')}
+                </Link>
                 {unit.isLate && (
-                  <Chip size="sm" variant="soft" color="danger" className="mt-1.5">
+                  <Chip size="sm" variant="soft" color="danger" className="mt-1.5 flex w-fit">
                     <AlertTriangle className="size-3.5" aria-hidden />
                     {t('tenants.status.late')}
                   </Chip>
@@ -76,19 +75,7 @@ export function TenantLeases({ leases }: { leases: TenantLease[] }) {
                   {t('tenants.detail.leases.since', { date: date(lease.startDate) })}
                 </p>
                 <LeaseEnd date={lease.endDate} />
-                <div
-                  role="meter"
-                  aria-label={t('tenants.detail.leases.elapsed')}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-valuenow={Math.round(progress * 100)}
-                  className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-default"
-                >
-                  <div
-                    className="h-full rounded-full bg-night-700 dark:bg-night-200"
-                    style={{ width: `${progress * 100}%` }}
-                  />
-                </div>
+                <LeaseProgress start={lease.startDate} end={lease.endDate} className="mt-1.5" />
               </div>
             </div>
           </li>

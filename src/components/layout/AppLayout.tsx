@@ -2,7 +2,7 @@ import { Button } from '@heroui/react'
 import { Bell } from 'lucide-react'
 import { RouterProvider as AriaRouterProvider } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
-import { Outlet, useHref, useNavigate } from 'react-router'
+import { Outlet, ScrollRestoration, useHref, useNavigate } from 'react-router'
 import { CurrencySwitcher } from '@/components/CurrencySwitcher'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
@@ -53,6 +53,8 @@ export function AppLayout() {
 
           <main className="flex-1 p-4 sm:p-6 lg:p-8">
             <Outlet />
+            {/* Retour en haut de page à chaque navigation, position restaurée au retour arrière */}
+            <ScrollRestoration />
           </main>
         </div>
       </div>

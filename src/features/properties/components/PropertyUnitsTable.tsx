@@ -1,5 +1,5 @@
 import { Chip } from '@heroui/react'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, FilePlus2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { useTenantNames } from '@/features/tenants/api'
@@ -12,7 +12,7 @@ const statusColor: Record<UnitStatus, 'success' | 'warning' | 'default'> = {
   underWorks: 'default',
 }
 
-export function PropertyUnitsTable({ units }: { units: Unit[] }) {
+export function PropertyUnitsTable({ units, propertyId }: { units: Unit[]; propertyId?: string }) {
   const { t } = useTranslation()
   const f = useFormatters()
   const tenantName = useTenantNames()
@@ -100,6 +100,15 @@ export function PropertyUnitsTable({ units }: { units: Unit[] }) {
                       })}
                     </p>
                   </>
+                ) : u.status === 'vacant' && propertyId ? (
+                  <Link
+                    to={`/contracts/new?property=${propertyId}&unit=${u.id}`}
+                    className="inline-flex items-center gap-1 text-sm font-medium text-accent outline-none hover:underline focus-visible:ring-2 focus-visible:ring-focus"
+                    aria-label={t('properties.detail.units.rentOutLabel', { label: u.label })}
+                  >
+                    <FilePlus2 className="size-3.5" aria-hidden />
+                    {t('properties.detail.units.rentOut')}
+                  </Link>
                 ) : (
                   <span className="text-muted">{t('properties.detail.units.none')}</span>
                 )}

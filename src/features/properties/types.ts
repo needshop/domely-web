@@ -12,8 +12,13 @@ export type PropertyType = (typeof propertyTypes)[number]
 export type UnitKind = 'apartment' | 'studio' | 'house' | 'shop' | 'office'
 export type UnitStatus = 'rented' | 'vacant' | 'underWorks'
 
-/** Bail en cours sur un lot (le locataire est décrit dans le module Locataires). */
+/**
+ * Bail en cours sur un lot, déduit des contrats (module Contrats) ;
+ * le locataire est décrit dans le module Locataires.
+ */
 export interface UnitLease {
+  /** Identifiant du contrat */
+  id: string
   tenantId: string
   /** Début du bail (ISO) */
   startDate: string
@@ -30,9 +35,9 @@ export interface Unit {
   /** Surface en m² */
   area: number
   rooms?: number
-  /** Loyer mensuel hors charges (XOF) */
+  /** Loyer mensuel hors charges (XOF) : celui du bail si le lot est loué, sinon le loyer de référence */
   rent: number
-  /** Charges mensuelles (XOF) */
+  /** Charges mensuelles (XOF) : celles du bail si le lot est loué */
   charges: number
   status: UnitStatus
   lease?: UnitLease

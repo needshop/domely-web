@@ -1,5 +1,5 @@
 import type { Tenant } from '../types'
-import { todayIso } from '../utils'
+import { todayIso } from '@/lib/dates'
 import { idDocumentsByKind, type TenantFormValues } from './schema'
 
 const newId = () => `t-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`

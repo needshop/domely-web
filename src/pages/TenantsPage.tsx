@@ -10,7 +10,8 @@ import { TenantCard } from '@/features/tenants/components/TenantCard'
 import { TenantsTable } from '@/features/tenants/components/TenantsTable'
 import { TenantsToolbar } from '@/features/tenants/components/TenantsToolbar'
 import { TENANTS_PAGE_SIZE, useTenantFilters } from '@/features/tenants/hooks/useTenantFilters'
-import { LEASE_ENDING_DAYS, tenantsSummary } from '@/features/tenants/utils'
+import { LEASE_ENDING_DAYS } from '@/features/contracts/utils'
+import { tenantsSummary } from '@/features/tenants/utils'
 import { useFormatters } from '@/lib/format'
 
 export function TenantsPage() {

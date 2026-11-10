@@ -1,5 +1,6 @@
 import {
   Calendar,
+  ComboBox,
   DateField,
   DatePicker,
   Description,
@@ -9,6 +10,7 @@ import {
   ListBox,
   NumberField,
   Select,
+  Switch,
   TextArea,
   TextField,
 } from '@heroui/react'
@@ -274,6 +276,96 @@ export function FormDateField<T extends FieldValues>({
             </Calendar>
           </DatePicker.Popover>
         </DatePicker>
+      )}
+    />
+  )
+}
+
+/** Liste déroulante avec saisie pour filtrer (longues listes : locataires…). */
+export function FormComboBox<T extends FieldValues>({
+  control,
+  name,
+  label,
+  description,
+  isRequired,
+  isDisabled,
+  className,
+  placeholder,
+  emptyLabel,
+  options,
+}: BaseProps<T> & { options: SelectOption[]; placeholder?: string; emptyLabel: string }) {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field, fieldState }) => (
+        <ComboBox
+          name={field.name}
+          selectedKey={field.value ?? null}
+          onSelectionChange={(key) => field.onChange(key === null ? null : String(key))}
+          onBlur={field.onBlur}
+          isInvalid={fieldState.invalid}
+          isRequired={isRequired}
+          isDisabled={isDisabled}
+          validationBehavior="aria"
+          menuTrigger="focus"
+          className={cn('w-full', className)}
+        >
+          <Label>{label}</Label>
+          <ComboBox.InputGroup>
+            <Input ref={field.ref} placeholder={placeholder} />
+            <ComboBox.Trigger />
+          </ComboBox.InputGroup>
+          {description && <Description>{description}</Description>}
+          <FieldError>{fieldState.error?.message}</FieldError>
+          <ComboBox.Popover>
+            <ListBox
+              renderEmptyState={() => <p className="p-3 text-sm text-muted">{emptyLabel}</p>}
+            >
+              {options.map((o) => (
+                <ListBox.Item key={o.id} id={o.id} textValue={o.label}>
+                  {o.label}
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </ComboBox.Popover>
+        </ComboBox>
+      )}
+    />
+  )
+}
+
+/** Interrupteur oui / non. */
+export function FormSwitch<T extends FieldValues>({
+  control,
+  name,
+  label,
+  description,
+  isDisabled,
+  className,
+}: BaseProps<T>) {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <div className={cn('flex flex-col gap-1', className)}>
+          <Switch
+            name={field.name}
+            isSelected={Boolean(field.value)}
+            onChange={field.onChange}
+            isDisabled={isDisabled}
+          >
+            <Switch.Content>
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+              {label}
+            </Switch.Content>
+          </Switch>
+          {description && <p className="text-xs text-muted">{description}</p>}
+        </div>
       )}
     />
   )

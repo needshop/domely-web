@@ -1,7 +1,8 @@
 import { Clock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useFormatters } from '@/lib/format'
-import { daysUntil, isLeaseEndingSoon } from '../utils'
+import { daysUntil } from '@/lib/dates'
+import { isLeaseEndingSoon } from '../utils'
 
 /** Date de fin de bail, signalée si elle approche. */
 export function LeaseEnd({ date }: { date?: string }) {

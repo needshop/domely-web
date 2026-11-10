@@ -122,7 +122,7 @@ export function PropertyDetailPage() {
             </Tabs.List>
           </Tabs.ListContainer>
           <Tabs.Panel id="units" className="p-2 sm:p-3">
-            <PropertyUnitsTable units={property.units} />
+            <PropertyUnitsTable units={property.units} propertyId={property.id} />
           </Tabs.Panel>
           <Tabs.Panel id="info" className="px-5 py-2">
             <PropertyInfo property={property} stats={stats} />

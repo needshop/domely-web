@@ -130,6 +130,8 @@ export function UnitsFieldArray({ control }: { control: Control<PropertyFormValu
                   control={control}
                   name={`units.${index}.rent`}
                   label={t('properties.form.fields.rent')}
+                  isDisabled={isRented}
+                  description={isRented ? t('properties.form.units.rentFromLease') : undefined}
                   formatOptions={amountFormat}
                   minValue={0}
                   step={5_000}
@@ -139,6 +141,7 @@ export function UnitsFieldArray({ control }: { control: Control<PropertyFormValu
                   control={control}
                   name={`units.${index}.charges`}
                   label={t('properties.form.fields.charges')}
+                  isDisabled={isRented}
                   formatOptions={amountFormat}
                   minValue={0}
                   step={1_000}

@@ -255,7 +255,9 @@
         "leaseEnd": "Fin de bail {{date}}",
         "late": "Loyer en retard",
         "none": "—",
-        "floorFirst": "1ᵉʳ"
+        "floorFirst": "1ᵉʳ",
+        "rentOut": "Louer",
+        "rentOutLabel": "Créer un contrat pour {{label}}"
       },
       "info": {
         "type": "Type de bien",
@@ -311,10 +313,11 @@
         "add": "Ajouter un lot",
         "remove": "Supprimer le lot {{label}}",
         "rentedBy": "Loué à {{name}}",
-        "rentedLocked": "Lot loué : le statut et la suppression se gèrent depuis le bail.",
+        "rentedLocked": "Lot loué : le statut, le loyer et la suppression se gèrent depuis le contrat.",
         "labelPrefix": "Lot",
         "count_one": "{{count}} lot",
-        "count_other": "{{count}} lots"
+        "count_other": "{{count}} lots",
+        "rentFromLease": "Fixé par le contrat en cours."
       },
       "actions": {
         "create": "Créer le bien",
@@ -447,7 +450,7 @@
         "rent": "Loyer",
         "period": "Période",
         "since": "Depuis le {{date}}",
-        "elapsed": "Durée du bail écoulée"
+        "viewContract": "Voir le contrat"
       },
       "contact": {
         "title": "Coordonnées",
@@ -461,7 +464,8 @@
         "notes": "Notes",
         "noNotes": "Aucune note."
       },
-      "edit": "Modifier"
+      "edit": "Modifier",
+      "newContract": "Nouveau contrat"
     },
     "form": {
       "createTitle": "Ajouter un locataire",
@@ -508,6 +512,188 @@
       },
       "errors": {
         "duplicatePhone": "Ce numéro est déjà utilisé par {{name}}."
+      }
+    }
+  },
+  "contracts": {
+    "title": "Contrats",
+    "subtitle_one": "{{count}} bail en cours",
+    "subtitle_other": "{{count}} baux en cours",
+    "add": "Nouveau contrat",
+    "unknownTenant": "Locataire inconnu",
+    "elapsed": "Durée du bail écoulée",
+    "terminatedOn": "Résilié le {{date}}",
+    "duration_one": "{{count}} mois",
+    "duration_other": "{{count}} mois",
+    "status": {
+      "upcoming": "À venir",
+      "active": "En cours",
+      "expired": "Échu",
+      "terminated": "Résilié"
+    },
+    "type": {
+      "residential": "Bail d’habitation",
+      "commercial": "Bail commercial",
+      "professional": "Bail professionnel"
+    },
+    "terminationReason": {
+      "tenantLeave": "Congé donné par le locataire",
+      "ownerTermination": "Congé donné par le bailleur",
+      "unpaidRent": "Loyers impayés",
+      "mutualAgreement": "Accord amiable",
+      "notRenewed": "Non renouvelé à l’échéance",
+      "other": "Autre motif"
+    },
+    "stats": {
+      "active": "Baux en cours",
+      "upcoming_one": "{{count}} à venir",
+      "upcoming_other": "{{count}} à venir",
+      "endingSoon": "Échéances proches",
+      "monthlyRent": "Loyers et charges",
+      "monthlyRentHint": "Prévus chaque mois par les baux",
+      "deposits": "Dépôts de garantie",
+      "depositsHint": "Détenus pour les baux en cours"
+    },
+    "filters": {
+      "searchLabel": "Rechercher un contrat",
+      "search": "Référence, locataire, bien, lot…",
+      "status": "Situation",
+      "statuses": {
+        "all": "Tous les contrats",
+        "running": "En cours",
+        "endingSoon": "Échéance proche",
+        "upcoming": "À venir",
+        "expired": "Échus",
+        "terminated": "Résiliés"
+      },
+      "type": "Nature du bail",
+      "allTypes": "Toutes natures",
+      "property": "Bien",
+      "sort": "Trier par",
+      "sorts": {
+        "endDate": "Échéance la plus proche",
+        "recent": "Plus récents",
+        "rent": "Loyer le plus élevé",
+        "reference": "Référence"
+      },
+      "reset": "Réinitialiser les filtres"
+    },
+    "empty": {
+      "title": "Aucun contrat ne correspond à votre recherche",
+      "description": "Modifiez la recherche ou les filtres pour élargir les résultats."
+    },
+    "table": {
+      "reference": "Référence",
+      "parties": "Locataire et lot",
+      "start": "Début",
+      "end": "Fin",
+      "rent": "Loyer",
+      "status": "Situation",
+      "actions": "Actions"
+    },
+    "card": {
+      "open": "Voir le contrat {{reference}}"
+    },
+    "detail": {
+      "back": "Retour aux contrats",
+      "notFound": "Ce contrat est introuvable.",
+      "subtitle": "{{tenant}} · {{unit}}, {{property}}",
+      "edit": "Modifier",
+      "terminate": "Résilier",
+      "tenant": "Locataire",
+      "unit": "Logement",
+      "notice": {
+        "terminated": "Contrat résilié le {{date}} — {{reason}}.",
+        "plannedTermination": "Résiliation enregistrée : le contrat prendra fin le {{date}}.",
+        "expired": "Échéance dépassée depuis le {{date}} : renouvelez ou résiliez ce contrat.",
+        "upcoming": "Ce contrat débute le {{date}} : le lot sera alors marqué comme loué."
+      },
+      "stats": {
+        "monthly": "Loyer + charges",
+        "monthlyHint": "{{rent}} + {{charges}} de charges",
+        "deposit": "Dépôt de garantie",
+        "depositHint_one": "{{count}} mois de loyer",
+        "depositHint_other": "{{count}} mois de loyer",
+        "paymentDay": "Échéance",
+        "paymentDayValue": "Le {{day}}",
+        "paymentDayHint": "De chaque mois",
+        "end": "Fin du bail"
+      },
+      "terms": {
+        "title": "Conditions du bail",
+        "type": "Nature",
+        "period": "Période",
+        "rent": "Loyer mensuel",
+        "deposit": "Dépôt de garantie",
+        "paymentDay": "Échéance du loyer",
+        "paymentDayValue": "Le {{day}} de chaque mois",
+        "renewal": "Renouvellement",
+        "tacitRenewal": "Reconduction tacite à l’échéance",
+        "noRenewal": "Pas de reconduction tacite",
+        "createdAt": "Enregistré dans Domely"
+      }
+    },
+    "terminate": {
+      "title": "Résilier {{reference}}",
+      "description": "À la date d’effet, le contrat passe en « Résilié » et le lot redevient disponible à la location.",
+      "date": "Date d’effet",
+      "dateHint": "Dernier jour d’occupation du lot.",
+      "reason": "Motif",
+      "confirm": "Résilier le contrat",
+      "toast": "Résiliation enregistrée",
+      "toastDescription": "Le contrat {{reference}} a été résilié.",
+      "errors": {
+        "beforeStart": "La date d’effet ne peut pas précéder le début du bail."
+      }
+    },
+    "form": {
+      "createTitle": "Nouveau contrat de bail",
+      "createSubtitle": "Rattachez un locataire à un lot et fixez les conditions du bail.",
+      "editTitle": "Modifier {{reference}}",
+      "editSubtitle": "Mettez à jour la période et les conditions financières du bail.",
+      "create": "Créer le contrat",
+      "notEditable": "Un contrat résilié ne peut plus être modifié.",
+      "unitRented": "loué jusqu’au {{date}}",
+      "vacantUnits_zero": "aucun lot libre",
+      "vacantUnits_one": "{{count}} lot libre",
+      "vacantUnits_other": "{{count}} lots libres",
+      "sections": {
+        "parties": "Locataire et lot",
+        "partiesHint": "Qui loue, et quel lot.",
+        "partiesLocked": "Le locataire et le lot d’un contrat ne changent pas : créez un nouveau contrat si besoin.",
+        "period": "Période",
+        "periodHint": "Nature du bail, dates et renouvellement.",
+        "financial": "Conditions financières"
+      },
+      "fields": {
+        "tenant": "Locataire",
+        "tenantPlaceholder": "Rechercher un locataire…",
+        "noTenant": "Aucun locataire trouvé.",
+        "property": "Bien",
+        "unit": "Lot",
+        "unitHint": "Choisissez d’abord un bien.",
+        "type": "Nature du bail",
+        "startDate": "Début du bail",
+        "endDate": "Fin du bail",
+        "tacitRenewal": "Reconduction tacite",
+        "tacitRenewalHint": "Le bail se renouvelle automatiquement à l’échéance, sauf congé.",
+        "deposit": "Dépôt de garantie",
+        "depositHint": "Usage : 2 mois (habitation), 3 mois (commercial).",
+        "paymentDay": "Jour d’échéance",
+        "paymentDayHint": "Du 1 au 28 du mois.",
+        "notesPlaceholder": "Clauses particulières, état des lieux, remise des clés…"
+      },
+      "toast": {
+        "created": "Contrat créé",
+        "createdDescription": "Le contrat {{reference}} a été enregistré.",
+        "updated": "Modifications enregistrées",
+        "updatedDescription": "Le contrat {{reference}} a été mis à jour."
+      },
+      "errors": {
+        "endBeforeStart": "La fin du bail doit être postérieure à son début.",
+        "overlap": "Ce lot est déjà loué sur cette période ({{reference}}, du {{start}} au {{end}}).",
+        "underWorks": "Ce lot est en travaux : il ne peut pas être loué pour le moment.",
+        "paymentDay": "Indiquez un jour entre 1 et 28."
       }
     }
   },

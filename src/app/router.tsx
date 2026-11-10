@@ -1,6 +1,9 @@
 import { createBrowserRouter } from 'react-router'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { navigation } from '@/components/layout/navigation'
+import { ContractDetailPage } from '@/pages/ContractDetailPage'
+import { ContractFormPage } from '@/pages/ContractFormPage'
+import { ContractsPage } from '@/pages/ContractsPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
@@ -25,9 +28,13 @@ export const router = createBrowserRouter([
       { path: 'tenants/new', element: <TenantFormPage mode="create" /> },
       { path: 'tenants/:id', element: <TenantDetailPage /> },
       { path: 'tenants/:id/edit', element: <TenantFormPage mode="edit" /> },
+      { path: 'contracts', element: <ContractsPage /> },
+      { path: 'contracts/new', element: <ContractFormPage mode="create" /> },
+      { path: 'contracts/:id', element: <ContractDetailPage /> },
+      { path: 'contracts/:id/edit', element: <ContractFormPage mode="edit" /> },
       // Modules à implémenter progressivement
       ...navigation
-        .filter((item) => !['/', '/properties', '/tenants'].includes(item.to))
+        .filter((item) => !['/', '/properties', '/tenants', '/contracts'].includes(item.to))
         .map((item) => ({
           path: item.to.slice(1),
           element: <PlaceholderPage navKey={item.key} />,

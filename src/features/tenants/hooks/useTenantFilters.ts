@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router'
 import { normalizeSearch } from '@/lib/search'
 import { tenantKinds, type TenantKind, type TenantRow } from '../types'
-import { isLeaseEndingSoon } from '../utils'
+import { isLeaseEndingSoon } from '@/features/contracts/utils'
 
 export const statusFilters = ['all', 'active', 'late', 'endingSoon', 'inactive'] as const
 export type StatusFilter = (typeof statusFilters)[number]

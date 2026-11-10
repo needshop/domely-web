@@ -8,6 +8,8 @@ import type { Property, Unit, UnitKind, UnitStatus } from './types'
 /** Identifiants des locataires particuliers, attribués dans l'ordre des lots loués. */
 let nextTenant = 0
 const autoTenantId = () => `t${++nextTenant}`
+/** Identifiants des contrats de bail en cours (repris par le module Contrats). */
+let nextLease = 0
 
 interface UnitsSpec {
   prefix: string
@@ -51,6 +53,7 @@ function makeUnits(spec: UnitsSpec): Unit[] {
       lease:
         status === 'rented'
           ? {
+              id: `l${++nextLease}`,
               tenantId: spec.tenantIds?.[n] ?? autoTenantId(),
               startDate: `${2025 - ((spec.seed + i) % 3)}-${leaseMonth}-${leaseDay}`,
               endDate: `2027-${leaseMonth}-${leaseDay}`,

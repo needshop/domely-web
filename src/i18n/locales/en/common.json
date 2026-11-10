@@ -255,7 +255,9 @@
         "leaseEnd": "Lease ends {{date}}",
         "late": "Late rent",
         "none": "—",
-        "floorFirst": "1"
+        "floorFirst": "1",
+        "rentOut": "Rent out",
+        "rentOutLabel": "Create a contract for {{label}}"
       },
       "info": {
         "type": "Property type",
@@ -311,10 +313,11 @@
         "add": "Add a unit",
         "remove": "Remove unit {{label}}",
         "rentedBy": "Rented to {{name}}",
-        "rentedLocked": "Rented unit: status and removal are managed from the lease.",
+        "rentedLocked": "Rented unit: status, rent and removal are managed from the contract.",
         "labelPrefix": "Unit",
         "count_one": "{{count}} unit",
-        "count_other": "{{count}} units"
+        "count_other": "{{count}} units",
+        "rentFromLease": "Set by the active contract."
       },
       "actions": {
         "create": "Create property",
@@ -447,7 +450,7 @@
         "rent": "Rent",
         "period": "Term",
         "since": "Since {{date}}",
-        "elapsed": "Lease term elapsed"
+        "viewContract": "View contract"
       },
       "contact": {
         "title": "Contact details",
@@ -461,7 +464,8 @@
         "notes": "Notes",
         "noNotes": "No notes."
       },
-      "edit": "Edit"
+      "edit": "Edit",
+      "newContract": "New contract"
     },
     "form": {
       "createTitle": "Add a tenant",
@@ -508,6 +512,188 @@
       },
       "errors": {
         "duplicatePhone": "This number is already used by {{name}}."
+      }
+    }
+  },
+  "contracts": {
+    "title": "Contracts",
+    "subtitle_one": "{{count}} active lease",
+    "subtitle_other": "{{count}} active leases",
+    "add": "New contract",
+    "unknownTenant": "Unknown tenant",
+    "elapsed": "Lease term elapsed",
+    "terminatedOn": "Terminated on {{date}}",
+    "duration_one": "{{count}} month",
+    "duration_other": "{{count}} months",
+    "status": {
+      "upcoming": "Upcoming",
+      "active": "Active",
+      "expired": "Expired",
+      "terminated": "Terminated"
+    },
+    "type": {
+      "residential": "Residential lease",
+      "commercial": "Commercial lease",
+      "professional": "Professional lease"
+    },
+    "terminationReason": {
+      "tenantLeave": "Notice given by the tenant",
+      "ownerTermination": "Notice given by the landlord",
+      "unpaidRent": "Unpaid rent",
+      "mutualAgreement": "Mutual agreement",
+      "notRenewed": "Not renewed at term",
+      "other": "Other reason"
+    },
+    "stats": {
+      "active": "Active leases",
+      "upcoming_one": "{{count}} upcoming",
+      "upcoming_other": "{{count}} upcoming",
+      "endingSoon": "Ending soon",
+      "monthlyRent": "Rent and charges",
+      "monthlyRentHint": "Due every month under the leases",
+      "deposits": "Security deposits",
+      "depositsHint": "Held for active leases"
+    },
+    "filters": {
+      "searchLabel": "Search contracts",
+      "search": "Reference, tenant, property, unit…",
+      "status": "Status",
+      "statuses": {
+        "all": "All contracts",
+        "running": "Active",
+        "endingSoon": "Ending soon",
+        "upcoming": "Upcoming",
+        "expired": "Expired",
+        "terminated": "Terminated"
+      },
+      "type": "Lease type",
+      "allTypes": "All types",
+      "property": "Property",
+      "sort": "Sort by",
+      "sorts": {
+        "endDate": "Ending soonest",
+        "recent": "Most recent",
+        "rent": "Highest rent",
+        "reference": "Reference"
+      },
+      "reset": "Reset filters"
+    },
+    "empty": {
+      "title": "No contract matches your search",
+      "description": "Change the search or filters to broaden the results."
+    },
+    "table": {
+      "reference": "Reference",
+      "parties": "Tenant and unit",
+      "start": "Start",
+      "end": "End",
+      "rent": "Rent",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "card": {
+      "open": "View contract {{reference}}"
+    },
+    "detail": {
+      "back": "Back to contracts",
+      "notFound": "This contract could not be found.",
+      "subtitle": "{{tenant}} · {{unit}}, {{property}}",
+      "edit": "Edit",
+      "terminate": "Terminate",
+      "tenant": "Tenant",
+      "unit": "Unit",
+      "notice": {
+        "terminated": "Contract terminated on {{date}} — {{reason}}.",
+        "plannedTermination": "Termination recorded: the contract will end on {{date}}.",
+        "expired": "Term ended on {{date}}: renew or terminate this contract.",
+        "upcoming": "This contract starts on {{date}}: the unit will then be marked as rented."
+      },
+      "stats": {
+        "monthly": "Rent + charges",
+        "monthlyHint": "{{rent}} + {{charges}} charges",
+        "deposit": "Security deposit",
+        "depositHint_one": "{{count}} month of rent",
+        "depositHint_other": "{{count}} months of rent",
+        "paymentDay": "Due date",
+        "paymentDayValue": "On the {{day}}",
+        "paymentDayHint": "Of each month",
+        "end": "Lease end"
+      },
+      "terms": {
+        "title": "Lease terms",
+        "type": "Type",
+        "period": "Term",
+        "rent": "Monthly rent",
+        "deposit": "Security deposit",
+        "paymentDay": "Rent due date",
+        "paymentDayValue": "On day {{day}} of each month",
+        "renewal": "Renewal",
+        "tacitRenewal": "Automatically renewed at term",
+        "noRenewal": "No automatic renewal",
+        "createdAt": "Recorded in Domely"
+      }
+    },
+    "terminate": {
+      "title": "Terminate {{reference}}",
+      "description": "On the effective date, the contract becomes “Terminated” and the unit is available to rent again.",
+      "date": "Effective date",
+      "dateHint": "Last day the unit is occupied.",
+      "reason": "Reason",
+      "confirm": "Terminate contract",
+      "toast": "Termination recorded",
+      "toastDescription": "Contract {{reference}} has been terminated.",
+      "errors": {
+        "beforeStart": "The effective date cannot be before the lease start."
+      }
+    },
+    "form": {
+      "createTitle": "New lease contract",
+      "createSubtitle": "Link a tenant to a unit and set the lease terms.",
+      "editTitle": "Edit {{reference}}",
+      "editSubtitle": "Update the lease term and financial conditions.",
+      "create": "Create contract",
+      "notEditable": "A terminated contract can no longer be edited.",
+      "unitRented": "rented until {{date}}",
+      "vacantUnits_zero": "no vacant unit",
+      "vacantUnits_one": "{{count}} vacant unit",
+      "vacantUnits_other": "{{count}} vacant units",
+      "sections": {
+        "parties": "Tenant and unit",
+        "partiesHint": "Who rents, and which unit.",
+        "partiesLocked": "A contract’s tenant and unit can’t change: create a new contract if needed.",
+        "period": "Term",
+        "periodHint": "Lease type, dates and renewal.",
+        "financial": "Financial terms"
+      },
+      "fields": {
+        "tenant": "Tenant",
+        "tenantPlaceholder": "Search a tenant…",
+        "noTenant": "No tenant found.",
+        "property": "Property",
+        "unit": "Unit",
+        "unitHint": "Choose a property first.",
+        "type": "Lease type",
+        "startDate": "Lease start",
+        "endDate": "Lease end",
+        "tacitRenewal": "Automatic renewal",
+        "tacitRenewalHint": "The lease renews automatically at term unless notice is given.",
+        "deposit": "Security deposit",
+        "depositHint": "Usually 2 months (residential), 3 months (commercial).",
+        "paymentDay": "Due day",
+        "paymentDayHint": "From the 1st to the 28th.",
+        "notesPlaceholder": "Special clauses, inventory, key handover…"
+      },
+      "toast": {
+        "created": "Contract created",
+        "createdDescription": "Contract {{reference}} has been recorded.",
+        "updated": "Changes saved",
+        "updatedDescription": "Contract {{reference}} has been updated."
+      },
+      "errors": {
+        "endBeforeStart": "The lease end must be after its start.",
+        "overlap": "This unit is already rented for this period ({{reference}}, {{start}} to {{end}}).",
+        "underWorks": "This unit is under works and can’t be rented for now.",
+        "paymentDay": "Enter a day between 1 and 28."
       }
     }
   },

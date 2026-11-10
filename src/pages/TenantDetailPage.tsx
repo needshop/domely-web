@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   CalendarClock,
   CalendarDays,
+  FilePlus2,
   KeyRound,
   Mail,
   Pencil,
@@ -17,7 +18,7 @@ import { TenantAvatar } from '@/features/tenants/components/TenantAvatar'
 import { TenantContact } from '@/features/tenants/components/TenantContact'
 import { TenantLeases } from '@/features/tenants/components/TenantLeases'
 import { TenantStatusChip } from '@/features/tenants/components/TenantStatusChip'
-import { daysUntil } from '@/features/tenants/utils'
+import { daysUntil } from '@/lib/dates'
 import { useFormatters } from '@/lib/format'
 
 export function TenantDetailPage() {
@@ -79,6 +80,13 @@ export function TenantDetailPage() {
               {t('tenants.detail.email')}
             </a>
           )}
+          <Link
+            to={`/contracts/new?tenant=${tenant.id}`}
+            className={buttonVariants({ variant: 'primary' })}
+          >
+            <FilePlus2 className="size-4" aria-hidden />
+            {t('tenants.detail.newContract')}
+          </Link>
           <Link
             to={`/tenants/${tenant.id}/edit`}
             className={buttonVariants({ variant: 'secondary' })}
