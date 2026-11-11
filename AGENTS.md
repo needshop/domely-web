@@ -4,7 +4,8 @@ Document de référence pour les agents (et les humains) qui travaillent sur Dom
 structure, spécifications techniques et fonctionnelles, conventions et pièges connus.
 **À tenir à jour à chaque fonctionnalité livrée** (sections 7, 8, 11 et 12 en particulier).
 
-> Dernière mise à jour : 11/11/2026 — front v0.1.0, modules Biens, Locataires, Contrats, Loyers, Interventions et Rapports.
+> Dernière mise à jour : 11/11/2026 — front v0.1.0, tous les modules de la navigation (Biens, Locataires, Loyers, Interventions, Contrats,
+> Rapports, Paramètres).
 
 ---
 
@@ -24,7 +25,8 @@ propriétaires et gestionnaires de biens en **Afrique de l'Ouest** (zone UEMOA +
   Mobile Money, WhatsApp, usage mobile important.
 - Suivre l'entretien : interventions (signalement, planification, prestataires, coûts).
 - Analyser : rapports (revenus, recouvrement, impayés, dépenses, résultat par bien, export CSV).
-- À venir : paramètres, API, application mobile.
+- Personnaliser : profil, organisation, devise et taux, valeurs par défaut des baux, modèle de relance.
+- À venir : API, application mobile.
 
 ### Public et contexte d'usage
 
@@ -147,8 +149,8 @@ src/
 | `components/` | Composants d'affichage du module                                                                          |
 | `form/`       | `schema.ts` (zod), `mapping.ts` (entité ↔ formulaire), formulaire                                         |
 
-Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenance`, `reports`
-(`reports` n'a pas de store : il agrège les données des autres modules).
+Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenance`, `reports`,
+`settings` (`reports` n'a pas de store : il agrège les données des autres modules).
 
 ### Flux de données
 
@@ -156,7 +158,8 @@ Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenan
   n'importent **jamais** un store ou un `mockData` directement.
 - Pour brancher l'API, on remplace l'implémentation des hooks de `api.ts` (ex. TanStack
   Query) **sans toucher aux composants**.
-- Les données sont perdues au rechargement (assumé tant que l'API n'existe pas).
+- Les données sont perdues au rechargement (assumé tant que l'API n'existe pas), **sauf les
+  paramètres**, enregistrés dans `localStorage` (`domely-settings`).
 - **Sources de vérité et états dérivés** :
   - le **contrat** fait foi pour l'occupation : `useProperties()` applique les contrats aux
     biens (`applyLeases`). Un lot est « loué » s'il a un contrat en cours, avec le loyer, les
@@ -198,14 +201,16 @@ Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenan
 - La valeur par défaut est retirée de l'URL. Un changement de filtre ramène à la page 1, et une
   page hors bornes est ramenée dans les bornes.
 - Préférences locales (`localStorage`) : `domely-lang`, `domely-currency`,
-  `domely-sidebar-collapsed`, `domely-properties-view`, `heroui-theme`.
+  `domely-sidebar-collapsed`, `domely-properties-view`, `heroui-theme`, `domely-settings`
+  (paramètres, lus avec les valeurs par défaut en repli pour les champs ajoutés plus tard).
 
 ### Montants et devises
 
 - **Tous les montants sont stockés en XOF** (devise de référence).
 - L'affichage est converti vers la devise choisie (`CurrencySwitcher`) :
   - EUR : `655,957 XOF = 1 €` (parité fixe) ;
-  - GNF : `1 XOF = 14,18 GNF` (taux **indicatif**, à fournir par l'API plus tard).
+  - GNF : `1 XOF = 14,18 GNF` par défaut (taux **indicatif**), modifiable dans Paramètres ;
+    les taux passent par le `CurrencyContext` (`useCurrency().rates`).
 - À partir de 1 million, notation abrégée à 2 décimales : `15 250 000 F CFA` s'affiche
   « 15,25 M F CFA ».
 - Toujours formater via `useFormatters()` (`lib/format.ts`) : `money`, `moneyExact`, `number`,
@@ -291,7 +296,7 @@ Valeurs :
   - Sur mobile, un tiroir s'ouvre depuis le bouton du header.
   - Header : devise, langue, thème, notifications (non branchées).
 - **Navigation** : Tableau de bord, Biens, Locataires, Loyers, Interventions, Contrats,
-  Rapports, Paramètres. Paramètres est une page « à venir ».
+  Rapports, Paramètres : tous les modules sont implémentés.
 - **PWA** installable avec l'icône de l'application ; page 404 ; retour en haut de page à
   chaque navigation.
 
@@ -449,6 +454,23 @@ Valeurs :
 - **CSV** : séparateur `;`, BOM UTF-8 (ouverture directe dans Excel en français), montants
   bruts en XOF.
 
+### Paramètres (`/settings`, onglet dans `?tab=`)
+
+- Enregistrés dans le navigateur (`domely-settings`), conservés au rechargement.
+- **Profil** : nom, e-mail, téléphone. Le prénom personnalise le titre du tableau de bord
+  (« Bonjour Fatou, »).
+- **Organisation** : type (particulier, agence, société), nom, identifiant légal (NINEA, RCCM,
+  IFU…), pays, ville, adresse, téléphone, e-mail. Le nom et les coordonnées **signent les
+  relances**.
+- **Préférences** : langue, devise d'affichage et thème (appliqués immédiatement) ; taux GNF
+  (l'EUR reste à parité fixe) ; réinitialisation de tous les paramètres, avec confirmation.
+- **Location** : valeurs proposées à la création d'un contrat (jour d'échéance, durée de 12,
+  24 ou 36 mois, reconduction tacite, dépôt en mois de loyer pour l'habitation et pour le
+  commercial / professionnel).
+- **Messages** : modèle de relance avec variables `{{name}}`, `{{month}}`, `{{unit}}`,
+  `{{property}}`, `{{amount}}`, `{{date}}`, aperçu et retour au modèle par défaut. Un modèle
+  identique au modèle par défaut n'est pas enregistré, pour continuer à suivre la langue.
+
 ---
 
 ## 9. Règles métier clés (résumé)
@@ -466,9 +488,9 @@ Valeurs :
 
 ## 10. Tests
 
-- **Playwright e2e** dans `front/e2e/` (≈ 95 tests), fichiers par module : `smoke`, `theme`,
+- **Playwright e2e** dans `front/e2e/` (≈ 100 tests), fichiers par module : `smoke`, `theme`,
   `sidebar`, `i18n`, `dashboard`, `currency`, `properties`, `property-form`, `tenants`,
-  `tenant-form`, `contracts`, `rents`, `maintenance`, `reports`.
+  `tenant-form`, `contracts`, `rents`, `maintenance`, `reports`, `settings`.
 - Les tests tournent sur un **build de production** servi par `vite preview` sur le port
   **4173** (`reuseExistingServer: false`), sous Chrome système, en locale `fr-FR`.
   Le serveur de dev n'est pas utilisé : il est trop instable pour les tests.
@@ -505,6 +527,10 @@ Valeurs :
   Toujours raisonner en `propertyId` + `unitId`.
 - **Hooks et effets** : éviter `setState` synchrone dans un effet (règle de lint). Initialiser
   l'état directement et remonter le composant via `key`.
+- **Bouton désactivé et `NumberField`** : un champ numérique ne valide sa saisie qu'au blur, et
+  cliquer sur un bouton désactivé ne déplace pas le focus. Ne pas désactiver un bouton
+  « Enregistrer » en attendant que le formulaire soit « modifié » : la saisie ne serait jamais
+  enregistrable.
 - **Cartes mobiles dans une grille** : un élément de grille garde la largeur de son contenu ;
   mettre `min-w-0` sur le `<li>` pour que les textes `truncate` ne fassent pas déborder la page.
 - Après chaque `Write`/`Edit` d'un fichier formaté, Prettier peut reformater : relire avant
@@ -531,6 +557,7 @@ Ressources pressenties (REST, montants en XOF, dates ISO) :
 | `/dashboard`      | agrégats (encaissements sur 12 mois, impayés, occupation)                                                      |
 | `/interventions`  | liste, détail, création, modification, transitions de statut (planifier, démarrer, terminer, annuler, rouvrir) |
 | `/providers`      | (plus tard) annuaire des prestataires                                                                          |
+| `/settings`       | paramètres du compte et de l'organisation (aujourd'hui dans le navigateur)                                     |
 | `/reports/*`      | agrégats par période et par bien ; exports CSV / PDF générés côté serveur                                      |
 
 Points à trancher côté API :
@@ -543,44 +570,115 @@ Points à trancher côté API :
 
 ---
 
-## 13. Feuille de route
+## 13. Limites connues et feuille de route
 
 **Déjà livré** : initialisation, PWA, thème clair et sombre, i18n, devises, tableau de bord, et
-les modules Biens, Locataires, Contrats, Loyers (encaissement et relance), Interventions et
-Rapports.
+tous les modules : Biens, Locataires, Contrats, Loyers (encaissement et relance),
+Interventions, Rapports et Paramètres.
 
-**Prochaines étapes envisagées** :
+Les limites ci-dessous sont **connues et assumées** à ce stade ; elles sont à traiter par la
+suite. Quand une limite est levée, la retirer de cette liste et mettre à jour la section 8.
 
-- Loyers :
-  - quittances de loyer (PDF / impression) ;
-  - annulation d'un encaissement ;
-  - brancher le bouton « Relancer » du tableau de bord ;
-  - prorata du premier mois ;
-  - révision annuelle des loyers.
-- Contrats : renouvellement d'un contrat échu, documents joints, état des lieux.
-- Biens : suppression, photos.
-- Interventions : annuaire des prestataires, photos, lien avec le statut « en travaux » du
-  lot, refacturation au locataire.
-- Rapports : export PDF / impression, comparaison d'une période à l'autre, évolution de
-  l'occupation dans le temps, déclaration de revenus fonciers.
-- Paramètres : profil, organisation, devises et taux, modèles de messages.
-- API (`api/`) puis application mobile (`mobile/`).
+### Transverse
+
+- **Pas d'API** : données de démonstration en mémoire, perdues au rechargement (sauf les
+  paramètres, dans le navigateur). Pas de synchronisation entre appareils ni de mode hors ligne.
+- **Pas de comptes** : ni authentification, ni utilisateurs multiples, ni droits.
+- Cloche de **notifications** du header non branchée.
+- Pas de **suppression** ni d'**archivage** (biens, locataires, contrats, interventions).
+- Pas de **pièces jointes** (photos, baux signés, pièces d'identité, factures).
+- Tests uniquement **e2e** (pas de tests unitaires des calculs métier) ; données fictives des
+  loyers et interventions **relatives à la date du jour**.
+
+### Tableau de bord
+
+- Carte « Échéances à venir » (assurance, révision, état des lieux) : **données fictives**.
+- Indicateurs « +N ce mois-ci » (biens ajoutés, nouveaux locataires) : **données fictives**.
+- Bouton **« Relancer »** de la carte « Loyers en retard » : **non branché** (la relance
+  fonctionne depuis la page Loyers).
+
+### Biens
+
+- Pas de suppression ni de photos.
+- Occupation affichée **à date** uniquement (pas d'historique).
+- Identifiants de lots uniques par bien seulement (`propertyId` + `unitId`).
+
+### Locataires
+
+- La fiche ne liste que les **baux en cours** : pas d'historique des baux passés.
+- « Sans bail » ne distingue pas un ancien locataire d'un futur locataire.
+- Unicité vérifiée sur le téléphone uniquement (pas sur l'e-mail ni la pièce d'identité).
+
+### Contrats
+
+- Pas d'action **« Renouveler »** pour un contrat échu (on le modifie ou on le résilie).
+- Une résiliation enregistrée **ne peut pas être annulée**.
+- Pas de génération du bail (PDF), de signature, d'**état des lieux** ni de suivi de la
+  **restitution du dépôt de garantie**.
+- Pas de **révision / indexation** du loyer.
+- Le seuil « bail bientôt échu » est fixé à **90 jours** (`LEASE_ENDING_DAYS`), non
+  configurable.
+
+### Loyers
+
+- Pas de **quittance** de loyer (PDF / impression).
+- Pas d'**annulation d'un encaissement** dans l'interface (prévue côté données :
+  `cancelPayment`).
+- Pas de **prorata** du premier ni du dernier mois.
+- Un paiement s'impute sur **une seule échéance** : pas de répartition automatique d'un
+  versement sur plusieurs mois, ni de trop-perçu / avoir.
+- Pas de pénalités de retard.
+- Relances **envoyées depuis l'appareil** (WhatsApp, SMS, e-mail) : pas d'envoi serveur, pas de
+  relances automatiques, historique perdu au rechargement.
+- Pas de rapprochement bancaire ni Mobile Money.
+
+### Interventions
+
+- Pas d'**annuaire des prestataires** : nom et téléphone saisis à chaque intervention.
+- Pas de photos ni de devis / factures joints.
+- Démarrer une intervention ne passe pas le lot en **« en travaux »**.
+- « À la charge du locataire » est informatif : le coût n'est **pas refacturé** sur ses loyers.
+- Pas d'interventions récurrentes (entretiens annuels).
+
+### Rapports
+
+- Pas d'**export PDF** ni de mise en page d'impression (exports CSV uniquement).
+- Pas de **comparaison** d'une période à l'autre.
+- Occupation **à date** (pas d'évolution dans le temps).
+- Loyers comptés **par mois d'échéance** (et non par date d'encaissement) ; dépenses limitées
+  aux interventions terminées.
+- Pas de déclaration de revenus fonciers ni de vue fiscale.
+
+### Paramètres
+
+- Enregistrés **dans le navigateur** : propres à l'appareil, non partagés.
+- Changer d'onglet sans enregistrer **perd les modifications** sans avertissement (la garde
+  ne protège que la sortie de la page).
+- Pas de logo de l'organisation, ni d'utilisateurs et de droits.
+- Seul le taux GNF est modifiable (EUR à parité fixe) ; pas de récupération automatique des taux.
+
+### Prochaines grandes étapes
+
+- API (`api/`) : persistance, comptes et droits, calcul serveur des échéances, envoi des
+  relances, génération des PDF (baux, quittances, rapports), téléversement des documents.
+- Application mobile (`mobile/`).
 
 ---
 
 ## 14. Historique des livraisons (front, `main`)
 
-| Commit       | Contenu                                                                                |
-| ------------ | -------------------------------------------------------------------------------------- |
-| `c0abb04`    | Initialisation : Vite, Tailwind, HeroUI, i18n, PWA, Playwright                         |
-| `a1be7bf`    | Tableau de bord, menu mobile, devises XOF / EUR / GNF                                  |
-| `1ca4a85`    | Carte Occupation de hauteur fixe                                                       |
-| `2193478`    | Biens : liste et fiche                                                                 |
-| `6842285`    | Biens : formulaire et pagination                                                       |
-| `a1a652a`    | Locataires : liste, fiche, formulaires                                                 |
-| `44dc41c`    | Contrats : liste, fiche, création, modification, résiliation                           |
-| `091f681`    | Loyers : échéances, encaissements, impayés, relances ; dashboard branché               |
-| `8571a9e`    | `CLAUDE.md` du front (renvoie vers ce fichier)                                         |
-| `9194948`    | `AGENTS.md` déplacé dans `front/` (versionné avec le front)                            |
-| `d108003`    | Interventions : liste, fiche, cycle de vie, formulaire ; onglet bien ; dashboard       |
-| _à commiter_ | Rapports : indicateurs, revenus mensuels, performance par bien, impayés, dépenses, CSV |
+| Commit       | Contenu                                                                                     |
+| ------------ | ------------------------------------------------------------------------------------------- |
+| `c0abb04`    | Initialisation : Vite, Tailwind, HeroUI, i18n, PWA, Playwright                              |
+| `a1be7bf`    | Tableau de bord, menu mobile, devises XOF / EUR / GNF                                       |
+| `1ca4a85`    | Carte Occupation de hauteur fixe                                                            |
+| `2193478`    | Biens : liste et fiche                                                                      |
+| `6842285`    | Biens : formulaire et pagination                                                            |
+| `a1a652a`    | Locataires : liste, fiche, formulaires                                                      |
+| `44dc41c`    | Contrats : liste, fiche, création, modification, résiliation                                |
+| `091f681`    | Loyers : échéances, encaissements, impayés, relances ; dashboard branché                    |
+| `8571a9e`    | `CLAUDE.md` du front (renvoie vers ce fichier)                                              |
+| `9194948`    | `AGENTS.md` déplacé dans `front/` (versionné avec le front)                                 |
+| `d108003`    | Interventions : liste, fiche, cycle de vie, formulaire ; onglet bien ; dashboard            |
+| `fc25403`    | Rapports : indicateurs, revenus mensuels, performance par bien, impayés, dépenses, CSV      |
+| _à commiter_ | Paramètres : profil, organisation, préférences et taux, défauts des baux, modèle de relance |

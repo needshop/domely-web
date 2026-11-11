@@ -10,7 +10,7 @@ const localeOf = (lng: string | undefined) => (lng === 'en' ? 'en-US' : 'fr-FR')
 /** Formateurs Intl alignés sur la langue et la devise actives. */
 export function useFormatters() {
   const { i18n } = useTranslation()
-  const { currency: currencyCode } = useCurrency()
+  const { currency: currencyCode, rates } = useCurrency()
   const locale = localeOf(i18n.resolvedLanguage)
 
   return useMemo(() => {
@@ -53,11 +53,11 @@ export function useFormatters() {
       currencyCode,
       // — Montants issus des données (en devise de référence XOF) : convertis puis formatés —
       /** Convertit un montant XOF vers la devise d'affichage. */
-      convert: (v: number) => convertAmount(v, currencyCode),
+      convert: (v: number) => convertAmount(v, currencyCode, undefined, rates),
       /** Montant XOF converti et formaté : complet sous 1 M, abrégé au-delà. */
-      money: (v: number) => formatAmount(convertAmount(v, currencyCode)),
+      money: (v: number) => formatAmount(convertAmount(v, currencyCode, undefined, rates)),
       /** Montant XOF converti, exact (tableaux de données, lecteurs d'écran). */
-      moneyExact: (v: number) => currency.format(convertAmount(v, currencyCode)),
+      moneyExact: (v: number) => currency.format(convertAmount(v, currencyCode, undefined, rates)),
       // — Montants déjà dans la devise d'affichage (ex. graphiques) —
       formatAmount,
       formatAmountExact: (v: number) => currency.format(v),
@@ -72,5 +72,5 @@ export function useFormatters() {
       dayMonthYear: (d: Date) => dayMonthYear.format(d),
       fullDate: (d: Date) => fullDate.format(d),
     }
-  }, [locale, currencyCode])
+  }, [locale, currencyCode, rates])
 }

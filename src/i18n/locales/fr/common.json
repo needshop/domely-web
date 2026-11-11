@@ -39,6 +39,7 @@
   },
   "dashboard": {
     "greeting": "Bonjour,",
+    "greetingName": "Bonjour {{name}},",
     "subtitle": "Voici la vue d’ensemble de votre patrimoine.",
     "addProperty": "Ajouter un bien",
     "viewAll": "Tout voir",
@@ -111,9 +112,6 @@
         "building": "Immeuble"
       }
     }
-  },
-  "placeholder": {
-    "comingSoon": "Module à venir."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -958,7 +956,7 @@
         "tacitRenewal": "Reconduction tacite",
         "tacitRenewalHint": "Le bail se renouvelle automatiquement à l’échéance, sauf congé.",
         "deposit": "Dépôt de garantie",
-        "depositHint": "Usage : 2 mois (habitation), 3 mois (commercial).",
+        "depositHint": "Usage : {{residential}} mois (habitation), {{commercial}} mois (commercial) — voir Paramètres.",
         "paymentDay": "Jour d’échéance",
         "paymentDayHint": "Du 1 au 28 du mois.",
         "notesPlaceholder": "Clauses particulières, état des lieux, remise des clés…"
@@ -1038,6 +1036,99 @@
       "none": "Aucun impayé : tous les locataires sont à jour.",
       "dues_one": "{{count}} échéance",
       "dues_other": "{{count}} échéances"
+    }
+  },
+  "settings": {
+    "subtitle": "Votre profil, votre organisation et vos préférences.",
+    "tabs": "Sections des paramètres",
+    "tab": {
+      "profile": "Profil",
+      "organization": "Organisation",
+      "preferences": "Préférences",
+      "rentals": "Location",
+      "messages": "Messages"
+    },
+    "save": "Enregistrer",
+    "saved": "Paramètres enregistrés",
+    "storageNotice": "Les paramètres sont enregistrés dans ce navigateur, en attendant la synchronisation avec votre compte.",
+    "profile": {
+      "title": "Profil",
+      "description": "Vos informations personnelles.",
+      "name": "Nom complet",
+      "nameHint": "Votre prénom est utilisé pour vous saluer sur le tableau de bord."
+    },
+    "organization": {
+      "title": "Organisation",
+      "description": "Qui gère les biens. Ces informations signent les messages envoyés aux locataires.",
+      "kind": "Vous êtes",
+      "kinds": {
+        "individual": "Propriétaire particulier",
+        "agency": "Agence immobilière",
+        "company": "Société (SCI, SARL…)"
+      },
+      "name": "Raison sociale",
+      "nameIndividual": "Nom affiché",
+      "nameHint": "Apparaît en signature des relances.",
+      "registration": "Identifiant légal",
+      "registrationPlaceholder": "NINEA, RCCM, IFU…",
+      "address": "Adresse"
+    },
+    "preferences": {
+      "title": "Affichage",
+      "description": "Appliqué immédiatement, sur cet appareil.",
+      "language": "Langue",
+      "languageHint": "Langue de l’interface et des messages proposés.",
+      "currency": "Devise d’affichage",
+      "currencyHint": "Les montants sont enregistrés en F CFA et convertis à l’affichage.",
+      "theme": "Thème",
+      "themeHint": "Clair, sombre, ou selon le réglage de l’appareil."
+    },
+    "rates": {
+      "title": "Taux de change",
+      "description": "Utilisés pour convertir les montants affichés.",
+      "eur": "Euro",
+      "eurHint": "Parité fixe du franc CFA, non modifiable.",
+      "gnf": "Franc guinéen (pour 1 F CFA)",
+      "gnfHint": "Taux flottant : mettez-le à jour régulièrement."
+    },
+    "rentals": {
+      "title": "Valeurs par défaut des contrats",
+      "description": "Proposées à la création d’un contrat ; modifiables contrat par contrat.",
+      "leaseMonths": "Durée du bail",
+      "depositResidential": "Dépôt de garantie — habitation",
+      "depositCommercial": "Dépôt de garantie — commercial et professionnel",
+      "depositHint": "En mois de loyer.",
+      "tacitRenewalHint": "Valeur proposée pour la reconduction tacite des nouveaux baux.",
+      "errors": {
+        "depositMax": "12 mois maximum."
+      }
+    },
+    "messages": {
+      "title": "Message de relance",
+      "description": "Proposé quand vous relancez un loyer impayé ; modifiable avant chaque envoi.",
+      "template": "Modèle",
+      "variables": "Variables remplacées à l’envoi :",
+      "variable": {
+        "name": "locataire",
+        "month": "mois",
+        "unit": "lot",
+        "property": "bien",
+        "amount": "montant dû",
+        "date": "échéance"
+      },
+      "preview": "Aperçu",
+      "signatureHint": "La signature reprend le nom et les coordonnées de votre organisation.",
+      "noSignature": "Renseignez votre organisation pour ajouter une signature.",
+      "restore": "Rétablir le modèle par défaut"
+    },
+    "reset": {
+      "title": "Réinitialiser",
+      "description": "Revenir aux paramètres d’origine (profil, organisation, taux, valeurs par défaut, modèle).",
+      "action": "Réinitialiser les paramètres",
+      "confirmTitle": "Réinitialiser les paramètres ?",
+      "confirmDescription": "Tous les paramètres reviendront à leurs valeurs d’origine. Vos biens, locataires et contrats ne sont pas concernés.",
+      "confirm": "Réinitialiser",
+      "done": "Paramètres réinitialisés"
     }
   },
   "form": {

@@ -8,6 +8,7 @@ import { ContractForm } from '@/features/contracts/form/ContractForm'
 import { emptyLeaseValues, fromFormValues, toFormValues } from '@/features/contracts/form/mapping'
 import type { LeaseFormValues } from '@/features/contracts/form/schema'
 import { useProperties } from '@/features/properties/api'
+import { useSettings } from '@/features/settings/api'
 import { useTenants } from '@/features/tenants/api'
 
 /**
@@ -22,6 +23,7 @@ export function ContractFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const leases = useLeases()
   const properties = useProperties()
   const tenants = useTenants()
+  const rentalDefaults = useSettings().rentals
   const existing = mode === 'edit' ? leases.find((l) => l.id === id) : undefined
 
   // Valeurs initiales figées au montage : le formulaire ne doit pas se réinitialiser en cours de saisie
@@ -29,11 +31,14 @@ export function ContractFormPage({ mode }: { mode: 'create' | 'edit' }) {
     if (existing) return toFormValues(existing)
     const property = properties.find((p) => p.id === params.get('property'))
     const tenantId = params.get('tenant')
-    return emptyLeaseValues({
-      tenantId: tenants.some((tn) => tn.id === tenantId) ? tenantId : null,
-      property,
-      unit: property?.units.find((u) => u.id === params.get('unit')),
-    })
+    return emptyLeaseValues(
+      {
+        tenantId: tenants.some((tn) => tn.id === tenantId) ? tenantId : null,
+        property,
+        unit: property?.units.find((u) => u.id === params.get('unit')),
+      },
+      rentalDefaults,
+    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [existing?.id])
   const others = useMemo(() => leases.filter((l) => l.id !== existing?.id), [leases, existing?.id])

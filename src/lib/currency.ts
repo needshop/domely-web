@@ -17,16 +17,30 @@ export const BASE_CURRENCY: Currency = 'XOF'
 export const XOF_PER_EUR = 655.957
 export const GNF_PER_XOF = 14.18
 
-const RATE_FROM_XOF: Record<Currency, number> = {
+/** Taux depuis 1 XOF. */
+export type ExchangeRates = Record<Currency, number>
+
+export const DEFAULT_RATES: ExchangeRates = {
   XOF: 1,
   EUR: 1 / XOF_PER_EUR,
   GNF: GNF_PER_XOF,
 }
 
+/** Taux appliqués : l'EUR reste à parité fixe ; le GNF peut être ajusté dans les paramètres. */
+export const ratesWith = (gnfPerXof: number): ExchangeRates => ({
+  ...DEFAULT_RATES,
+  GNF: gnfPerXof,
+})
+
 /** Convertit un montant d'une devise vers une autre (via le XOF). */
-export function convertAmount(amount: number, to: Currency, from: Currency = BASE_CURRENCY) {
+export function convertAmount(
+  amount: number,
+  to: Currency,
+  from: Currency = BASE_CURRENCY,
+  rates: ExchangeRates = DEFAULT_RATES,
+) {
   if (from === to) return amount
-  return (amount / RATE_FROM_XOF[from]) * RATE_FROM_XOF[to]
+  return (amount / rates[from]) * rates[to]
 }
 export const CURRENCY_STORAGE_KEY = 'domely-currency'
 
@@ -36,6 +50,8 @@ export const isCurrency = (v: unknown): v is Currency =>
 export interface CurrencyContextValue {
   currency: Currency
   setCurrency: (c: Currency) => void
+  /** Taux de change appliqués à l'affichage */
+  rates: ExchangeRates
 }
 
 export const CurrencyContext = createContext<CurrencyContextValue | null>(null)

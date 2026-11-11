@@ -39,6 +39,7 @@
   },
   "dashboard": {
     "greeting": "Hello,",
+    "greetingName": "Hello {{name}},",
     "subtitle": "Here is an overview of your portfolio.",
     "addProperty": "Add a property",
     "viewAll": "View all",
@@ -111,9 +112,6 @@
         "building": "Building"
       }
     }
-  },
-  "placeholder": {
-    "comingSoon": "Module coming soon."
   },
   "notFound": {
     "title": "Page not found",
@@ -958,7 +956,7 @@
         "tacitRenewal": "Automatic renewal",
         "tacitRenewalHint": "The lease renews automatically at term unless notice is given.",
         "deposit": "Security deposit",
-        "depositHint": "Usually 2 months (residential), 3 months (commercial).",
+        "depositHint": "Usually {{residential}} months (residential), {{commercial}} months (commercial) — see Settings.",
         "paymentDay": "Due day",
         "paymentDayHint": "From the 1st to the 28th.",
         "notesPlaceholder": "Special clauses, inventory, key handover…"
@@ -1038,6 +1036,99 @@
       "none": "No unpaid rent: all tenants are up to date.",
       "dues_one": "{{count}} due",
       "dues_other": "{{count}} dues"
+    }
+  },
+  "settings": {
+    "subtitle": "Your profile, organization and preferences.",
+    "tabs": "Settings sections",
+    "tab": {
+      "profile": "Profile",
+      "organization": "Organization",
+      "preferences": "Preferences",
+      "rentals": "Leasing",
+      "messages": "Messages"
+    },
+    "save": "Save",
+    "saved": "Settings saved",
+    "storageNotice": "Settings are stored in this browser until they sync with your account.",
+    "profile": {
+      "title": "Profile",
+      "description": "Your personal information.",
+      "name": "Full name",
+      "nameHint": "Your first name is used to greet you on the dashboard."
+    },
+    "organization": {
+      "title": "Organization",
+      "description": "Who manages the properties. This information signs the messages sent to tenants.",
+      "kind": "You are",
+      "kinds": {
+        "individual": "Private landlord",
+        "agency": "Real estate agency",
+        "company": "Company"
+      },
+      "name": "Company name",
+      "nameIndividual": "Display name",
+      "nameHint": "Shown as the signature of reminders.",
+      "registration": "Legal identifier",
+      "registrationPlaceholder": "NINEA, RCCM, IFU…",
+      "address": "Address"
+    },
+    "preferences": {
+      "title": "Display",
+      "description": "Applied immediately, on this device.",
+      "language": "Language",
+      "languageHint": "Language of the interface and suggested messages.",
+      "currency": "Display currency",
+      "currencyHint": "Amounts are stored in CFA francs and converted for display.",
+      "theme": "Theme",
+      "themeHint": "Light, dark, or following the device setting."
+    },
+    "rates": {
+      "title": "Exchange rates",
+      "description": "Used to convert displayed amounts.",
+      "eur": "Euro",
+      "eurHint": "Fixed CFA franc peg, cannot be changed.",
+      "gnf": "Guinean franc (per 1 CFA franc)",
+      "gnfHint": "Floating rate: update it regularly."
+    },
+    "rentals": {
+      "title": "Contract defaults",
+      "description": "Suggested when creating a contract; editable contract by contract.",
+      "leaseMonths": "Lease term",
+      "depositResidential": "Security deposit — residential",
+      "depositCommercial": "Security deposit — commercial and professional",
+      "depositHint": "In months of rent.",
+      "tacitRenewalHint": "Suggested automatic renewal value for new leases.",
+      "errors": {
+        "depositMax": "12 months maximum."
+      }
+    },
+    "messages": {
+      "title": "Reminder message",
+      "description": "Suggested when you remind a tenant of unpaid rent; editable before each send.",
+      "template": "Template",
+      "variables": "Variables replaced when sending:",
+      "variable": {
+        "name": "tenant",
+        "month": "month",
+        "unit": "unit",
+        "property": "property",
+        "amount": "amount due",
+        "date": "due date"
+      },
+      "preview": "Preview",
+      "signatureHint": "The signature uses your organization’s name and contact details.",
+      "noSignature": "Fill in your organization to add a signature.",
+      "restore": "Restore default template"
+    },
+    "reset": {
+      "title": "Reset",
+      "description": "Go back to the original settings (profile, organization, rates, defaults, template).",
+      "action": "Reset settings",
+      "confirmTitle": "Reset settings?",
+      "confirmDescription": "All settings will return to their original values. Your properties, tenants and contracts are not affected.",
+      "confirm": "Reset",
+      "done": "Settings reset"
     }
   },
   "form": {

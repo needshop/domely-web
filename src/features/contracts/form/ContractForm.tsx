@@ -18,6 +18,7 @@ import {
   LeaveGuard,
 } from '@/components/form/FormLayout'
 import type { Property } from '@/features/properties/types'
+import { useSettings } from '@/features/settings/api'
 import type { Tenant } from '@/features/tenants/types'
 import { BASE_CURRENCY } from '@/lib/currency'
 import { durationInMonths } from '@/lib/dates'
@@ -58,6 +59,7 @@ export function ContractForm({
 }: ContractFormProps) {
   const { t } = useTranslation()
   const f = useFormatters()
+  const rentalDefaults = useSettings().rentals
   const formatDate = f.dayMonthYear
   const schema = useMemo(
     () =>
@@ -108,11 +110,11 @@ export function ContractForm({
     if (previousUnit.current === unitId) return
     previousUnit.current = unitId
     if (!unit || isEdit) return
-    const defaults = unitDefaults(unit)
+    const defaults = unitDefaults(unit, rentalDefaults)
     for (const key of ['type', 'rent', 'charges', 'deposit'] as const) {
       setValue(key, defaults[key], { shouldDirty: true })
     }
-  }, [unitId, unit, isEdit, setValue])
+  }, [unitId, unit, isEdit, setValue, rentalDefaults])
 
   // Loyer ou nature modifiés : le dépôt suit l'usage (2 ou 3 mois), sauf s'il a été personnalisé
   const previousTerms = useRef({ rent, type })
@@ -122,11 +124,12 @@ export function ContractForm({
     previousTerms.current = { rent, type }
     const deposit = getValues('deposit')
     const followsUsage =
-      deposit === null || (prev.rent !== null && deposit === defaultDeposit(prev.rent, prev.type))
+      deposit === null ||
+      (prev.rent !== null && deposit === defaultDeposit(prev.rent, prev.type, rentalDefaults))
     if (followsUsage && rent) {
-      setValue('deposit', defaultDeposit(rent, type), { shouldDirty: true })
+      setValue('deposit', defaultDeposit(rent, type, rentalDefaults), { shouldDirty: true })
     }
-  }, [rent, type, getValues, setValue])
+  }, [rent, type, getValues, setValue, rentalDefaults])
 
   // Début modifié : fin proposée un an plus tard si elle n'est plus cohérente
   const previousStart = useRef(startDate)
@@ -135,9 +138,11 @@ export function ContractForm({
     previousStart.current = startDate
     const end = getValues('endDate')
     if (startDate && (!end || end <= startDate)) {
-      setValue('endDate', defaultEndDate(startDate), { shouldDirty: true })
+      setValue('endDate', defaultEndDate(startDate, rentalDefaults.leaseMonths), {
+        shouldDirty: true,
+      })
     }
-  }, [startDate, getValues, setValue])
+  }, [startDate, getValues, setValue, rentalDefaults])
 
   const months =
     startDate && endDate && endDate > startDate ? durationInMonths(startDate, endDate) : 0
@@ -287,7 +292,10 @@ export function ContractForm({
             control={control}
             name="deposit"
             label={t('contracts.form.fields.deposit')}
-            description={t('contracts.form.fields.depositHint')}
+            description={t('contracts.form.fields.depositHint', {
+              residential: rentalDefaults.depositMonthsResidential,
+              commercial: rentalDefaults.depositMonthsCommercial,
+            })}
             formatOptions={amountFormat}
             minValue={0}
           />

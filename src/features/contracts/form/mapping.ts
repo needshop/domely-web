@@ -1,4 +1,5 @@
 import type { Property, Unit } from '@/features/properties/types'
+import type { RentalDefaults } from '@/features/settings/types'
 import { addDays, addMonths, todayIso } from '@/lib/dates'
 import type { Lease, LeaseType } from '../types'
 import { leaseTypeForUnit, nextReference } from '../utils'
@@ -6,30 +7,30 @@ import type { LeaseFormValues } from './schema'
 
 const newId = () => `l-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
 
-/** Fin par défaut : un an après le début, la veille du jour anniversaire. */
-export const defaultEndDate = (start: string) => addDays(addMonths(start, 12), -1)
+/** Fin par défaut : la durée de bail des paramètres, la veille du jour anniversaire. */
+export const defaultEndDate = (start: string, months = 12) => addDays(addMonths(start, months), -1)
 
-/** Dépôt de garantie d'usage : 2 mois de loyer en habitation, 3 sinon. */
-export const defaultDeposit = (rent: number, type: LeaseType) =>
-  rent * (type === 'residential' ? 2 : 3)
+/** Dépôt de garantie d'usage (paramètres) : en mois de loyer, selon la nature du bail. */
+export const defaultDeposit = (rent: number, type: LeaseType, defaults: RentalDefaults) =>
+  rent *
+  (type === 'residential' ? defaults.depositMonthsResidential : defaults.depositMonthsCommercial)
 
 /** Conditions proposées pour un lot : nature du bail, loyer et charges de référence. */
-export function unitDefaults(unit: Unit) {
+export function unitDefaults(unit: Unit, defaults: RentalDefaults) {
   const type = leaseTypeForUnit(unit.kind)
   return {
     type,
     rent: unit.rent,
     charges: unit.charges,
-    deposit: defaultDeposit(unit.rent, type),
+    deposit: defaultDeposit(unit.rent, type, defaults),
   }
 }
 
 /** Valeurs initiales d'un nouveau contrat (pré-remplies depuis un lot ou un locataire). */
-export function emptyLeaseValues(prefill: {
-  tenantId?: string | null
-  property?: Property
-  unit?: Unit
-}): LeaseFormValues {
+export function emptyLeaseValues(
+  prefill: { tenantId?: string | null; property?: Property; unit?: Unit },
+  defaults: RentalDefaults,
+): LeaseFormValues {
   const start = addMonths(todayIso().slice(0, 8) + '01', 1)
   return {
     tenantId: prefill.tenantId ?? null,
@@ -37,14 +38,14 @@ export function emptyLeaseValues(prefill: {
     unitId: prefill.unit?.id ?? null,
     type: 'residential',
     startDate: start,
-    endDate: defaultEndDate(start),
+    endDate: defaultEndDate(start, defaults.leaseMonths),
     rent: null,
     charges: null,
     deposit: null,
-    paymentDay: 5,
-    tacitRenewal: true,
+    paymentDay: defaults.paymentDay,
+    tacitRenewal: defaults.tacitRenewal,
     notes: '',
-    ...(prefill.unit ? unitDefaults(prefill.unit) : {}),
+    ...(prefill.unit ? unitDefaults(prefill.unit, defaults) : {}),
   }
 }
 

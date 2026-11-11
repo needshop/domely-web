@@ -17,6 +17,7 @@ import { portfolioStats } from '@/features/properties/utils'
 import { useInterventionRows } from '@/features/maintenance/api'
 import { isOpen, priorityOrder } from '@/features/maintenance/utils'
 import { useRentDues } from '@/features/rents/api'
+import { useSettings } from '@/features/settings/api'
 import { currentPeriod, isOverdue, periodsBetween, shiftPeriod } from '@/features/rents/utils'
 import { useTenantRows } from '@/features/tenants/api'
 import { tenantsSummary } from '@/features/tenants/utils'
@@ -26,6 +27,7 @@ export function DashboardPage() {
   const { t } = useTranslation()
   const f = useFormatters()
   const { kpis, deadlines } = dashboardMock
+  const profileName = useSettings().profile.name.trim()
   // Biens, lots et occupation : mêmes données que le module Biens
   const properties = useProperties()
   const portfolio = portfolioStats(properties)
@@ -86,7 +88,11 @@ export function DashboardPage() {
     <div className="mx-auto flex max-w-7xl flex-col gap-6">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl">{t('dashboard.greeting')}</h1>
+          <h1 className="text-2xl">
+            {profileName
+              ? t('dashboard.greetingName', { name: profileName.split(' ')[0] })
+              : t('dashboard.greeting')}
+          </h1>
           <p className="mt-1 text-sm text-muted">{t('dashboard.subtitle')}</p>
         </div>
         <Link to="/properties/new" className={buttonVariants({ variant: 'primary' })}>

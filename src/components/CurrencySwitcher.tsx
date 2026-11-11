@@ -1,18 +1,12 @@
 import { ListBox, Select } from '@heroui/react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/cn'
-import {
-  type Currency,
-  GNF_PER_XOF,
-  supportedCurrencies,
-  useCurrency,
-  XOF_PER_EUR,
-} from '@/lib/currency'
+import { type Currency, supportedCurrencies, useCurrency, XOF_PER_EUR } from '@/lib/currency'
 
 /** Sélecteur de devise d'affichage (XOF / EUR / GNF). */
 export function CurrencySwitcher({ className }: { className?: string }) {
   const { t, i18n } = useTranslation()
-  const { currency, setCurrency } = useCurrency()
+  const { currency, setCurrency, rates } = useCurrency()
   const decimal = new Intl.NumberFormat(i18n.resolvedLanguage === 'en' ? 'en-US' : 'fr-FR', {
     maximumFractionDigits: 3,
   })
@@ -20,7 +14,7 @@ export function CurrencySwitcher({ className }: { className?: string }) {
   // Taux appliqué, affiché sous chaque devise
   const rateLabel = (code: Currency) => {
     if (code === 'EUR') return t('currency.rate.EUR', { value: decimal.format(XOF_PER_EUR) })
-    if (code === 'GNF') return t('currency.rate.GNF', { value: decimal.format(GNF_PER_XOF) })
+    if (code === 'GNF') return t('currency.rate.GNF', { value: decimal.format(rates.GNF) })
     return t('currency.rate.XOF')
   }
 

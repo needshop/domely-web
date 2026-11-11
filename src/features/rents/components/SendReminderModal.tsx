@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/cn'
 import { todayIso } from '@/lib/dates'
 import { useFormatters } from '@/lib/format'
+import { fillTemplate, signature } from '@/features/settings/reminderMessage'
+import { useSettings } from '@/features/settings/api'
 import { recordReminder } from '../api'
 import type { ReminderChannel, RentDueRow } from '../types'
 
@@ -37,16 +39,22 @@ function ReminderContent({ row, onClose }: { row: RentDueRow; onClose: () => voi
   const f = useFormatters()
   // Message proposé à partir du locataire, du lot et du montant dû (modifiable).
   // Le contenu est remonté à chaque échéance (key), d'où l'initialisation directe.
-  const [message, setMessage] = useState(() =>
-    t('rents.reminder.template', {
+  const settings = useSettings()
+  const [message, setMessage] = useState(() => {
+    const values = {
       name: row.tenant?.name ?? '',
       month: f.monthLong(new Date(`${row.due.period}-15T12:00:00`)),
       unit: row.unit?.label ?? '',
       property: row.property?.name ?? '',
       amount: f.moneyExact(row.due.remaining),
       date: f.dayMonthYear(new Date(`${row.due.dueDate}T12:00:00`)),
-    }),
-  )
+    }
+    // Modèle personnalisé des paramètres, sinon modèle par défaut de la langue active
+    const custom = settings.reminder.template.trim()
+    const body = custom ? fillTemplate(custom, values) : t('rents.reminder.template', values)
+    const sign = signature(settings.organization)
+    return sign ? `${body}\n${sign}` : body
+  })
 
   const tenant = row.tenant
   const phone = tenant?.phone.replace(/[^\d+]/g, '') ?? ''
