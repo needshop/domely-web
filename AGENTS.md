@@ -817,3 +817,5 @@ suite. Quand une limite est levée, la retirer de cette liste et mettre à jour 
 | `fab5dc2` | Paramètres : profil, organisation, préférences et taux, défauts des baux, modèle de relance     |
 | `1d6cb56` | Authentification : connexion, inscription (OTP, justificatifs), récupération, agence en en-tête |
 | `565aee5` | Bailleurs (comptes professionnels) : liste, fiche, formulaire ; bailleur des biens              |
+| `4965203` | Tests : création de contrat stabilisée (liste avec recherche au clavier)                        |
+| `6b79e36` | Chargement des pages à la demande (fichier principal de 1,69 Mo à 413 Ko)                       |
