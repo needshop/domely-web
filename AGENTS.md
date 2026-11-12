@@ -143,8 +143,14 @@ docker run --rm -p 8080:8080 domely-front     # http://localhost:8080
 - Job `image` (si `checks` passe) : build `linux/amd64`, push sur
   `ghcr.io/needshop/domely-web`, tags `X.Y.Z`, `X.Y`, `X` (pas pour les 0.x) et `latest` (sauf
   pré-release), cache GitHub Actions, attestation de provenance.
+- **Relance manuelle** (release déjà publiée, run échoué) : Actions → Release image → Run
+  workflow avec le tag, ou `gh workflow run release-image.yml -f tag=vX.Y.Z` ; le code du tag
+  est utilisé, pas celui de `main`.
 - **Prérequis** : variable de dépôt `VITE_API_URL` (Settings → Secrets and variables →
-  Actions → Variables) ; l'organisation doit autoriser la création de packages. Aucun secret :
+  Actions → Variables) ; l'organisation doit autoriser la création de packages **et les
+  actions GitHub** (`actions/*`, en plus de `docker/*`) : réglage imposé au niveau de
+  l'organisation `needshop` (admin requis), sinon le run échoue au démarrage
+  (`startup_failure`). Aucun secret :
   `GITHUB_TOKEN` (`packages: write`) suffit pour pousser.
 - **Faire une release** : mettre à jour `version` dans `package.json` sur `main`, puis
   Releases → Draft a new release → tag `vX.Y.Z` → Publish.

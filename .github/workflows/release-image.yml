@@ -6,17 +6,27 @@
 #    attestation de provenance.
 #
 # Prérequis : variable de dépôt (ou d'environnement) VITE_API_URL ; aucun secret à créer,
-# GITHUB_TOKEN suffit pour pousser sur GHCR.
+# GITHUB_TOKEN suffit pour pousser sur GHCR. L'organisation doit autoriser les actions
+# GitHub (actions/*) et Docker (docker/*).
+#
+# Relance manuelle (release déjà publiée) : Actions → Release image → Run workflow, avec le
+# tag, ou `gh workflow run release-image.yml -f tag=v0.1.0`.
 
 name: Release image
 
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag de la release à publier (ex. v0.1.0)
+        required: true
+        type: string
 
 # Une seule publication à la fois par release
 concurrency:
-  group: release-image-${{ github.event.release.tag_name }}
+  group: release-image-${{ github.event.release.tag_name || inputs.tag }}
   cancel-in-progress: false
 
 permissions:
@@ -25,6 +35,8 @@ permissions:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  # Tag publié : celui de la release, ou celui saisi pour une relance manuelle
+  RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
 
 jobs:
   checks:
@@ -32,8 +44,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Récupérer le code
+      - name: Récupérer le code (tag de la release)
         uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
 
       - name: Installer Node.js
         uses: actions/setup-node@v4
@@ -43,7 +57,7 @@ jobs:
 
       - name: Vérifier le tag de la release
         env:
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ env.RELEASE_TAG }}
         run: |
           VERSION="v$(node -p "require('./package.json').version")"
           if [ "$TAG" != "$VERSION" ]; then
@@ -93,8 +107,10 @@ jobs:
       id-token: write
       attestations: write
     steps:
-      - name: Récupérer le code
+      - name: Récupérer le code (tag de la release)
         uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
 
       - name: Vérifier la variable VITE_API_URL
         env:
@@ -122,9 +138,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}},enable=${{ !startsWith(github.event.release.tag_name, 'v0.') }}
+            type=semver,pattern={{version}},value=${{ env.RELEASE_TAG }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.RELEASE_TAG }}
+            type=semver,pattern={{major}},value=${{ env.RELEASE_TAG }},enable=${{ !startsWith(env.RELEASE_TAG, 'v0.') }}
           labels: |
             org.opencontainers.image.title=Domely — front
             org.opencontainers.image.description=Front Domely (SPA React servie par nginx)
