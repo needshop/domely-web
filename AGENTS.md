@@ -918,3 +918,4 @@ suite. Quand une limite est levée, la retirer de cette liste et mettre à jour 
 | `6b79e36` | Chargement des pages à la demande (fichier principal de 1,69 Mo à 413 Ko)                       |
 | `9d53205` | Tests : build conditionnel (rebuild seulement si les sources ont changé)                        |
 | `74c0f67` | Rôles des comptes, module Workspace (invitations, désactivation des gestionnaires)              |
+| `4e26ae8` | Image Docker (nginx) et publication sur GHCR à chaque release (GitHub Actions)                  |
