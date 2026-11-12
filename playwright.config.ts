@@ -28,9 +28,12 @@ export default defineConfig({
   },
   projects: [{ name: 'desktop-chrome', use: { ...devices['Desktop Chrome'], channel: 'chrome' } }],
   webServer: {
-    command: `npm run build && npx vite preview --port ${PORT} --strictPort`,
+    // Rebuild seulement si les sources ont changé depuis le dernier build (scripts/e2e-server.mjs) ;
+    // forcer avec E2E_BUILD=always
+    command: 'node scripts/e2e-server.mjs',
+    env: { E2E_PORT: String(PORT) },
     url: baseURL,
-    // Toujours rebuilder : on ne veut jamais tester un ancien build resté ouvert
+    // Jamais de serveur déjà ouvert : il pourrait servir un ancien build
     reuseExistingServer: false,
     timeout: 180_000,
   },
