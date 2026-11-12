@@ -82,13 +82,15 @@ jobs:
         run: npx playwright install --with-deps chrome
 
       - name: Suite e2e complète
+        id: e2e
         run: npx playwright test
         env:
           CI: true
           E2E_BUILD: always
 
+      # Seulement si les tests e2e ont échoué (sinon il n'y a pas de rapport)
       - name: Conserver le rapport Playwright en cas d'échec
-        if: failure()
+        if: failure() && steps.e2e.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
