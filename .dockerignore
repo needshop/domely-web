@@ -1,0 +1,29 @@
+# Ni dépendances ni builds locaux : l'image installe et construit tout elle-même
+node_modules
+dist
+dist-ssr
+
+# Tests e2e et rapports
+e2e
+test-results
+playwright-report
+blob-report
+playwright.config.ts
+.playwright-mcp
+
+# Git, éditeurs, système
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store
+*.log
+
+# Variables locales (secrets éventuels)
+.env
+.env.*
+!.env.example
+
+# Fichiers Docker eux-mêmes (hors configuration nginx)
+Dockerfile
+.dockerignore

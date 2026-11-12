@@ -44,6 +44,8 @@ domely/                      # racine de travail (pas un dépôt git)
 ├── .mcp.json                # serveur MCP Playwright (tests navigateur)
 ├── Domely_Brand_Kit/        # logos, icônes, palette, charte graphique (PDF)
 ├── front/                   # SPA React — dépôt git : git@github.com:needshop/domely-web.git
+│   ├── Dockerfile           # image de production (nginx), config dans docker/nginx.conf
+│   ├── .github/workflows/   # release-image.yml : image Docker publiée sur GHCR à chaque release
 │   ├── AGENTS.md            # ce fichier
 │   └── CLAUDE.md            # consignes Claude Code (importe AGENTS.md)
 ├── api/                     # API (à venir, vide)
@@ -114,6 +116,42 @@ npm run lint           # oxlint
 npm run format         # prettier --write
 npx playwright test    # e2e (build + preview sur le port 4173)
 ```
+
+### Image Docker (`front/Dockerfile`)
+
+```bash
+docker build -t domely-front --build-arg VITE_API_URL=https://api.example.com/api .
+docker run --rm -p 8080:8080 domely-front     # http://localhost:8080
+```
+
+- Multi-étapes : build sur `node:24-alpine` (`npm ci`, `npm run build` avec typecheck), service
+  par `nginxinc/nginx-unprivileged:1.27-alpine` (sans root, port **8080**), image d'environ
+  80 Mo. Configuration nginx : `docker/nginx.conf`.
+- nginx : toutes les routes renvoient `index.html` (SPA) ; `/assets/*` en cache un an
+  (`immutable`), `index.html` et le manifeste en `no-cache` ; gzip ; en-têtes de sécurité
+  (`nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`) ; sonde
+  `GET /healthz` (utilisée par le `HEALTHCHECK`).
+- `VITE_API_URL` est **intégrée au build** : une image par environnement.
+- Premier build ≈ 5 min sur la machine de développement (Docker Desktop doit être lancé).
+
+### Publication de l'image (CI, `.github/workflows/release-image.yml`)
+
+- Déclenchée par la **publication d'une release GitHub** (tag `vX.Y.Z`).
+- Job `checks` : le tag doit correspondre à `version` de `package.json` (sinon échec) ;
+  typecheck, lint, format, **suite e2e complète** sous Chrome (`E2E_BUILD=always`, rapport
+  Playwright conservé 14 jours en cas d'échec).
+- Job `image` (si `checks` passe) : build `linux/amd64`, push sur
+  `ghcr.io/needshop/domely-web`, tags `X.Y.Z`, `X.Y`, `X` (pas pour les 0.x) et `latest` (sauf
+  pré-release), cache GitHub Actions, attestation de provenance.
+- **Prérequis** : variable de dépôt `VITE_API_URL` (Settings → Secrets and variables →
+  Actions → Variables) ; l'organisation doit autoriser la création de packages. Aucun secret :
+  `GITHUB_TOKEN` (`packages: write`) suffit pour pousser.
+- **Faire une release** : mettre à jour `version` dans `package.json` sur `main`, puis
+  Releases → Draft a new release → tag `vX.Y.Z` → Publish.
+- Package créé **privé** au premier push. Pour tirer l'image depuis un serveur : package
+  public, ou PAT _classic_ `read:packages` (les PAT fine-grained ne fonctionnent pas avec
+  GHCR), idéalement sur un compte technique.
+- Validation locale du workflow : `docker run --rm -v "$PWD":/repo -w /repo rhysd/actionlint:1.7.7`.
 
 - Variables d'environnement : `VITE_API_URL` (défaut `http://localhost:3000/api`),
   voir `front/.env.example`. Version de l'app injectée via `__APP_VERSION__` (package.json).
