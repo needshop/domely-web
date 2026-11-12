@@ -743,18 +743,19 @@ suite. Quand une limite est levée, la retirer de cette liste et mettre à jour 
 
 ## 14. Historique des livraisons (front, `main`)
 
-| Commit    | Contenu                                                                                     |
-| --------- | ------------------------------------------------------------------------------------------- |
-| `c0abb04` | Initialisation : Vite, Tailwind, HeroUI, i18n, PWA, Playwright                              |
-| `a1be7bf` | Tableau de bord, menu mobile, devises XOF / EUR / GNF                                       |
-| `1ca4a85` | Carte Occupation de hauteur fixe                                                            |
-| `2193478` | Biens : liste et fiche                                                                      |
-| `6842285` | Biens : formulaire et pagination                                                            |
-| `a1a652a` | Locataires : liste, fiche, formulaires                                                      |
-| `44dc41c` | Contrats : liste, fiche, création, modification, résiliation                                |
-| `091f681` | Loyers : échéances, encaissements, impayés, relances ; dashboard branché                    |
-| `8571a9e` | `CLAUDE.md` du front (renvoie vers ce fichier)                                              |
-| `9194948` | `AGENTS.md` déplacé dans `front/` (versionné avec le front)                                 |
-| `d108003` | Interventions : liste, fiche, cycle de vie, formulaire ; onglet bien ; dashboard            |
-| `fc25403` | Rapports : indicateurs, revenus mensuels, performance par bien, impayés, dépenses, CSV      |
-| `fab5dc2` | Paramètres : profil, organisation, préférences et taux, défauts des baux, modèle de relance |
+| Commit    | Contenu                                                                                         |
+| --------- | ----------------------------------------------------------------------------------------------- |
+| `c0abb04` | Initialisation : Vite, Tailwind, HeroUI, i18n, PWA, Playwright                                  |
+| `a1be7bf` | Tableau de bord, menu mobile, devises XOF / EUR / GNF                                           |
+| `1ca4a85` | Carte Occupation de hauteur fixe                                                                |
+| `2193478` | Biens : liste et fiche                                                                          |
+| `6842285` | Biens : formulaire et pagination                                                                |
+| `a1a652a` | Locataires : liste, fiche, formulaires                                                          |
+| `44dc41c` | Contrats : liste, fiche, création, modification, résiliation                                    |
+| `091f681` | Loyers : échéances, encaissements, impayés, relances ; dashboard branché                        |
+| `8571a9e` | `CLAUDE.md` du front (renvoie vers ce fichier)                                                  |
+| `9194948` | `AGENTS.md` déplacé dans `front/` (versionné avec le front)                                     |
+| `d108003` | Interventions : liste, fiche, cycle de vie, formulaire ; onglet bien ; dashboard                |
+| `fc25403` | Rapports : indicateurs, revenus mensuels, performance par bien, impayés, dépenses, CSV          |
+| `fab5dc2` | Paramètres : profil, organisation, préférences et taux, défauts des baux, modèle de relance     |
+| `1d6cb56` | Authentification : connexion, inscription (OTP, justificatifs), récupération, agence en en-tête |
