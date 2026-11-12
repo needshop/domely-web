@@ -63,6 +63,8 @@ export interface Property {
   /** Date d'ajout dans Domely (ISO) */
   createdAt: string
   description?: string
+  /** Bailleur qui a confié le bien à l'agence (comptes professionnels, module Bailleurs) */
+  landlordId?: string
   units: Unit[]
 }
 

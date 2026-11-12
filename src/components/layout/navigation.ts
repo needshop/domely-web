@@ -2,6 +2,7 @@ import {
   BarChart3,
   Building2,
   FileText,
+  Handshake,
   House,
   type LucideIcon,
   Settings,
@@ -13,6 +14,7 @@ import {
 export type NavKey =
   | 'dashboard'
   | 'properties'
+  | 'landlords'
   | 'tenants'
   | 'rents'
   | 'maintenance'
@@ -25,11 +27,14 @@ export interface NavItem {
   key: NavKey
   to: string
   icon: LucideIcon
+  /** Réservé aux comptes professionnels (agences, mandataires) */
+  professionalOnly?: boolean
 }
 
 export const navigation: NavItem[] = [
   { key: 'dashboard', to: '/', icon: House },
   { key: 'properties', to: '/properties', icon: Building2 },
+  { key: 'landlords', to: '/landlords', icon: Handshake, professionalOnly: true },
   { key: 'tenants', to: '/tenants', icon: Users },
   { key: 'rents', to: '/rents', icon: Wallet },
   { key: 'maintenance', to: '/maintenance', icon: Wrench },

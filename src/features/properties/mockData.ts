@@ -67,6 +67,7 @@ function makeUnits(spec: UnitsSpec): Unit[] {
 export const propertiesMock: Property[] = [
   {
     id: 'p1',
+    landlordId: 'l1',
     name: 'Résidence Les Oliviers',
     type: 'residence',
     address: {
@@ -116,6 +117,7 @@ export const propertiesMock: Property[] = [
   },
   {
     id: 'p3',
+    landlordId: 'l2',
     name: 'Immeuble Bellevue',
     type: 'building',
     address: {
@@ -143,6 +145,7 @@ export const propertiesMock: Property[] = [
   },
   {
     id: 'p4',
+    landlordId: 'l2',
     name: 'Résidence Baobab',
     type: 'residence',
     address: {
@@ -166,6 +169,7 @@ export const propertiesMock: Property[] = [
   },
   {
     id: 'p5',
+    landlordId: 'l5',
     name: 'Galerie Étoile',
     type: 'commercial',
     address: { street: 'Boulevard du 13 Janvier', district: 'Bè', city: 'Lomé', country: 'TG' },
@@ -186,6 +190,7 @@ export const propertiesMock: Property[] = [
   },
   {
     id: 'p6',
+    landlordId: 'l5',
     name: 'Horizon Business Center',
     type: 'office',
     address: {
@@ -209,6 +214,7 @@ export const propertiesMock: Property[] = [
   },
   {
     id: 'p7',
+    landlordId: 'l1',
     name: 'Villa Teranga',
     type: 'house',
     address: {
@@ -233,6 +239,7 @@ export const propertiesMock: Property[] = [
   },
   {
     id: 'p8',
+    landlordId: 'l3',
     name: 'Maison Akwaba',
     type: 'house',
     address: { street: 'Rue 12.045', district: 'Fidjrossè', city: 'Cotonou', country: 'BJ' },
@@ -252,6 +259,7 @@ export const propertiesMock: Property[] = [
   },
   {
     id: 'p9',
+    landlordId: 'l4',
     name: 'Résidence Le Flamboyant',
     type: 'residence',
     address: { street: 'Rue des Cocotiers', district: 'Tokoin', city: 'Lomé', country: 'TG' },
@@ -269,6 +277,7 @@ export const propertiesMock: Property[] = [
   },
   {
     id: 'p10',
+    landlordId: 'l5',
     name: 'Boutiques Dantokpa',
     type: 'commercial',
     address: {
@@ -292,6 +301,7 @@ export const propertiesMock: Property[] = [
   },
   {
     id: 'p11',
+    landlordId: 'l4',
     name: 'Appartement Corniche',
     type: 'apartment',
     address: {

@@ -2,13 +2,22 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { FormDateField, FormSelect, FormTextArea, FormTextField } from '@/components/form/fields'
+import {
+  FormComboBox,
+  FormDateField,
+  FormSelect,
+  FormTextArea,
+  FormTextField,
+} from '@/components/form/fields'
 import {
   FormActionBar,
   FormErrorSummary,
   FormSection as Section,
   LeaveGuard,
 } from '@/components/form/FormLayout'
+import { Link } from 'react-router'
+import { useIsProfessional } from '@/features/auth/api'
+import { useLandlords } from '@/features/landlords/api'
 import { supportedCountries, useCountryName } from '@/lib/countries'
 import { propertyTypes } from '../types'
 import { isSingleUnitType, makePropertySchema, type PropertyFormValues } from './schema'
@@ -29,6 +38,16 @@ export function PropertyForm({
 }: PropertyFormProps) {
   const { t } = useTranslation()
   const countryName = useCountryName()
+  // Agences : le bien est rattaché au bailleur qui en a confié la gestion
+  const isProfessional = useIsProfessional()
+  const landlords = useLandlords()
+  const landlordOptions = useMemo(
+    () =>
+      landlords
+        .map((l) => ({ id: l.id, label: l.name }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    [landlords],
+  )
   // Le schéma (et ses messages) suit la langue active
   const schema = useMemo(() => makePropertySchema(t), [t])
 
@@ -65,6 +84,33 @@ export function PropertyForm({
       className="flex flex-col gap-6"
     >
       <FormErrorSummary show={hasErrors} />
+
+      {isProfessional && (
+        <Section
+          title={t('properties.form.sections.landlord')}
+          hint={t('properties.form.sections.landlordHint')}
+        >
+          <div className="grid gap-5 sm:grid-cols-2">
+            <FormComboBox
+              control={control}
+              name="landlordId"
+              label={t('properties.form.fields.landlord')}
+              placeholder={t('properties.form.fields.landlordPlaceholder')}
+              emptyLabel={t('properties.form.fields.landlordEmpty')}
+              options={landlordOptions}
+            />
+            <p className="text-sm text-muted sm:self-center">
+              {t('properties.form.fields.landlordMissing')}{' '}
+              <Link
+                to="/landlords/new"
+                className="font-medium text-foreground underline-offset-4 hover:underline"
+              >
+                {t('properties.form.fields.landlordCreate')}
+              </Link>
+            </p>
+          </div>
+        </Section>
+      )}
 
       <Section
         title={t('properties.form.sections.general')}

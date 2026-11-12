@@ -62,6 +62,8 @@ export function makePropertySchema(t: TFunction) {
         country: z.enum(supportedCountries, { error: required }),
       }),
       acquiredAt: z.string(),
+      /** Bailleur (comptes professionnels) ; null = aucun */
+      landlordId: z.string().nullable(),
       units: z.array(unit).min(1, { error: t('properties.form.errors.atLeastOneUnit') }),
     })
     .superRefine((values, ctx) => {

@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
+import { useIsProfessional } from '@/features/auth/api'
+import { useLandlord } from '@/features/landlords/api'
 import { useCountryName } from '@/lib/countries'
 import { useFormatters } from '@/lib/format'
 import type { Property, PropertyStats } from '../types'
@@ -18,9 +21,25 @@ export function PropertyInfo({ property: p, stats }: { property: Property; stats
   const f = useFormatters()
   const countryName = useCountryName()
   const date = (iso: string) => f.dayMonthYear(new Date(`${iso}T12:00:00`))
+  const isProfessional = useIsProfessional()
+  const landlord = useLandlord(p.landlordId)
 
   return (
     <dl className="divide-y divide-separator">
+      {isProfessional && (
+        <Item label={t('properties.detail.info.landlord')}>
+          {landlord ? (
+            <Link
+              to={`/landlords/${landlord.id}`}
+              className="rounded-sm font-medium outline-none hover:underline focus-visible:ring-2 focus-visible:ring-focus"
+            >
+              {landlord.name}
+            </Link>
+          ) : (
+            <span className="text-muted">{t('properties.detail.info.noLandlord')}</span>
+          )}
+        </Item>
+      )}
       <Item label={t('properties.detail.info.type')}>{t(`properties.type.${p.type}`)}</Item>
       <Item label={t('properties.detail.info.address')}>
         {p.address.street}

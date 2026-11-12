@@ -9,6 +9,7 @@
     "label": "Main navigation",
     "dashboard": "Dashboard",
     "properties": "Properties",
+    "landlords": "Landlords",
     "tenants": "Tenants",
     "rents": "Rents",
     "maintenance": "Maintenance",
@@ -256,7 +257,9 @@
         "totalArea": "Total area",
         "units": "Number of units",
         "description": "Description",
-        "noDescription": "No description."
+        "noDescription": "No description.",
+        "landlord": "Landlord",
+        "noLandlord": "No landlord linked"
       }
     },
     "form": {
@@ -271,7 +274,9 @@
         "addressHint": "Where the property is located.",
         "units": "Units",
         "unitsHint": "The rentable units of the property: apartments, studios, shops, offices…",
-        "unitsSingleHint": "A property of this type is rented as a single unit."
+        "unitsSingleHint": "A property of this type is rented as a single unit.",
+        "landlord": "Landlord",
+        "landlordHint": "The owner who entrusted you with managing this property."
       },
       "fields": {
         "name": "Property name",
@@ -296,7 +301,12 @@
         "rent": "Monthly rent",
         "charges": "Monthly charges",
         "status": "Status",
-        "amountsHint": "Amounts are entered in CFA francs (XOF), the reference currency."
+        "amountsHint": "Amounts are entered in CFA francs (XOF), the reference currency.",
+        "landlord": "Landlord",
+        "landlordPlaceholder": "Search for a landlord…",
+        "landlordEmpty": "No matching landlord.",
+        "landlordMissing": "Landlord not in the list?",
+        "landlordCreate": "Add a landlord"
       },
       "units": {
         "add": "Add a unit",
@@ -324,6 +334,154 @@
         "atLeastOneUnit": "Add at least one unit.",
         "singleUnit": "A “{{type}}” property has a single unit. Remove the extra units.",
         "duplicateLabel": "This label is already used by another unit."
+      }
+    }
+  },
+  "landlords": {
+    "title": "Landlords",
+    "subtitle": "The owners who entrust you with managing their properties.",
+    "add": "Add a landlord",
+    "kind": {
+      "individual": "Individual",
+      "company": "Company"
+    },
+    "noProperty": "No property entrusted",
+    "propertiesCount_one": "{{count}} property",
+    "propertiesCount_other": "{{count}} properties",
+    "unitsCount_one": "{{count}} unit",
+    "unitsCount_other": "{{count}} units",
+    "perMonth": "per month",
+    "feeRateShort": "{{rate}}%",
+    "feeRateLong": "{{rate}}% of rent collected",
+    "card": {
+      "open": "Open {{name}}’s profile"
+    },
+    "stats": {
+      "total": "Landlords",
+      "withoutProperty_zero": "All have at least one property",
+      "withoutProperty_one": "{{count}} without a property",
+      "withoutProperty_other": "{{count}} without a property",
+      "properties": "Properties entrusted",
+      "unassigned_zero": "Every property has a landlord",
+      "unassigned_one": "{{count}} property without a landlord",
+      "unassigned_other": "{{count}} properties without a landlord",
+      "monthlyRent": "Rent managed",
+      "monthlyRentHint": "Rented units, excluding charges, per month",
+      "monthlyFees": "Estimated fees",
+      "monthlyFeesHint": "Management rate applied to rent, per month"
+    },
+    "filters": {
+      "searchLabel": "Search for a landlord",
+      "search": "Name, phone, email, city, property…",
+      "kind": "Landlord type",
+      "allKinds": "All types",
+      "sort": "Sort by",
+      "sorts": {
+        "name": "Name (A → Z)",
+        "recent": "Most recent",
+        "properties": "Most properties",
+        "rent": "Highest rent"
+      },
+      "reset": "Reset filters",
+      "results_zero": "No landlords",
+      "results_one": "{{count}} landlord",
+      "results_other": "{{count}} landlords"
+    },
+    "empty": {
+      "title": "No landlords found",
+      "description": "Change the search or filters, or add a landlord."
+    },
+    "table": {
+      "landlord": "Landlord",
+      "contact": "Contact",
+      "properties": "Properties entrusted",
+      "occupancy": "Occupancy",
+      "rent": "Rent / month",
+      "fees": "Fees / month",
+      "actions": "Actions"
+    },
+    "fields": {
+      "contactPerson": "Contact person",
+      "phone": "Phone",
+      "email": "Email",
+      "city": "City of residence",
+      "country": "Country of residence",
+      "residence": "Residence",
+      "mandateStart": "Mandate start",
+      "feeRate": "Management fee",
+      "notes": "Notes"
+    },
+    "detail": {
+      "notFound": "This landlord cannot be found.",
+      "back": "Back to landlords",
+      "mandateSince": "Management mandate since {{date}}",
+      "addedOn": "Added on {{date}}",
+      "call": "Call",
+      "email": "Email",
+      "edit": "Edit",
+      "contact": "Contact details and mandate",
+      "noNotes": "No notes",
+      "stats": {
+        "properties": "Properties entrusted",
+        "occupancy": "Occupancy",
+        "occupancyHint": "{{rented}} of {{units}} units rented",
+        "monthlyRent": "Monthly rent",
+        "monthlyRentHint": "Rented units, excluding charges",
+        "late_one": "{{count}} late rent",
+        "late_other": "{{count}} late rents",
+        "fees": "Estimated fees",
+        "noFeeRate": "Management rate not set"
+      },
+      "properties": {
+        "title": "Properties entrusted",
+        "add": "Add a property",
+        "empty": "No property is linked to this landlord yet.",
+        "occupancy": "{{rented}} / {{units}} units rented",
+        "occupancyLabel": "Occupancy of {{name}}",
+        "late_one": "{{count}} late",
+        "late_other": "{{count}} late"
+      }
+    },
+    "form": {
+      "createTitle": "New landlord",
+      "createSubtitle": "The owner who entrusts you with managing one or more properties.",
+      "editTitle": "Edit {{name}}",
+      "editSubtitle": "The properties linked to this landlord are not affected.",
+      "sections": {
+        "identity": "Identity",
+        "identityHint": "Individual or company (property company, holding…).",
+        "contact": "Contact details",
+        "contactHint": "To reach them and send their management reports.",
+        "mandate": "Management mandate",
+        "mandateHint": "Terms agreed with the landlord.",
+        "notesHint": "Useful information for the team (contact preferences, deadlines…)."
+      },
+      "fields": {
+        "kind": "Landlord type",
+        "fullName": "Full name",
+        "fullNamePlaceholder": "E.g. Abdou Karim Ndiaye",
+        "companyName": "Company name",
+        "companyNamePlaceholder": "E.g. SCI Les Palmiers",
+        "contactPersonHint": "Manager or person to contact.",
+        "phoneHint": "Include the country code if they live abroad.",
+        "feeRateHint": "Percentage of rent collected, to estimate your fees.",
+        "notesPlaceholder": "E.g. prefers to be contacted on WhatsApp.",
+        "feeRate": "Management fee (%)",
+        "emailHint": "Used to send their management reports."
+      },
+      "errors": {
+        "feeRate": "The rate must be between 0 and 100%.",
+        "duplicatePhone": "This number already belongs to {{name}}."
+      },
+      "actions": {
+        "create": "Add landlord",
+        "save": "Save"
+      },
+      "toast": {
+        "created": "Landlord added",
+        "createdDescription": "{{name}} has been added to your landlords.",
+        "updated": "Landlord updated",
+        "updatedDescription": "{{name}}’s details are up to date."
       }
     }
   },

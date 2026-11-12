@@ -1,0 +1,14 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:4173",
+      "localStorage": [
+        {
+          "name": "domely-session",
+          "value": "{\"accountId\": \"acc-demo-agency\", \"identifier\": \"AGT8R2K\", \"firstName\": \"Aminata\", \"lastName\": \"Sow\", \"profile\": \"professional\", \"verification\": \"verified\", \"professionalKind\": \"agency\", \"agencyName\": \"Teranga Immobilier\", \"startedAt\": \"2026-02-03T08:00:00.000Z\"}"
+        }
+      ]
+    }
+  ]
+}

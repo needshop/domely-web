@@ -1,7 +1,7 @@
 import { createBrowserRouter, Outlet } from 'react-router'
 import { RootLayout } from '@/app/RootLayout'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { GuestOnly, RequireAuth } from '@/features/auth/components/AuthGuards'
+import { GuestOnly, RequireAuth, RequireProfessional } from '@/features/auth/components/AuthGuards'
 import { AuthLayout } from '@/features/auth/components/AuthLayout'
 import { ContractDetailPage } from '@/pages/ContractDetailPage'
 import { ContractFormPage } from '@/pages/ContractFormPage'
@@ -9,6 +9,9 @@ import { ContractsPage } from '@/pages/ContractsPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { InterventionDetailPage } from '@/pages/InterventionDetailPage'
 import { InterventionFormPage } from '@/pages/InterventionFormPage'
+import { LandlordDetailPage } from '@/pages/LandlordDetailPage'
+import { LandlordFormPage } from '@/pages/LandlordFormPage'
+import { LandlordsPage } from '@/pages/LandlordsPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { MaintenancePage } from '@/pages/MaintenancePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
@@ -67,6 +70,21 @@ export const router = createBrowserRouter([
           { path: 'properties/new', element: <PropertyFormPage mode="create" /> },
           { path: 'properties/:id', element: <PropertyDetailPage /> },
           { path: 'properties/:id/edit', element: <PropertyFormPage mode="edit" /> },
+          // Bailleurs : comptes professionnels uniquement
+          {
+            path: 'landlords',
+            element: (
+              <RequireProfessional>
+                <Outlet />
+              </RequireProfessional>
+            ),
+            children: [
+              { index: true, element: <LandlordsPage /> },
+              { path: 'new', element: <LandlordFormPage mode="create" /> },
+              { path: ':id', element: <LandlordDetailPage /> },
+              { path: ':id/edit', element: <LandlordFormPage mode="edit" /> },
+            ],
+          },
           { path: 'tenants', element: <TenantsPage /> },
           { path: 'tenants/new', element: <TenantFormPage mode="create" /> },
           { path: 'tenants/:id', element: <TenantDetailPage /> },

@@ -149,7 +149,7 @@ src/
 | `components/` | Composants d'affichage du module                                                                          |
 | `form/`       | `schema.ts` (zod), `mapping.ts` (entité ↔ formulaire), formulaire                                         |
 
-Modules : `auth`, `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenance`, `reports`,
+Modules : `auth`, `dashboard`, `properties`, `landlords`, `tenants`, `contracts`, `rents`, `maintenance`, `reports`,
 `settings` (`reports` n'a pas de store : il agrège les données des autres modules).
 
 ### Flux de données
@@ -259,6 +259,7 @@ Modules : `auth`, `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `m
 ## 7. Modèle de domaine
 
 ```
+Landlord (bailleur) 1───n Property (comptes professionnels, `Property.landlordId`)
 Property (bien) 1───n Unit (lot)
 Unit 1───n Lease (contrat) n───1 Tenant (locataire)
 Lease 1───n RentDue (échéance mensuelle, calculée) 1───n Payment (encaissement)
@@ -268,7 +269,8 @@ Property 1───n Intervention (sur un lot ou les parties communes) n──�
 
 | Entité         | Champs clés                                                                                                                                                                                                                                                                                           |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Property`     | id, name, type, address { street, district, city, country ISO }, acquiredAt?, createdAt, description?, units[]                                                                                                                                                                                        |
+| `Property`     | id, name, type, address { street, district, city, country ISO }, acquiredAt?, createdAt, description?, landlordId?, units[]                                                                                                                                                                           |
+| `Landlord`     | id, kind (individual / company), name, contactPerson?, phone, email, city?, country? (UEMOA + GN + FR), mandateStart?, feeRate? (% des loyers), notes?, createdAt                                                                                                                                     |
 | `Unit`         | id (unique **dans le bien**), label, kind, floor?, area, rooms?, rent et charges (référence), status ; dérivés : lease?, isLate?                                                                                                                                                                      |
 | `Tenant`       | id, kind (individual / company), name, phone, email?, occupation?, contactPerson?, idDocument?, emergencyContact?, notes?, createdAt                                                                                                                                                                  |
 | `Lease`        | id, reference `BAIL-AAAA-NNNN`, propertyId, unitId, tenantId, type, startDate, endDate, rent, charges, deposit, paymentDay (1–28), tacitRenewal, terminatedAt?, terminationReason?, notes?, createdAt                                                                                                 |
@@ -304,7 +306,7 @@ Valeurs :
   - Sidebar nuit repliable en icônes (état mémorisé), avec la version de l'app en bas.
   - Sur mobile, un tiroir s'ouvre depuis le bouton du header.
   - Header : devise, langue, thème, notifications (non branchées), menu du compte.
-- **Navigation** : Tableau de bord, Biens, Locataires, Loyers, Interventions, Contrats,
+- **Navigation** : Tableau de bord, Biens, Bailleurs (comptes professionnels), Locataires, Loyers, Interventions, Contrats,
   Rapports, Paramètres : tous les modules sont implémentés.
 - **PWA** installable avec l'icône de l'application ; page 404 ; retour en haut de page à
   chaque navigation.
@@ -393,6 +395,28 @@ Valeurs :
   - Pour un lot loué, le statut, le loyer et la suppression sont verrouillés (gérés par le
     contrat).
   - Toast de confirmation, garde de sortie.
+
+### Bailleurs (`/landlords`, `/landlords/new`, `/landlords/:id`, `/landlords/:id/edit`)
+
+- **Réservé aux comptes professionnels** (agences, mandataires) : entrée de navigation masquée
+  pour les propriétaires, routes protégées (`RequireProfessional`, retour à l'accueil),
+  champ « Bailleur » absent du formulaire et de la fiche d'un bien.
+- **Liste**
+  - Indicateurs : bailleurs (dont sans bien), biens confiés (et biens sans bailleur), loyers
+    gérés par mois, honoraires mensuels estimés.
+  - Recherche (nom, interlocuteur, téléphone avec ou sans espaces, e-mail, ville, bien),
+    filtre par type, tri (nom, récents, nombre de biens, loyers). **10 par page**.
+  - Colonnes : bailleur, contact, biens confiés et lots, occupation, loyers, honoraires (taux).
+- **Fiche** : boutons Appeler, Écrire, Modifier ; indicateurs (biens et lots, occupation,
+  loyers et retards, honoraires) ; biens confiés (occupation, loyers, retards, lien vers le
+  bien) avec « Ajouter un bien » (pré-sélectionne le bailleur, `?landlord=`) ; coordonnées et
+  mandat.
+- **Formulaire** : particulier ou société (raison sociale, interlocuteur) ; téléphone
+  obligatoire et **unique** parmi les bailleurs ; e-mail **obligatoire** (comptes rendus) ; ville et pays de résidence (dont la
+  France pour la diaspora) ; début du mandat ; honoraires de gestion en % (0 à 100) ; notes.
+- **Honoraires estimés** = taux × loyers mensuels des lots loués (hors charges).
+- **Biens** : section « Bailleur » en tête du formulaire (liste avec recherche, facultative,
+  lien « Ajouter un bailleur ») ; ligne « Bailleur » dans l'onglet Informations de la fiche.
 
 ### Locataires (`/tenants`, `/tenants/new`, `/tenants/:id`, `/tenants/:id/edit`)
 
@@ -547,14 +571,15 @@ Valeurs :
 
 ## 10. Tests
 
-- **Playwright e2e** dans `front/e2e/` (≈ 110 tests), fichiers par module : `auth`, `smoke`, `theme`,
+- **Playwright e2e** dans `front/e2e/` (≈ 120 tests), fichiers par module : `auth`, `landlords`, `smoke`, `theme`,
   `sidebar`, `i18n`, `dashboard`, `currency`, `properties`, `property-form`, `tenants`,
   `tenant-form`, `contracts`, `rents`, `maintenance`, `reports`, `settings`.
 - Les tests tournent sur un **build de production** servi par `vite preview` sur le port
   **4173** (`reuseExistingServer: false`), sous Chrome système, en locale `fr-FR`.
   Le serveur de dev n'est pas utilisé : il est trop instable pour les tests.
-- **Session** : les tests démarrent connectés au compte de démonstration
-  (`storageState: e2e/fixtures/auth-state.json` dans `playwright.config.ts`). `auth.spec.ts`
+- **Session** : les tests démarrent connectés au compte de démonstration propriétaire
+  (`storageState: e2e/fixtures/auth-state.json` dans `playwright.config.ts`). Pour le compte
+  agence : `test.use({ storageState: 'e2e/fixtures/agency-auth-state.json' })` (`landlords`). `auth.spec.ts`
   repart d'un état vide (`test.use({ storageState: { cookies: [], origins: [] } })`).
 - Code OTP : saisir avec `getByLabel('Code de vérification (6 chiffres)').fill('123456')`.
   Téléversement : `page.waitForEvent('filechooser')` puis `setFiles({ name, mimeType, buffer })`.
@@ -612,6 +637,7 @@ Ressources pressenties (REST, montants en XOF, dates ISO) :
 | Ressource         | Opérations                                                                                                                                                                                                            |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `/properties`     | liste (filtres, pagination), détail, création, modification                                                                                                                                                           |
+| `/landlords`      | liste, détail, création, modification ; unicité du téléphone ; rattachement des biens (`landlordId`)                                                                                                                  |
 | `/tenants`        | liste, détail, création, modification ; unicité du téléphone                                                                                                                                                          |
 | `/leases`         | liste, détail, création (contrôle des chevauchements), modification, `POST /leases/:id/terminate`                                                                                                                     |
 | `/rent-dues`      | échéances calculées (par mois, impayés), indicateurs                                                                                                                                                                  |
@@ -678,6 +704,15 @@ suite. Quand une limite est levée, la retirer de cette liste et mettre à jour 
 - Pas de suppression ni de photos.
 - Occupation affichée **à date** uniquement (pas d'historique).
 - Identifiants de lots uniques par bien seulement (`propertyId` + `unitId`).
+
+### Bailleurs
+
+- Données **communes à tous les comptes** (pas de cloisonnement par agence).
+- Pas de suppression ni d'archivage ; pas de création rapide depuis le formulaire de bien (le
+  lien ouvre le formulaire bailleur et quitte celui du bien).
+- Honoraires **estimés** (taux × loyers des lots loués) : ni encaissement réel, ni reversement
+  au bailleur, ni compte rendu de gestion.
+- Pas de documents du mandat (mandat signé, RIB, pièce d'identité).
 
 ### Locataires
 

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import logoWhite from '@/assets/brand/logo-white.svg'
 import symbolWhite from '@/assets/brand/symbol-white.svg'
 import { cn } from '@/lib/cn'
+import { useIsProfessional } from '@/features/auth/api'
 import { env } from '@/lib/env'
 import { navigation } from './navigation'
 import { SidebarLink } from './SidebarLink'
@@ -26,6 +27,8 @@ export function SidebarContent({
   beforeNav,
 }: SidebarContentProps) {
   const { t } = useTranslation()
+  const isProfessional = useIsProfessional()
+  const items = navigation.filter((item) => !item.professionalOnly || isProfessional)
   const ToggleIcon = collapsed ? PanelLeftOpen : PanelLeftClose
   const toggleLabel = collapsed ? t('sidebar.expandLabel') : t('sidebar.collapseLabel')
 
@@ -45,7 +48,7 @@ export function SidebarContent({
         className="-mx-1 flex min-h-0 flex-col gap-1 overflow-y-auto px-1"
         aria-label={t('nav.label')}
       >
-        {navigation.map((item) => (
+        {items.map((item) => (
           <SidebarLink key={item.to} item={item} collapsed={collapsed} onNavigate={onNavigate} />
         ))}
       </nav>

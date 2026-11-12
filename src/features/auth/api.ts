@@ -35,6 +35,11 @@ export function useSession(): Session | null {
   return useSyncExternalStore(authStore.subscribe, authStore.getSession)
 }
 
+/** Compte professionnel (agence, mandataire) : accès au module Bailleurs. */
+export function useIsProfessional(): boolean {
+  return useSession()?.profile === 'professional'
+}
+
 export async function login(identifier: string, password: string): Promise<Session> {
   await latency()
   const id = normalizeIdentifier(identifier)

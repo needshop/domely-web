@@ -2,7 +2,8 @@ import { Breadcrumbs, buttonVariants, toast } from '@heroui/react'
 import { ArrowLeft } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate, useParams } from 'react-router'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
+import { useLandlord } from '@/features/landlords/api'
 import { createProperty, updateProperty, useProperty } from '@/features/properties/api'
 import {
   emptyPropertyValues,
@@ -18,13 +19,15 @@ export function PropertyFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const navigate = useNavigate()
   const { id } = useParams()
   const existing = useProperty(mode === 'edit' ? id : undefined)
+  // Pré-sélection du bailleur depuis sa fiche (« Ajouter un bien », ?landlord=)
+  const presetLandlord = useLandlord(useSearchParams()[0].get('landlord') ?? undefined)
 
   // Valeurs initiales figées au montage : le formulaire ne doit pas se réinitialiser en cours de saisie
   const defaultValues = useMemo(
     () =>
       existing
         ? toFormValues(existing)
-        : emptyPropertyValues(t('properties.form.units.labelPrefix')),
+        : emptyPropertyValues(t('properties.form.units.labelPrefix'), presetLandlord?.id ?? null),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [existing?.id],
   )

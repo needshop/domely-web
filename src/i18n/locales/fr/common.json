@@ -9,6 +9,7 @@
     "label": "Navigation principale",
     "dashboard": "Tableau de bord",
     "properties": "Biens",
+    "landlords": "Bailleurs",
     "tenants": "Locataires",
     "rents": "Loyers",
     "maintenance": "Interventions",
@@ -256,7 +257,9 @@
         "totalArea": "Surface totale",
         "units": "Nombre de lots",
         "description": "Description",
-        "noDescription": "Aucune description."
+        "noDescription": "Aucune description.",
+        "landlord": "Bailleur",
+        "noLandlord": "Aucun bailleur rattaché"
       }
     },
     "form": {
@@ -271,7 +274,9 @@
         "addressHint": "Localisation du bien.",
         "units": "Lots",
         "unitsHint": "Les unités louables du bien : appartements, studios, boutiques, bureaux…",
-        "unitsSingleHint": "Un bien de ce type est loué en un seul lot."
+        "unitsSingleHint": "Un bien de ce type est loué en un seul lot.",
+        "landlord": "Bailleur",
+        "landlordHint": "Le propriétaire qui vous a confié la gestion de ce bien."
       },
       "fields": {
         "name": "Nom du bien",
@@ -296,7 +301,12 @@
         "rent": "Loyer mensuel",
         "charges": "Charges mensuelles",
         "status": "Statut",
-        "amountsHint": "Montants saisis en francs CFA (XOF), devise de référence."
+        "amountsHint": "Montants saisis en francs CFA (XOF), devise de référence.",
+        "landlord": "Bailleur",
+        "landlordPlaceholder": "Rechercher un bailleur…",
+        "landlordEmpty": "Aucun bailleur ne correspond.",
+        "landlordMissing": "Le bailleur n’est pas dans la liste ?",
+        "landlordCreate": "Ajouter un bailleur"
       },
       "units": {
         "add": "Ajouter un lot",
@@ -324,6 +334,154 @@
         "atLeastOneUnit": "Ajoutez au moins un lot.",
         "singleUnit": "Un bien de type « {{type}} » ne comporte qu’un seul lot. Supprimez les lots en trop.",
         "duplicateLabel": "Ce libellé est déjà utilisé par un autre lot."
+      }
+    }
+  },
+  "landlords": {
+    "title": "Bailleurs",
+    "subtitle": "Les propriétaires qui vous confient la gestion de leurs biens.",
+    "add": "Ajouter un bailleur",
+    "kind": {
+      "individual": "Particulier",
+      "company": "Société"
+    },
+    "noProperty": "Aucun bien confié",
+    "propertiesCount_one": "{{count}} bien",
+    "propertiesCount_other": "{{count}} biens",
+    "unitsCount_one": "{{count}} lot",
+    "unitsCount_other": "{{count}} lots",
+    "perMonth": "par mois",
+    "feeRateShort": "{{rate}} %",
+    "feeRateLong": "{{rate}} % des loyers encaissés",
+    "card": {
+      "open": "Ouvrir la fiche de {{name}}"
+    },
+    "stats": {
+      "total": "Bailleurs",
+      "withoutProperty_zero": "Tous ont au moins un bien",
+      "withoutProperty_one": "{{count}} sans bien confié",
+      "withoutProperty_other": "{{count}} sans bien confié",
+      "properties": "Biens confiés",
+      "unassigned_zero": "Tous les biens ont un bailleur",
+      "unassigned_one": "{{count}} bien sans bailleur",
+      "unassigned_other": "{{count}} biens sans bailleur",
+      "monthlyRent": "Loyers gérés",
+      "monthlyRentHint": "Lots loués, hors charges, par mois",
+      "monthlyFees": "Honoraires estimés",
+      "monthlyFeesHint": "Taux de gestion appliqué aux loyers, par mois"
+    },
+    "filters": {
+      "searchLabel": "Rechercher un bailleur",
+      "search": "Nom, téléphone, e-mail, ville, bien…",
+      "kind": "Type de bailleur",
+      "allKinds": "Tous les types",
+      "sort": "Trier par",
+      "sorts": {
+        "name": "Nom (A → Z)",
+        "recent": "Plus récents",
+        "properties": "Plus de biens",
+        "rent": "Loyers les plus élevés"
+      },
+      "reset": "Réinitialiser les filtres",
+      "results_zero": "Aucun bailleur",
+      "results_one": "{{count}} bailleur",
+      "results_other": "{{count}} bailleurs"
+    },
+    "empty": {
+      "title": "Aucun bailleur trouvé",
+      "description": "Modifiez la recherche ou les filtres, ou ajoutez un bailleur."
+    },
+    "table": {
+      "landlord": "Bailleur",
+      "contact": "Contact",
+      "properties": "Biens confiés",
+      "occupancy": "Occupation",
+      "rent": "Loyers / mois",
+      "fees": "Honoraires / mois",
+      "actions": "Actions"
+    },
+    "fields": {
+      "contactPerson": "Interlocuteur",
+      "phone": "Téléphone",
+      "email": "E-mail",
+      "city": "Ville de résidence",
+      "country": "Pays de résidence",
+      "residence": "Résidence",
+      "mandateStart": "Début du mandat",
+      "feeRate": "Honoraires de gestion",
+      "notes": "Notes"
+    },
+    "detail": {
+      "notFound": "Ce bailleur est introuvable.",
+      "back": "Retour aux bailleurs",
+      "mandateSince": "Mandat de gestion depuis le {{date}}",
+      "addedOn": "Ajouté le {{date}}",
+      "call": "Appeler",
+      "email": "Écrire",
+      "edit": "Modifier",
+      "contact": "Coordonnées et mandat",
+      "noNotes": "Aucune note",
+      "stats": {
+        "properties": "Biens confiés",
+        "occupancy": "Occupation",
+        "occupancyHint": "{{rented}} lots loués sur {{units}}",
+        "monthlyRent": "Loyers mensuels",
+        "monthlyRentHint": "Lots loués, hors charges",
+        "late_one": "{{count}} loyer en retard",
+        "late_other": "{{count}} loyers en retard",
+        "fees": "Honoraires estimés",
+        "noFeeRate": "Taux de gestion non renseigné"
+      },
+      "properties": {
+        "title": "Biens confiés",
+        "add": "Ajouter un bien",
+        "empty": "Aucun bien n’est encore rattaché à ce bailleur.",
+        "occupancy": "{{rented}} / {{units}} lots loués",
+        "occupancyLabel": "Occupation de {{name}}",
+        "late_one": "{{count}} retard",
+        "late_other": "{{count}} retards"
+      }
+    },
+    "form": {
+      "createTitle": "Nouveau bailleur",
+      "createSubtitle": "Le propriétaire qui vous confie la gestion d’un ou plusieurs biens.",
+      "editTitle": "Modifier {{name}}",
+      "editSubtitle": "Les biens rattachés à ce bailleur ne changent pas.",
+      "sections": {
+        "identity": "Identité",
+        "identityHint": "Particulier ou société (SCI, holding…).",
+        "contact": "Coordonnées",
+        "contactHint": "Pour le joindre et lui envoyer ses comptes rendus de gestion.",
+        "mandate": "Mandat de gestion",
+        "mandateHint": "Conditions convenues avec le bailleur.",
+        "notesHint": "Informations utiles pour l’équipe (préférences de contact, échéances…)."
+      },
+      "fields": {
+        "kind": "Type de bailleur",
+        "fullName": "Nom complet",
+        "fullNamePlaceholder": "Ex. : Abdou Karim Ndiaye",
+        "companyName": "Raison sociale",
+        "companyNamePlaceholder": "Ex. : SCI Les Palmiers",
+        "contactPersonHint": "Gérant ou personne à contacter.",
+        "phoneHint": "Avec l’indicatif s’il réside à l’étranger.",
+        "feeRateHint": "Pourcentage des loyers encaissés, pour estimer vos honoraires.",
+        "notesPlaceholder": "Ex. : préfère être contacté par WhatsApp.",
+        "feeRate": "Honoraires de gestion (%)",
+        "emailHint": "Pour lui envoyer ses comptes rendus de gestion."
+      },
+      "errors": {
+        "feeRate": "Le taux doit être compris entre 0 et 100 %.",
+        "duplicatePhone": "Ce numéro est déjà celui de {{name}}."
+      },
+      "actions": {
+        "create": "Ajouter le bailleur",
+        "save": "Enregistrer"
+      },
+      "toast": {
+        "created": "Bailleur ajouté",
+        "createdDescription": "{{name}} a été ajouté à vos bailleurs.",
+        "updated": "Bailleur modifié",
+        "updatedDescription": "Les informations de {{name}} sont à jour."
       }
     }
   },

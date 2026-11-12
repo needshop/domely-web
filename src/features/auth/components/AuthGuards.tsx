@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Navigate, useLocation } from 'react-router'
-import { useSession } from '../api'
+import { useIsProfessional, useSession } from '../api'
 
 /** Réservé aux utilisateurs connectés : sinon, page de connexion (retour prévu après coup). */
 export function RequireAuth({ children }: { children: ReactNode }) {
@@ -11,6 +11,11 @@ export function RequireAuth({ children }: { children: ReactNode }) {
     return <Navigate to="/login" replace state={from === '/' ? undefined : { from }} />
   }
   return children
+}
+
+/** Réservé aux comptes professionnels (module Bailleurs) : sinon, retour à l'accueil. */
+export function RequireProfessional({ children }: { children: ReactNode }) {
+  return useIsProfessional() ? children : <Navigate to="/" replace />
 }
 
 /**

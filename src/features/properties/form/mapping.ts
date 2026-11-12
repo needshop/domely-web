@@ -19,9 +19,13 @@ export function emptyUnit(type: PropertyType, index: number, labelPrefix: string
   }
 }
 
-/** Valeurs initiales d'un nouveau bien. */
-export function emptyPropertyValues(labelPrefix: string): PropertyFormValues {
+/** Valeurs initiales d'un nouveau bien (bailleur éventuellement pré-sélectionné). */
+export function emptyPropertyValues(
+  labelPrefix: string,
+  landlordId: string | null = null,
+): PropertyFormValues {
   return {
+    landlordId,
     name: '',
     type: 'residence',
     description: '',
@@ -42,6 +46,7 @@ export function toFormValues(p: Property): PropertyFormValues {
       country: p.address.country as PropertyFormValues['address']['country'],
     },
     acquiredAt: p.acquiredAt ?? '',
+    landlordId: p.landlordId ?? null,
     units: p.units.map((u) => ({
       id: u.id,
       label: u.label,
@@ -94,6 +99,7 @@ export function fromFormValues(values: PropertyFormValues, existing?: Property):
       country: values.address.country,
     },
     acquiredAt: values.acquiredAt || undefined,
+    landlordId: values.landlordId ?? undefined,
     units,
   }
 }
