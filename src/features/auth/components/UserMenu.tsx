@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { initials } from '@/lib/initials'
 import { logout, useSession } from '../api'
+import { sortRoles } from '../permissions'
+import { roles } from '../types'
 
 /** Menu du compte (en-tête) : identité, identifiant, paramètres et déconnexion. */
 export function UserMenu() {
@@ -29,8 +31,12 @@ export function UserMenu() {
         <div className="border-b border-separator px-3 py-2.5">
           <p className="truncate text-sm font-medium">{fullName}</p>
           <p className="text-xs text-muted">
-            {t(`auth.profiles.${session.profile}.title`)} ·{' '}
             {t('auth.menu.identifier', { identifier: session.identifier })}
+          </p>
+          <p className="mt-0.5 text-xs text-muted">
+            {sortRoles(session.roles, roles)
+              .map((role) => t(`auth.roles.${role}`))
+              .join(' · ')}
           </p>
           {session.verification === 'pending' && (
             <p className="mt-1 text-xs text-warning-soft-foreground">{t('auth.menu.pending')}</p>

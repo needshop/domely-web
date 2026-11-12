@@ -16,6 +16,7 @@
     "maintenance": "Interventions",
     "contracts": "Contrats",
     "reports": "Rapports",
+    "workspace": "Workspace",
     "settings": "Paramètres"
   },
   "sidebar": {
@@ -484,6 +485,86 @@
         "updated": "Bailleur modifié",
         "updatedDescription": "Les informations de {{name}} sont à jour."
       }
+    }
+  },
+  "workspace": {
+    "title": "Workspace",
+    "subtitle": "Les gestionnaires de {{name}} et leurs accès.",
+    "status": {
+      "active": "Actif",
+      "disabled": "Désactivé",
+      "invited": "Invité",
+      "expired": "Invitation expirée"
+    },
+    "stats": {
+      "active": "Comptes actifs",
+      "activeHint": "Admins et gestionnaires",
+      "invited": "Invitations en attente",
+      "invitedHint": "Valables 7 jours",
+      "disabled": "Comptes désactivés",
+      "disabledHint": "Ne peuvent plus se connecter"
+    },
+    "members": {
+      "title": "Membres",
+      "description": "Les comptes de l’agence et les invitations envoyées.",
+      "you": "(vous)",
+      "owner": "Créateur de l’agence",
+      "since": "Depuis le {{date}}",
+      "expiresOn": "Expire le {{date}}",
+      "expiredOn": "Expirée le {{date}}",
+      "actions": "Actions pour {{name}}"
+    },
+    "actions": {
+      "resend": "Renvoyer l’invitation",
+      "revoke": "Annuler l’invitation",
+      "disable": "Désactiver le compte",
+      "enable": "Réactiver le compte"
+    },
+    "confirm": {
+      "revoke": {
+        "title": "Annuler l’invitation de {{name}} ?",
+        "description": "Le lien reçu par e-mail ne fonctionnera plus. Vous pourrez l’inviter à nouveau."
+      },
+      "disable": {
+        "title": "Désactiver le compte de {{name}} ?",
+        "description": "Il ne pourra plus se connecter tant que son compte n’est pas réactivé. Ses données sont conservées."
+      }
+    },
+    "toast": {
+      "revoked": "Invitation de {{name}} annulée",
+      "disabled": "Compte de {{name}} désactivé",
+      "enabled": "Compte de {{name}} réactivé"
+    },
+    "invite": {
+      "open": "Inviter un gestionnaire",
+      "title": "Inviter un gestionnaire",
+      "description": "Il recevra un lien par e-mail pour créer son compte dans votre agence.",
+      "emailHint": "Le lien d’invitation est envoyé à cette adresse.",
+      "submit": "Envoyer l’invitation",
+      "sentTitle": "Invitation envoyée",
+      "sentDescription": "{{name}} a reçu un lien par e-mail à {{email}}. Il est valable 7 jours.",
+      "demoLink": "Démonstration : aucun e-mail n’est envoyé, voici le lien d’invitation.",
+      "copyLink": "Copier le lien",
+      "openLink": "Ouvrir le lien",
+      "done": "Terminé"
+    },
+    "agency": {
+      "title": "Agence",
+      "name": "Nom de l’agence",
+      "owner": "Administrateur",
+      "createdAt": "Créée le"
+    },
+    "accept": {
+      "title": "Rejoindre {{agency}}",
+      "description": "{{inviter}} vous invite à rejoindre {{agency}} en tant que gestionnaire. Choisissez votre mot de passe pour créer votre compte.",
+      "descriptionNoInviter": "Vous êtes invité à rejoindre {{agency}} en tant que gestionnaire. Choisissez votre mot de passe pour créer votre compte.",
+      "name": "Nom",
+      "role": "Rôle",
+      "create": "Vérifier et créer mon compte",
+      "invalidTitle": "Invitation expirée ou invalide",
+      "invalidDescription": "Ce lien n’est plus valable. Demandez à l’administrateur de votre agence de vous renvoyer une invitation.",
+      "signedInTitle": "Vous êtes déjà connecté",
+      "signedInDescription": "Vous êtes connecté en tant que {{name}}. Déconnectez-vous pour accepter cette invitation avec un nouveau compte."
     }
   },
   "tenants": {
@@ -1371,7 +1452,11 @@
       "invalidPhone": "Numéro invalide (8 à 10 chiffres, sans l’indicatif).",
       "weakPassword": "Le mot de passe doit compter au moins 8 caractères, dont une lettre et un chiffre.",
       "passwordMismatch": "Les deux mots de passe ne correspondent pas.",
-      "invalidRegistration": "Numéro d’immatriculation invalide (5 à 30 caractères)."
+      "invalidRegistration": "Numéro d’immatriculation invalide (5 à 30 caractères).",
+      "accountDisabled": "Ce compte a été désactivé par l’administrateur de votre agence.",
+      "alreadyInvited": "Une invitation est déjà en attente pour cet e-mail ou ce numéro.",
+      "invitationInvalid": "Cette invitation n’est plus valable.",
+      "forbidden": "Vous n’avez pas les droits pour cette action."
     },
     "login": {
       "title": "Connexion",
@@ -1384,7 +1469,7 @@
       "noAccount": "Pas encore de compte ?",
       "signup": "Créer un compte",
       "demoTitle": "Comptes de démonstration",
-      "demoDescription": "Propriétaire {{owner}}, agence {{agency}} ; mot de passe {{password}}."
+      "demoDescription": "Propriétaire {{owner}}, admin d’agence {{agency}}, gestionnaire {{manager}} ; mot de passe {{password}}."
     },
     "otp": {
       "title": "Vérification du téléphone",
@@ -1540,6 +1625,14 @@
       "pending": "Vérification des justificatifs en cours",
       "actions": "Actions du compte",
       "logout": "Se déconnecter"
+    },
+    "roles": {
+      "super_admin": "Super administrateur",
+      "admin": "Administrateur d’agence",
+      "property_manager": "Gestionnaire",
+      "landlord": "Bailleur",
+      "tenant": "Locataire",
+      "user": "Utilisateur"
     }
   }
 }

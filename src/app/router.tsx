@@ -3,7 +3,7 @@ import { createBrowserRouter, Outlet } from 'react-router'
 import { PageLoader } from '@/app/PageLoader'
 import { RootLayout } from '@/app/RootLayout'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { GuestOnly, RequireAuth, RequireProfessional } from '@/features/auth/components/AuthGuards'
+import { GuestOnly, RequireAccess, RequireAuth } from '@/features/auth/components/AuthGuards'
 import { AuthLayout } from '@/features/auth/components/AuthLayout'
 
 /**
@@ -39,6 +39,8 @@ const pages = {
   contractForm: () => import('@/pages/ContractFormPage'),
   reports: () => import('@/pages/ReportsPage'),
   settings: () => import('@/pages/SettingsPage'),
+  workspace: () => import('@/pages/WorkspacePage'),
+  invitation: () => import('@/pages/InvitationPage'),
   notFound: () => import('@/pages/NotFoundPage'),
 }
 
@@ -75,7 +77,11 @@ export const router = createBrowserRouter([
               },
             ],
           },
-          // Accessible connecté ou non : le lien vient d'un e-mail
+          // Accessibles connecté ou non : les liens viennent d'un e-mail
+          {
+            path: 'invitation',
+            lazy: page(pages.invitation, (m) => <m.InvitationPage />),
+          },
           {
             path: 'reset-password',
             lazy: page(pages.resetPassword, (m) => <m.ResetPasswordPage />),
@@ -105,13 +111,13 @@ export const router = createBrowserRouter([
             path: 'properties/:id/edit',
             lazy: page(pages.propertyForm, (m) => <m.PropertyFormPage mode="edit" />),
           },
-          // Bailleurs : comptes professionnels uniquement
+          // Bailleurs : admins et gestionnaires d'une agence
           {
             path: 'landlords',
             element: (
-              <RequireProfessional>
+              <RequireAccess module="landlords">
                 <Outlet />
-              </RequireProfessional>
+              </RequireAccess>
             ),
             children: [
               { index: true, lazy: page(pages.landlords, (m) => <m.LandlordsPage />) },
@@ -164,6 +170,16 @@ export const router = createBrowserRouter([
             lazy: page(pages.contractForm, (m) => <m.ContractFormPage mode="edit" />),
           },
           { path: 'reports', lazy: page(pages.reports, (m) => <m.ReportsPage />) },
+          // Workspace : admins d'une agence
+          {
+            path: 'workspace',
+            element: (
+              <RequireAccess module="workspace">
+                <Outlet />
+              </RequireAccess>
+            ),
+            children: [{ index: true, lazy: page(pages.workspace, (m) => <m.WorkspacePage />) }],
+          },
           { path: 'settings', lazy: page(pages.settings, (m) => <m.SettingsPage />) },
         ],
       },

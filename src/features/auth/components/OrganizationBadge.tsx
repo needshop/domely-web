@@ -4,20 +4,20 @@ import { cn } from '@/lib/cn'
 import { useSession } from '../api'
 
 /**
- * Compte professionnel : nom de l'agence (ou du mandataire) et son statut. Rien pour un compte
+ * Agence (workspace) ou nom commercial du mandataire, avec son statut. Rien pour un compte
  * propriétaire.
  * - `header` : en-tête de l'application, masqué sous 640 px (en-tête trop chargé) ;
  * - `sidebar` : menu mobile (fond nuit), entre le logo et la navigation.
  */
 export function OrganizationBadge({ variant = 'header' }: { variant?: 'header' | 'sidebar' }) {
   const { t } = useTranslation()
-  const session = useSession()
-  if (session?.profile !== 'professional' || !session.agencyName) return null
+  const organization = useSession()?.organization
+  if (!organization) return null
   const inSidebar = variant === 'sidebar'
 
   return (
     <div
-      title={session.agencyName}
+      title={organization.name}
       className={cn(
         'min-w-0 items-center gap-2.5',
         inSidebar ? 'mb-6 flex rounded-xl bg-night-800 p-2.5' : 'hidden sm:flex',
@@ -38,13 +38,11 @@ export function OrganizationBadge({ variant = 'header' }: { variant?: 'header' |
         <span
           className={cn('truncate font-display text-sm leading-tight', inSidebar && 'text-white')}
         >
-          {session.agencyName}
+          {organization.name}
         </span>
-        {session.professionalKind && (
-          <span className={cn('truncate text-xs', inSidebar ? 'text-night-300' : 'text-muted')}>
-            {t(`auth.professionalKinds.${session.professionalKind}`)}
-          </span>
-        )}
+        <span className={cn('truncate text-xs', inSidebar ? 'text-night-300' : 'text-muted')}>
+          {t(`auth.professionalKinds.${organization.kind}`)}
+        </span>
       </span>
     </div>
   )

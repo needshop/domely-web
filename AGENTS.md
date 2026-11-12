@@ -69,9 +69,12 @@ domely/                      # racine de travail (pas un dépôt git)
 - **URLs en anglais** (`/properties`, `/tenants`…), libellés traduits via i18n.
 - Aucun texte en dur dans les composants : tout passe par `react-i18next` (fr **et** en).
 - Commentaires et documentation en français.
-- Avant de livrer : `npm run typecheck`, `npm run lint`, `npm run format:check` et
-  `npx playwright test` doivent passer ; vérifier visuellement (desktop, mobile 375 px,
-  thème sombre si pertinent).
+- Pendant le développement **et avant un commit / push** : `npm run typecheck`, `npm run lint`,
+  `npm run format:check` et **seulement les tests e2e des modules concernés**
+  (`npx playwright test e2e/<module>.spec.ts`, plus ceux des modules qui en dépendent) ;
+  vérifier visuellement (desktop, mobile 375 px, thème sombre si pertinent).
+- **Suite e2e complète (`npx playwright test`) uniquement pour un build de déploiement** : elle
+  prend 8 à 10 min sur la machine de développement.
 
 ### Environnement
 
@@ -291,8 +294,10 @@ Property 1───n Intervention (sur un lot ou les parties communes) n──�
 | `RentDue`      | id `leaseId:AAAA-MM`, period, dueDate, amount (loyer + charges), paid, remaining, status, daysLate, payments[] — **calculé**                                                                                                                                                                          |
 | `Payment`      | id, leaseId, period, date, amount, method, reference?, note?                                                                                                                                                                                                                                          |
 | `Reminder`     | id, leaseId, period, date, channel (whatsapp / sms / email)                                                                                                                                                                                                                                           |
-| `Account`      | id, identifier (7 caractères), profile, professionalKind?, firstName, lastName, email, phone (international), password (simulation), agencyName?, registrationNumber?, documents[] { type, name, size, mimeType }, verification (`verified` / `pending`), createdAt                                   |
-| `Session`      | accountId, identifier, firstName, lastName, profile, verification, professionalKind?, agencyName?, startedAt                                                                                                                                                                                          |
+| `Account`      | id, identifier (7 caractères), profile, professionalKind?, **roles[]**, workspaceId?, status (`active` / `disabled`), firstName, lastName, email, phone (international), password (simulation), agencyName?, registrationNumber?, documents[], verification (`verified` / `pending`), createdAt       |
+| `Session`      | accountId, identifier, firstName, lastName, roles[], verification, workspaceId?, organization? { name, kind }, startedAt — **recalculée** depuis le compte (seuls accountId et startedAt sont stockés)                                                                                                |
+| `Workspace`    | id, name, registrationNumber?, ownerAccountId (admin créateur), createdAt                                                                                                                                                                                                                             |
+| `Invitation`   | id, token, workspaceId, firstName, lastName, email, phone, invitedBy, createdAt, expiresAt (7 jours), status (`pending` / `accepted` / `revoked`)                                                                                                                                                     |
 | `Intervention` | id, reference `INT-AAAA-NNNN`, propertyId, unitId? (absent = parties communes), title, description?, category, priority, status, reportedBy, tenantId?, reportedAt, scheduledAt?, completedAt?, provider { name, phone? }?, estimatedCost?, actualCost?, chargedTo, history[] { date, status, note? } |
 
 Valeurs :
@@ -320,7 +325,7 @@ Valeurs :
   - Sidebar nuit repliable en icônes (état mémorisé), avec la version de l'app en bas.
   - Sur mobile, un tiroir s'ouvre depuis le bouton du header.
   - Header : devise, langue, thème, notifications (non branchées), menu du compte.
-- **Navigation** : Tableau de bord, Biens, Bailleurs (comptes professionnels), Locataires, Loyers, Interventions, Contrats,
+- **Navigation** : Tableau de bord, Biens, Bailleurs (membres d'une agence), Locataires, Loyers, Interventions, Contrats,
   Rapports, Paramètres : tous les modules sont implémentés.
 - **PWA** installable avec l'icône de l'application ; page 404 ; retour en haut de page à
   chaque navigation.
@@ -344,10 +349,15 @@ Valeurs :
   formulaire, bloc de liens ombré : mot de passe oublié, identifiant oublié. Lien vers
   l'inscription. Erreur unique « Identifiant ou mot de passe incorrect ».
 - **Comptes de démonstration** affichés sur la page, mot de passe `Domely2026` :
-  - `DMY4K7P` : Moussa Diop, propriétaire gestionnaire, +221 77 123 45 67,
-    moussa.diop@example.com ;
-  - `AGT8R2K` : Aminata Sow, agence « Teranga Immobilier », +221 77 654 32 10,
-    aminata.sow@example.com.
+  - `DMY4K7P` : Moussa Diop, propriétaire gestionnaire (landlord + property_manager),
+    +221 77 123 45 67, moussa.diop@example.com ;
+  - `AGT8R2K` : Aminata Sow, admin de l'agence « Teranga Immobilier » (admin +
+    property_manager), +221 77 654 32 10, aminata.sow@example.com ;
+  - `GST5M3Q` : Ibrahima Fall, gestionnaire de l'agence (property_manager) ;
+  - `GST9K2D` : Mariam Koné, gestionnaire **désactivée** ; invitation en attente pour Yao
+    Mensah (lien `/invitation?token=demo-invitation-yao`).
+- **Compte désactivé** : connexion refusée (« Ce compte a été désactivé par l'administrateur de
+  votre agence »), session en cours fermée.
 - **Création de compte** (`/signup`, étapes en mémoire, garde de sortie) :
   1. profil : propriétaire gestionnaire, propriétaire mandant, professionnel ;
   2. informations : nom, prénom, e-mail, téléphone (indicatif SN, CI, TG, BJ, ML, BF, NE, GW,
@@ -369,10 +379,21 @@ Valeurs :
 - **Réinitialisation** (`/reset-password?token=`) : nouveau mot de passe et confirmation ; lien
   invalide, expiré ou déjà utilisé signalé avec un lien pour en demander un autre. Ensuite,
   retour à la connexion avec l'identifiant pré-rempli et un bandeau de confirmation.
-- **Compte professionnel** : nom de l'agence et statut (agence / mandataire) à gauche de
+- **Rôles** (un compte peut en cumuler plusieurs, `features/auth/permissions.ts`) :
+  - `super_admin` (plateforme, attribué à la main), `admin` (agence), `property_manager`
+    (gestionnaire d'agence ou particulier), `landlord`, `tenant` et `user` (prévus, pas encore
+    utilisés dans l'interface) ;
+  - attribués à l'inscription : propriétaire gestionnaire → landlord + property_manager ;
+    propriétaire mandant → landlord ; agence → admin + property_manager (crée le workspace de
+    l'agence) ; mandataire indépendant → property_manager ; gestionnaire invité →
+    property_manager (membre du workspace) ;
+  - accès : **Bailleurs** = admin ou property_manager membre d'un workspace d'agence
+    (`canManageLandlords`) ; **Workspace** = admin d'un workspace (`canManageWorkspace`) ;
+    garde `RequireAccess module="landlords" | "workspace"` et `access` dans `navigation.ts`.
+- **Organisation affichée** : nom de l'agence (workspace) ou du mandataire et statut à gauche de
   l'en-tête de l'application (à partir de 640 px, tronqué avec infobulle si besoin) et, dans le
   menu mobile, entre le logo et la navigation.
-- **Menu du compte** (avatar dans l'en-tête) : nom, profil, identifiant, vérification en cours,
+- **Menu du compte** (avatar dans l'en-tête) : nom, identifiant, rôles, vérification en cours,
   Paramètres, Se déconnecter.
 
 ### Tableau de bord (`/`)
@@ -412,9 +433,10 @@ Valeurs :
 
 ### Bailleurs (`/landlords`, `/landlords/new`, `/landlords/:id`, `/landlords/:id/edit`)
 
-- **Réservé aux comptes professionnels** (agences, mandataires) : entrée de navigation masquée
-  pour les propriétaires, routes protégées (`RequireProfessional`, retour à l'accueil),
-  champ « Bailleur » absent du formulaire et de la fiche d'un bien.
+- **Réservé aux membres d'une agence** (admin ou gestionnaire d'un workspace) : entrée de
+  navigation masquée sinon (propriétaires, mandataires indépendants), routes protégées
+  (`RequireAccess module="landlords"`, retour à l'accueil), champ « Bailleur » absent du
+  formulaire et de la fiche d'un bien.
 - **Liste**
   - Indicateurs : bailleurs (dont sans bien), biens confiés (et biens sans bailleur), loyers
     gérés par mois, honoraires mensuels estimés.
@@ -431,6 +453,26 @@ Valeurs :
 - **Honoraires estimés** = taux × loyers mensuels des lots loués (hors charges).
 - **Biens** : section « Bailleur » en tête du formulaire (liste avec recherche, facultative,
   lien « Ajouter un bailleur ») ; ligne « Bailleur » dans l'onglet Informations de la fiche.
+
+### Workspace (`/workspace`, `/invitation?token=`)
+
+- **Réservé aux admins d'une agence** (`RequireAccess module="workspace"`).
+- **Indicateurs** : comptes actifs, invitations en attente, comptes désactivés.
+- **Membres** : comptes de l'agence (rôles, statut, date d'arrivée ; « (vous) », créateur de
+  l'agence) puis invitations en attente (date d'expiration, « Invitation expirée »).
+- **Actions** (menu par membre, jamais sur son propre compte ni sur le créateur) :
+  - invitation : **Renvoyer** (nouveau lien, 7 jours, l'ancien n'est plus valable) ou
+    **Annuler** (avec confirmation) ;
+  - compte : **Désactiver** (avec confirmation) ou **Réactiver**.
+- **Inviter un gestionnaire** : nom, prénom, e-mail, téléphone ; refus si l'e-mail ou le
+  téléphone appartient à un compte ou à une invitation en attente. Le lien est envoyé par
+  e-mail (affiché, copiable et ouvrable pour la démonstration).
+- **Accepter une invitation** (`/invitation?token=`, connecté ou non) : agence, personne qui
+  invite et coordonnées rappelées ; mot de passe et confirmation, OTP du téléphone, puis compte
+  créé (property_manager, membre du workspace, vérifié) et identifiant affiché. Si un compte
+  est connecté, il faut d'abord se déconnecter. Lien expiré, annulé ou déjà utilisé : page
+  « Invitation expirée ou invalide ».
+- **Agence** : nom, SIRET / SIREN, administrateur, date de création.
 
 ### Locataires (`/tenants`, `/tenants/new`, `/tenants/:id`, `/tenants/:id/edit`)
 
@@ -585,11 +627,18 @@ Valeurs :
 
 ## 10. Tests
 
-- **Playwright e2e** dans `front/e2e/` (≈ 120 tests), fichiers par module : `auth`, `landlords`, `smoke`, `theme`,
+- **Quand lancer quoi** : les fichiers du ou des modules touchés pendant le développement et
+  avant un commit, la suite complète seulement pour un build de déploiement (voir section 3).
+- **Playwright e2e** dans `front/e2e/` (≈ 120 tests), fichiers par module : `auth`, `landlords`, `workspace`, `smoke`, `theme`,
   `sidebar`, `i18n`, `dashboard`, `currency`, `properties`, `property-form`, `tenants`,
   `tenant-form`, `contracts`, `rents`, `maintenance`, `reports`, `settings`.
 - Les tests tournent sur un **build de production** servi par `vite preview` sur le port
   **4173** (`reuseExistingServer: false`), sous Chrome système, en locale `fr-FR`.
+- **Build conditionnel** (`scripts/e2e-server.mjs`) : le build n'est refait que si les sources
+  ont changé (empreinte des chemins, tailles et dates de `src/`, `public/`, `index.html`, des
+  configs et de `package*.json`, enregistrée dans `dist/.e2e-build-hash`). Environ 40 s
+  gagnées par lancement. Forcer : `E2E_BUILD=always npx playwright test` (à faire pour le build
+  de déploiement). Un `vite build --outDir <ailleurs>` ne touche pas `dist/`.
   Le serveur de dev n'est pas utilisé : il est trop instable pour les tests.
 - **Session** : les tests démarrent connectés au compte de démonstration propriétaire
   (`storageState: e2e/fixtures/auth-state.json` dans `playwright.config.ts`). Pour le compte
@@ -659,6 +708,7 @@ Ressources pressenties (REST, montants en XOF, dates ISO) :
 | Ressource         | Opérations                                                                                                                                                                                                            |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `/properties`     | liste (filtres, pagination), détail, création, modification                                                                                                                                                           |
+| `/workspaces`     | workspace de l'agence, membres ; invitations (création, renvoi, annulation, acceptation) ; statut des comptes                                                                                                         |
 | `/landlords`      | liste, détail, création, modification ; unicité du téléphone ; rattachement des biens (`landlordId`)                                                                                                                  |
 | `/tenants`        | liste, détail, création, modification ; unicité du téléphone                                                                                                                                                          |
 | `/leases`         | liste, détail, création (contrôle des chevauchements), modification, `POST /leases/:id/terminate`                                                                                                                     |
@@ -704,7 +754,8 @@ suite. Quand une limite est levée, la retirer de cette liste et mettre à jour 
   identifiant affichés à l'écran), justificatifs non envoyés (métadonnées seulement), pas
   d'expiration de session ni de verrouillage après échecs.
 - Les données (biens, loyers…) sont **les mêmes pour tous les comptes** : pas de
-  cloisonnement par compte, ni de droits selon le profil ; les paramètres et le prénom du
+  cloisonnement par compte ni par workspace ; les rôles ne règlent que l'accès aux modules
+  Bailleurs et Workspace (pas d'attribution de biens à un gestionnaire, pas de droits fins) ; les paramètres et le prénom du
   tableau de bord ne viennent pas du compte connecté.
 - Pas de validation des justificatifs côté Domely (le statut reste « vérification en cours »),
   pas de modification du mot de passe ni des informations du compte depuis l'application.
@@ -726,6 +777,14 @@ suite. Quand une limite est levée, la retirer de cette liste et mettre à jour 
 - Pas de suppression ni de photos.
 - Occupation affichée **à date** uniquement (pas d'historique).
 - Identifiants de lots uniques par bien seulement (`propertyId` + `unitId`).
+
+### Workspace
+
+- Les rôles ne se modifient pas (pas de promotion d'un gestionnaire en admin), pas de
+  suppression d'un membre, pas de modification des informations de l'agence.
+- Aucun e-mail envoyé : le lien d'invitation est affiché à l'admin.
+- `super_admin`, `tenant` et `user` existent dans le modèle mais aucun écran ne les utilise.
+- Un mandataire indépendant n'a pas de workspace (ni accès aux Bailleurs).
 
 ### Bailleurs
 

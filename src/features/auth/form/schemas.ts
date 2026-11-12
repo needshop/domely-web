@@ -105,3 +105,21 @@ export const makeResetSchema = (t: TFunction) =>
       message: t('auth.errors.passwordMismatch'),
     })
 export type ResetValues = z.infer<ReturnType<typeof makeResetSchema>>
+
+/** Invitation d'un gestionnaire dans le workspace (par l'admin de l'agence). */
+export const makeInvitationSchema = (t: TFunction) =>
+  z.object({
+    firstName: z.string().trim().min(1, t('form.errors.required')).max(60),
+    lastName: z.string().trim().min(1, t('form.errors.required')).max(60),
+    email: emailField(t),
+    ...phoneFields(t),
+  })
+export type InvitationValues = z.infer<ReturnType<typeof makeInvitationSchema>>
+
+export const emptyInvitation: InvitationValues = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  phoneCountry: 'SN',
+  phoneNumber: '',
+}

@@ -16,7 +16,7 @@ import {
   LeaveGuard,
 } from '@/components/form/FormLayout'
 import { Link } from 'react-router'
-import { useIsProfessional } from '@/features/auth/api'
+import { useCanManageLandlords } from '@/features/auth/api'
 import { useLandlords } from '@/features/landlords/api'
 import { supportedCountries, useCountryName } from '@/lib/countries'
 import { propertyTypes } from '../types'
@@ -39,7 +39,7 @@ export function PropertyForm({
   const { t } = useTranslation()
   const countryName = useCountryName()
   // Agences : le bien est rattaché au bailleur qui en a confié la gestion
-  const isProfessional = useIsProfessional()
+  const canManageLandlords = useCanManageLandlords()
   const landlords = useLandlords()
   const landlordOptions = useMemo(
     () =>
@@ -85,7 +85,7 @@ export function PropertyForm({
     >
       <FormErrorSummary show={hasErrors} />
 
-      {isProfessional && (
+      {canManageLandlords && (
         <Section
           title={t('properties.form.sections.landlord')}
           hint={t('properties.form.sections.landlordHint')}

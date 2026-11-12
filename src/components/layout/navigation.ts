@@ -3,6 +3,7 @@ import {
   Building2,
   FileText,
   Handshake,
+  Network,
   House,
   type LucideIcon,
   Settings,
@@ -20,6 +21,7 @@ export type NavKey =
   | 'maintenance'
   | 'contracts'
   | 'reports'
+  | 'workspace'
   | 'settings'
 
 export interface NavItem {
@@ -27,18 +29,19 @@ export interface NavItem {
   key: NavKey
   to: string
   icon: LucideIcon
-  /** Réservé aux comptes professionnels (agences, mandataires) */
-  professionalOnly?: boolean
+  /** Module réservé selon les rôles (voir `RequireAccess`) */
+  access?: 'landlords' | 'workspace'
 }
 
 export const navigation: NavItem[] = [
   { key: 'dashboard', to: '/', icon: House },
   { key: 'properties', to: '/properties', icon: Building2 },
-  { key: 'landlords', to: '/landlords', icon: Handshake, professionalOnly: true },
+  { key: 'landlords', to: '/landlords', icon: Handshake, access: 'landlords' },
   { key: 'tenants', to: '/tenants', icon: Users },
   { key: 'rents', to: '/rents', icon: Wallet },
   { key: 'maintenance', to: '/maintenance', icon: Wrench },
   { key: 'contracts', to: '/contracts', icon: FileText },
   { key: 'reports', to: '/reports', icon: BarChart3 },
+  { key: 'workspace', to: '/workspace', icon: Network, access: 'workspace' },
   { key: 'settings', to: '/settings', icon: Settings },
 ]

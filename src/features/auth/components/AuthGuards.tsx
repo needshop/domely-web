@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Navigate, useLocation } from 'react-router'
-import { useIsProfessional, useSession } from '../api'
+import { useCanManageLandlords, useCanManageWorkspace, useSession } from '../api'
 
 /** Réservé aux utilisateurs connectés : sinon, page de connexion (retour prévu après coup). */
 export function RequireAuth({ children }: { children: ReactNode }) {
@@ -13,9 +13,22 @@ export function RequireAuth({ children }: { children: ReactNode }) {
   return children
 }
 
-/** Réservé aux comptes professionnels (module Bailleurs) : sinon, retour à l'accueil. */
-export function RequireProfessional({ children }: { children: ReactNode }) {
-  return useIsProfessional() ? children : <Navigate to="/" replace />
+/**
+ * Réservé selon les rôles, sinon retour à l'accueil :
+ * - `landlords` : admins et gestionnaires d'une agence (module Bailleurs) ;
+ * - `workspace` : admins d'une agence (module Workspace).
+ */
+export function RequireAccess({
+  module,
+  children,
+}: {
+  module: 'landlords' | 'workspace'
+  children: ReactNode
+}) {
+  const canLandlords = useCanManageLandlords()
+  const canWorkspace = useCanManageWorkspace()
+  const allowed = module === 'landlords' ? canLandlords : canWorkspace
+  return allowed ? children : <Navigate to="/" replace />
 }
 
 /**

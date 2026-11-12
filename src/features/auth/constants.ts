@@ -14,6 +14,9 @@ export const OTP_MAX_ATTEMPTS = 5
 /** Simulation : code accepté tant que l'envoi de SMS n'est pas branché. */
 export const DEMO_OTP_CODE = '123456'
 
+/** Validité d'une invitation de gestionnaire (ms). */
+export const INVITATION_TTL_MS = 7 * 24 * 60 * 60_000
+
 /** Validité d'un lien de réinitialisation du mot de passe (ms). */
 export const RESET_TOKEN_TTL_MS = 30 * 60_000
 

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { useIsProfessional } from '@/features/auth/api'
+import { useCanManageLandlords } from '@/features/auth/api'
 import { useLandlord } from '@/features/landlords/api'
 import { useCountryName } from '@/lib/countries'
 import { useFormatters } from '@/lib/format'
@@ -21,12 +21,12 @@ export function PropertyInfo({ property: p, stats }: { property: Property; stats
   const f = useFormatters()
   const countryName = useCountryName()
   const date = (iso: string) => f.dayMonthYear(new Date(`${iso}T12:00:00`))
-  const isProfessional = useIsProfessional()
+  const canManageLandlords = useCanManageLandlords()
   const landlord = useLandlord(p.landlordId)
 
   return (
     <dl className="divide-y divide-separator">
-      {isProfessional && (
+      {canManageLandlords && (
         <Item label={t('properties.detail.info.landlord')}>
           {landlord ? (
             <Link

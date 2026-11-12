@@ -12,7 +12,12 @@ import { AuthHeading } from '@/features/auth/components/AuthHeading'
 import { FormIdentifierField } from '@/features/auth/form/IdentifierField'
 import { FormPasswordField } from '@/features/auth/form/PasswordField'
 import { type LoginValues, makeLoginSchema } from '@/features/auth/form/schemas'
-import { DEMO_AGENCY_IDENTIFIER, DEMO_IDENTIFIER, DEMO_PASSWORD } from '@/features/auth/mockData'
+import {
+  DEMO_AGENCY_IDENTIFIER,
+  DEMO_IDENTIFIER,
+  DEMO_MANAGER_IDENTIFIER,
+  DEMO_PASSWORD,
+} from '@/features/auth/mockData'
 import { rememberedIdentifier } from '@/features/auth/rememberedIdentifier'
 import { useAuthErrorMessage } from '@/features/auth/hooks/useAuthErrorMessage'
 
@@ -113,6 +118,7 @@ export function LoginPage() {
           {t('auth.login.demoDescription', {
             owner: DEMO_IDENTIFIER,
             agency: DEMO_AGENCY_IDENTIFIER,
+            manager: DEMO_MANAGER_IDENTIFIER,
             password: DEMO_PASSWORD,
           })}
         </AuthAlert>

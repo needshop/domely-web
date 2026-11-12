@@ -7,6 +7,10 @@ export const authErrorCodes = [
   'otpExpired',
   'otpTooManyAttempts',
   'resetLinkInvalid',
+  'accountDisabled',
+  'alreadyInvited',
+  'invitationInvalid',
+  'forbidden',
 ] as const
 export type AuthErrorCode = (typeof authErrorCodes)[number]
 

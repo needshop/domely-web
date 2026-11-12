@@ -16,6 +16,7 @@
     "maintenance": "Maintenance",
     "contracts": "Contracts",
     "reports": "Reports",
+    "workspace": "Workspace",
     "settings": "Settings"
   },
   "sidebar": {
@@ -484,6 +485,86 @@
         "updated": "Landlord updated",
         "updatedDescription": "{{name}}’s details are up to date."
       }
+    }
+  },
+  "workspace": {
+    "title": "Workspace",
+    "subtitle": "{{name}}’s property managers and their access.",
+    "status": {
+      "active": "Active",
+      "disabled": "Disabled",
+      "invited": "Invited",
+      "expired": "Invitation expired"
+    },
+    "stats": {
+      "active": "Active accounts",
+      "activeHint": "Admins and property managers",
+      "invited": "Pending invitations",
+      "invitedHint": "Valid for 7 days",
+      "disabled": "Disabled accounts",
+      "disabledHint": "Can no longer sign in"
+    },
+    "members": {
+      "title": "Members",
+      "description": "The agency’s accounts and the invitations sent.",
+      "you": "(you)",
+      "owner": "Agency creator",
+      "since": "Since {{date}}",
+      "expiresOn": "Expires on {{date}}",
+      "expiredOn": "Expired on {{date}}",
+      "actions": "Actions for {{name}}"
+    },
+    "actions": {
+      "resend": "Resend invitation",
+      "revoke": "Cancel invitation",
+      "disable": "Disable account",
+      "enable": "Reactivate account"
+    },
+    "confirm": {
+      "revoke": {
+        "title": "Cancel {{name}}’s invitation?",
+        "description": "The link sent by email will stop working. You can invite them again."
+      },
+      "disable": {
+        "title": "Disable {{name}}’s account?",
+        "description": "They can no longer sign in until the account is reactivated. Their data is kept."
+      }
+    },
+    "toast": {
+      "revoked": "{{name}}’s invitation cancelled",
+      "disabled": "{{name}}’s account disabled",
+      "enabled": "{{name}}’s account reactivated"
+    },
+    "invite": {
+      "open": "Invite a property manager",
+      "title": "Invite a property manager",
+      "description": "They will receive an email link to create their account in your agency.",
+      "emailHint": "The invitation link is sent to this address.",
+      "submit": "Send invitation",
+      "sentTitle": "Invitation sent",
+      "sentDescription": "{{name}} received a link by email at {{email}}. It is valid for 7 days.",
+      "demoLink": "Demo: no email is sent, here is the invitation link.",
+      "copyLink": "Copy link",
+      "openLink": "Open link",
+      "done": "Done"
+    },
+    "agency": {
+      "title": "Agency",
+      "name": "Agency name",
+      "owner": "Administrator",
+      "createdAt": "Created on"
+    },
+    "accept": {
+      "title": "Join {{agency}}",
+      "description": "{{inviter}} invites you to join {{agency}} as a property manager. Choose your password to create your account.",
+      "descriptionNoInviter": "You are invited to join {{agency}} as a property manager. Choose your password to create your account.",
+      "name": "Name",
+      "role": "Role",
+      "create": "Verify and create my account",
+      "invalidTitle": "Invitation expired or invalid",
+      "invalidDescription": "This link is no longer valid. Ask your agency administrator to send you a new invitation.",
+      "signedInTitle": "You are already signed in",
+      "signedInDescription": "You are signed in as {{name}}. Sign out to accept this invitation with a new account."
     }
   },
   "tenants": {
@@ -1371,7 +1452,11 @@
       "invalidPhone": "Invalid number (8 to 10 digits, without the country code).",
       "weakPassword": "The password must have at least 8 characters, including a letter and a digit.",
       "passwordMismatch": "The two passwords do not match.",
-      "invalidRegistration": "Invalid registration number (5 to 30 characters)."
+      "invalidRegistration": "Invalid registration number (5 to 30 characters).",
+      "accountDisabled": "This account has been disabled by your agency administrator.",
+      "alreadyInvited": "An invitation is already pending for this email or number.",
+      "invitationInvalid": "This invitation is no longer valid.",
+      "forbidden": "You are not allowed to perform this action."
     },
     "login": {
       "title": "Sign in",
@@ -1384,7 +1469,7 @@
       "noAccount": "No account yet?",
       "signup": "Create an account",
       "demoTitle": "Demo accounts",
-      "demoDescription": "Owner {{owner}}, agency {{agency}}; password {{password}}."
+      "demoDescription": "Owner {{owner}}, agency admin {{agency}}, property manager {{manager}}; password {{password}}."
     },
     "otp": {
       "title": "Phone verification",
@@ -1540,6 +1625,14 @@
       "pending": "Document verification in progress",
       "actions": "Account actions",
       "logout": "Sign out"
+    },
+    "roles": {
+      "super_admin": "Super administrator",
+      "admin": "Agency administrator",
+      "property_manager": "Property manager",
+      "landlord": "Landlord",
+      "tenant": "Tenant",
+      "user": "User"
     }
   }
 }
