@@ -3,7 +3,8 @@
     "name": "Domely",
     "tagline": "Clarity for your real estate.",
     "version": "Domely v{{version}}",
-    "versionShort": "v{{version}}"
+    "versionShort": "v{{version}}",
+    "loading": "Loading…"
   },
   "nav": {
     "label": "Main navigation",

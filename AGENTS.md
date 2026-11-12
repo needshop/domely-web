@@ -122,7 +122,7 @@ npx playwright test    # e2e (build + preview sur le port 4173)
 
 ```
 src/
-├── app/            # router.tsx, RootLayout (liens React Aria, défilement), CurrencyProvider
+├── app/            # router.tsx, RootLayout (liens React Aria, défilement), PageLoader, CurrencyProvider
 ├── assets/brand/   # logos et symboles SVG (couleur et blanc)
 ├── components/     # composants partagés (StatTile, FilterSelect, ListPagination…)
 │   ├── charts/     # RentCollectionChart (histogramme mensuel), HorizontalBars
@@ -135,6 +135,20 @@ src/
 ├── pages/          # pages routées (assemblent les composants des features)
 └── services/       # (vide) futur client HTTP de l'API
 ```
+
+### Chargement des pages
+
+- Chaque page de `pages/` est **chargée à la demande** (`lazy` de React Router dans
+  `app/router.tsx`) : un fichier JavaScript par page, téléchargé à la première visite.
+  Les layouts (`RootLayout`, `AppLayout`, `AuthLayout`) et les gardes restent dans le fichier
+  principal.
+- Nouvelle page : l'exporter par son nom, l'ajouter à l'objet `pages` du routeur puis déclarer
+  la route avec `lazy: page(pages.x, (m) => <m.XPage … />)` (les props comme `mode` passent).
+- `PageLoader` s'affiche au tout premier chargement (`HydrateFallback`) ; lors d'une navigation,
+  la page précédente reste affichée jusqu'à ce que la suivante soit prête.
+- Poids téléchargé (build de production, dépendances partagées comprises) : environ 0,9 Mo
+  pour le tableau de bord, 1,2 à 1,4 Mo pour les pages à formulaire, contre 1,7 Mo pour tout
+  avant le découpage.
 
 ### Anatomie d'une feature (`src/features/<module>/`)
 
@@ -598,6 +612,14 @@ Valeurs :
     fiche plutôt que des options de liste cachées.
   - Après un clic de navigation, attendre l'URL (`toHaveURL`) avant de vérifier le contenu.
   - Saisir une date : focaliser le premier segment du groupe puis taper `jjmmaaaa`.
+  - Liste avec recherche (`ComboBox`) : taper la recherche, attendre l'option, puis la choisir
+    **au clavier** (`ArrowDown` jusqu'à sa position, `Enter`). Le clic sur l'option est instable
+    pendant l'animation d'ouverture, surtout sous la charge de la suite complète. Ne pas
+    supposer un seul résultat (« abdoulaye » en trouve deux).
+  - Lien d'une page qui vient de s'afficher après une mutation (création…) : si le clic attend
+    en vain un élément « stable », l'activer au clavier (`focus()` puis `Enter`).
+  - Machine de développement à 2 cœurs : la suite complète prend environ 8 min avec 2 workers
+    (valeur par défaut) ; davantage de workers sature la machine et fait échouer des tests.
   - Export de fichiers : `page.waitForEvent('download')` puis lire `download.path()`.
 
 ---

@@ -3,7 +3,8 @@
     "name": "Domely",
     "tagline": "La clarté au service de votre immobilier.",
     "version": "Domely v{{version}}",
-    "versionShort": "v{{version}}"
+    "versionShort": "v{{version}}",
+    "loading": "Chargement…"
   },
   "nav": {
     "label": "Navigation principale",
