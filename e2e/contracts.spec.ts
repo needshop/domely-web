@@ -3,10 +3,21 @@ import { expect, type Page, test } from '@playwright/test'
 const rows = (page: Page) => page.locator('tbody tr')
 
 /** Sélectionne un locataire dans la liste avec recherche. */
+/**
+ * Choisit un locataire dans la liste avec recherche. Sélection au clavier : sous la charge de
+ * la suite complète, le clic sur l'option tombait pendant l'animation d'ouverture de la liste.
+ */
 async function pickTenant(page: Page, search: string, name: string) {
   const combo = page.getByRole('combobox', { name: 'Locataire' })
   await combo.fill(search)
-  await page.getByRole('option', { name }).click()
+  // Position du locataire voulu parmi les résultats, puis déplacement au clavier jusqu'à lui
+  const option = page.getByRole('option', { name, exact: true })
+  await expect(option).toBeVisible()
+  const index = (await page.getByRole('option').allTextContents()).indexOf(name)
+  expect(index).toBeGreaterThanOrEqual(0)
+  for (let i = 0; i <= index; i++) await combo.press('ArrowDown')
+  await combo.press('Enter')
+  await expect(combo).toHaveValue(name)
 }
 
 test.describe('Contrats — liste', () => {
@@ -92,7 +103,13 @@ test.describe('Contrats — création', () => {
       new RegExp(`^BAIL-${today.getFullYear()}-`),
     )
 
-    await page.getByRole('link', { name: /Immeuble Bellevue/ }).click()
+    // Juste après la création, la fiche bouge encore (le clic attendait en vain un lien
+    // immobile) : on active le lien au clavier
+    const propertyLink = page.getByRole('link', { name: /Immeuble Bellevue/ })
+    await expect(propertyLink).toBeVisible()
+    await propertyLink.focus()
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL('/properties/p3')
     await expect(page.getByRole('link', { name: 'Abdoulaye Yeo' })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Créer un contrat pour Apt 18' })).toHaveCount(0)
   })
