@@ -878,3 +878,5 @@ suite. Quand une limite est levée, la retirer de cette liste et mettre à jour 
 | `565aee5` | Bailleurs (comptes professionnels) : liste, fiche, formulaire ; bailleur des biens              |
 | `4965203` | Tests : création de contrat stabilisée (liste avec recherche au clavier)                        |
 | `6b79e36` | Chargement des pages à la demande (fichier principal de 1,69 Mo à 413 Ko)                       |
+| `9d53205` | Tests : build conditionnel (rebuild seulement si les sources ont changé)                        |
+| `74c0f67` | Rôles des comptes, module Workspace (invitations, désactivation des gestionnaires)              |
