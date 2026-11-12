@@ -794,3 +794,4 @@ suite. Quand une limite est levée, la retirer de cette liste et mettre à jour 
 | `fc25403` | Rapports : indicateurs, revenus mensuels, performance par bien, impayés, dépenses, CSV          |
 | `fab5dc2` | Paramètres : profil, organisation, préférences et taux, défauts des baux, modèle de relance     |
 | `1d6cb56` | Authentification : connexion, inscription (OTP, justificatifs), récupération, agence en en-tête |
+| `565aee5` | Bailleurs (comptes professionnels) : liste, fiche, formulaire ; bailleur des biens              |
