@@ -20,6 +20,9 @@ export default defineConfig({
     baseURL,
     // Langue par défaut des tests (le détecteur i18next lit la langue du navigateur)
     locale: 'fr-FR',
+    // Session du compte de démonstration : les tests des modules démarrent connectés
+    // (les tests d'authentification repartent d'un état vide, voir e2e/auth.spec.ts)
+    storageState: 'e2e/fixtures/auth-state.json',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },

@@ -6,7 +6,8 @@ test.describe('Multilangue (fr / en)', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Bonjour,')
 
-    await page.getByRole('radio', { name: 'English' }).click()
+    await page.getByRole('button', { name: /Langue de l’interface/ }).click()
+    await page.getByRole('option', { name: /English/ }).click()
     await expect(page.locator('html')).toHaveAttribute('lang', 'en')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Hello,')
     await expect(page.getByRole('link', { name: 'Properties' })).toBeVisible()
@@ -14,7 +15,8 @@ test.describe('Multilangue (fr / en)', () => {
     await page.reload()
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Hello,')
 
-    await page.getByRole('radio', { name: 'Français' }).click()
+    await page.getByRole('button', { name: /Interface language/ }).click()
+    await page.getByRole('option', { name: /Français/ }).click()
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Bonjour,')
   })
 

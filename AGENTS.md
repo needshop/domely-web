@@ -4,8 +4,8 @@ Document de référence pour les agents (et les humains) qui travaillent sur Dom
 structure, spécifications techniques et fonctionnelles, conventions et pièges connus.
 **À tenir à jour à chaque fonctionnalité livrée** (sections 7, 8, 11 et 12 en particulier).
 
-> Dernière mise à jour : 11/11/2026 — front v0.1.0, tous les modules de la navigation (Biens, Locataires, Loyers, Interventions, Contrats,
-> Rapports, Paramètres).
+> Dernière mise à jour : 12/11/2026 — front v0.1.0, tous les modules de la navigation (Biens, Locataires, Loyers, Interventions, Contrats,
+> Rapports, Paramètres) et l'authentification (simulée, en attendant l'API).
 
 ---
 
@@ -122,7 +122,7 @@ npx playwright test    # e2e (build + preview sur le port 4173)
 
 ```
 src/
-├── app/            # router.tsx, CurrencyProvider (providers globaux)
+├── app/            # router.tsx, RootLayout (liens React Aria, défilement), CurrencyProvider
 ├── assets/brand/   # logos et symboles SVG (couleur et blanc)
 ├── components/     # composants partagés (StatTile, FilterSelect, ListPagination…)
 │   ├── charts/     # RentCollectionChart (histogramme mensuel), HorizontalBars
@@ -149,7 +149,7 @@ src/
 | `components/` | Composants d'affichage du module                                                                          |
 | `form/`       | `schema.ts` (zod), `mapping.ts` (entité ↔ formulaire), formulaire                                         |
 
-Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenance`, `reports`,
+Modules : `auth`, `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenance`, `reports`,
 `settings` (`reports` n'a pas de store : il agrège les données des autres modules).
 
 ### Flux de données
@@ -159,7 +159,8 @@ Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenan
 - Pour brancher l'API, on remplace l'implémentation des hooks de `api.ts` (ex. TanStack
   Query) **sans toucher aux composants**.
 - Les données sont perdues au rechargement (assumé tant que l'API n'existe pas), **sauf les
-  paramètres**, enregistrés dans `localStorage` (`domely-settings`).
+  paramètres** (`domely-settings`), **les comptes** (`domely-accounts`) et **la session**
+  (`domely-session`), enregistrés dans `localStorage`.
 - **Sources de vérité et états dérivés** :
   - le **contrat** fait foi pour l'occupation : `useProperties()` applique les contrats aux
     biens (`applyLeases`). Un lot est « loué » s'il a un contrat en cours, avec le loyer, les
@@ -181,6 +182,9 @@ Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenan
 - Les variables HeroUI (`--accent`, `--surface`…) sont surchargées pour le clair et le sombre.
 - Thème clair / sombre / système (`useTheme` HeroUI, clé `heroui-theme`), avec un script
   anti-flash dans `index.html`.
+- Sélecteurs de **langue** et de **devise** : listes déroulantes (`Select`) qui affichent le
+  code (FR, XOF…) dans le champ et le nom complet dans la liste ; la flèche est masquée sous
+  640 px (en-tête mobile chargé). Le thème reste un groupe de boutons.
 - Les statuts s'affichent **toujours avec une icône et un libellé**, jamais par la couleur seule.
 - Dataviz : les couleurs néon de la marque ne servent qu'aux statuts (contraste insuffisant
   pour les séries). Graphique des loyers : barres nuit, mois courant en rouge, tableau de
@@ -202,7 +206,10 @@ Modules : `dashboard`, `properties`, `tenants`, `contracts`, `rents`, `maintenan
   page hors bornes est ramenée dans les bornes.
 - Préférences locales (`localStorage`) : `domely-lang`, `domely-currency`,
   `domely-sidebar-collapsed`, `domely-properties-view`, `heroui-theme`, `domely-settings`
-  (paramètres, lus avec les valeurs par défaut en repli pour les champs ajoutés plus tard).
+  (paramètres, lus avec les valeurs par défaut en repli pour les champs ajoutés plus tard),
+  `domely-remembered-identifier` (identifiant mémorisé sur la page de connexion).
+- Simulation de l'authentification : `domely-accounts` (comptes créés, liens de
+  réinitialisation) et `domely-session` (utilisateur connecté).
 
 ### Montants et devises
 
@@ -268,6 +275,8 @@ Property 1───n Intervention (sur un lot ou les parties communes) n──�
 | `RentDue`      | id `leaseId:AAAA-MM`, period, dueDate, amount (loyer + charges), paid, remaining, status, daysLate, payments[] — **calculé**                                                                                                                                                                          |
 | `Payment`      | id, leaseId, period, date, amount, method, reference?, note?                                                                                                                                                                                                                                          |
 | `Reminder`     | id, leaseId, period, date, channel (whatsapp / sms / email)                                                                                                                                                                                                                                           |
+| `Account`      | id, identifier (7 caractères), profile, professionalKind?, firstName, lastName, email, phone (international), password (simulation), agencyName?, registrationNumber?, documents[] { type, name, size, mimeType }, verification (`verified` / `pending`), createdAt                                   |
+| `Session`      | accountId, identifier, firstName, lastName, profile, verification, professionalKind?, agencyName?, startedAt                                                                                                                                                                                          |
 | `Intervention` | id, reference `INT-AAAA-NNNN`, propertyId, unitId? (absent = parties communes), title, description?, category, priority, status, reportedBy, tenantId?, reportedAt, scheduledAt?, completedAt?, provider { name, phone? }?, estimatedCost?, actualCost?, chargedTo, history[] { date, status, note? } |
 
 Valeurs :
@@ -294,11 +303,61 @@ Valeurs :
 - **Layout**
   - Sidebar nuit repliable en icônes (état mémorisé), avec la version de l'app en bas.
   - Sur mobile, un tiroir s'ouvre depuis le bouton du header.
-  - Header : devise, langue, thème, notifications (non branchées).
+  - Header : devise, langue, thème, notifications (non branchées), menu du compte.
 - **Navigation** : Tableau de bord, Biens, Locataires, Loyers, Interventions, Contrats,
   Rapports, Paramètres : tous les modules sont implémentés.
 - **PWA** installable avec l'icône de l'application ; page 404 ; retour en haut de page à
   chaque navigation.
+
+### Authentification (`/login`, `/signup`, `/forgot-password`, `/forgot-identifier`, `/reset-password`)
+
+- **Accès** : toute l'application exige une session (`RequireAuth`). Sans session, on est
+  renvoyé vers `/login`, puis ramené à la page demandée après la connexion. Les pages
+  visiteurs (`GuestOnly`) renvoient un utilisateur connecté vers l'accueil.
+  `/reset-password` reste accessible connecté ou non (le lien vient d'un e-mail).
+- **Layout** (`AuthLayout`) : sur desktop, présentation de la plateforme sur 2/3 (logo blanc
+  en haut, surtitre, slogan et sous-titre centrés verticalement, points forts en bas ; `xl` et
+  plus, colonne de 28rem en `lg`) et
+  formulaire sur 1/3 (langue et thème en haut, plus le logo sur mobile uniquement, formulaire au centre, copyright en bas).
+  Sur mobile, le formulaire seul.
+- **Identifiant de connexion** : 7 caractères, lettres majuscules et chiffres (au moins un de
+  chaque, sans 0/O, 1/I/L), généré à la création du compte et envoyé par e-mail. Saisi en
+  majuscules automatiquement.
+- **Connexion** : identifiant, mot de passe (afficher / masquer), interrupteur « Mémoriser mon
+  identifiant » (pré-remplit le champ et place le curseur sur le mot de passe). Sous le
+  formulaire, bloc de liens ombré : mot de passe oublié, identifiant oublié. Lien vers
+  l'inscription. Erreur unique « Identifiant ou mot de passe incorrect ».
+- **Comptes de démonstration** affichés sur la page, mot de passe `Domely2026` :
+  - `DMY4K7P` : Moussa Diop, propriétaire gestionnaire, +221 77 123 45 67,
+    moussa.diop@example.com ;
+  - `AGT8R2K` : Aminata Sow, agence « Teranga Immobilier », +221 77 654 32 10,
+    aminata.sow@example.com.
+- **Création de compte** (`/signup`, étapes en mémoire, garde de sortie) :
+  1. profil : propriétaire gestionnaire, propriétaire mandant, professionnel ;
+  2. informations : nom, prénom, e-mail, téléphone (indicatif SN, CI, TG, BJ, ML, BF, NE, GW,
+     GN, FR + 8 à 10 chiffres), mot de passe (8 caractères, une lettre, un chiffre, règles
+     affichées en direct). Professionnels : agence immobilière ou mandataire indépendant, nom
+     de l'agence, SIRET / SIREN (ou NINEA, RCCM, IFU… ; 5 à 30 caractères). E-mail et
+     téléphone **uniques** ;
+  3. vérification du téléphone par code OTP à 6 chiffres (validation automatique à la saisie,
+     renvoi après 60 s, 5 essais, validité 5 min) ;
+  4. professionnels : justificatifs (PDF, JPG, PNG, 5 Mo max, glisser-déposer). Agence :
+     registre du commerce, carte professionnelle, pièce d'identité du gérant. Mandataire :
+     pièce d'identité, attestation d'immatriculation, mandat (facultatif). Le compte est créé
+     « vérification en cours » ;
+  - fin : identifiant affiché (copie), envoyé par e-mail ; bouton « Se connecter » avec
+    l'identifiant pré-rempli.
+- **Mot de passe / identifiant oublié** : e-mail et téléphone du compte (ils doivent
+  correspondre au même compte), code OTP, puis envoi par e-mail du lien de réinitialisation
+  (30 min, usage unique, un seul lien actif par compte) ou de l'identifiant.
+- **Réinitialisation** (`/reset-password?token=`) : nouveau mot de passe et confirmation ; lien
+  invalide, expiré ou déjà utilisé signalé avec un lien pour en demander un autre. Ensuite,
+  retour à la connexion avec l'identifiant pré-rempli et un bandeau de confirmation.
+- **Compte professionnel** : nom de l'agence et statut (agence / mandataire) à gauche de
+  l'en-tête de l'application (à partir de 640 px, tronqué avec infobulle si besoin) et, dans le
+  menu mobile, entre le logo et la navigation.
+- **Menu du compte** (avatar dans l'en-tête) : nom, profil, identifiant, vérification en cours,
+  Paramètres, Se déconnecter.
 
 ### Tableau de bord (`/`)
 
@@ -488,12 +547,17 @@ Valeurs :
 
 ## 10. Tests
 
-- **Playwright e2e** dans `front/e2e/` (≈ 100 tests), fichiers par module : `smoke`, `theme`,
+- **Playwright e2e** dans `front/e2e/` (≈ 110 tests), fichiers par module : `auth`, `smoke`, `theme`,
   `sidebar`, `i18n`, `dashboard`, `currency`, `properties`, `property-form`, `tenants`,
   `tenant-form`, `contracts`, `rents`, `maintenance`, `reports`, `settings`.
 - Les tests tournent sur un **build de production** servi par `vite preview` sur le port
   **4173** (`reuseExistingServer: false`), sous Chrome système, en locale `fr-FR`.
   Le serveur de dev n'est pas utilisé : il est trop instable pour les tests.
+- **Session** : les tests démarrent connectés au compte de démonstration
+  (`storageState: e2e/fixtures/auth-state.json` dans `playwright.config.ts`). `auth.spec.ts`
+  repart d'un état vide (`test.use({ storageState: { cookies: [], origins: [] } })`).
+- Code OTP : saisir avec `getByLabel('Code de vérification (6 chiffres)').fill('123456')`.
+  Téléversement : `page.waitForEvent('filechooser')` puis `setFiles({ name, mimeType, buffer })`.
 - Le serveur MCP Playwright sert aux vérifications visuelles (captures desktop et mobile,
   débordement horizontal).
 - Bonnes pratiques :
@@ -545,24 +609,28 @@ des appels HTTP (client dans `src/services/`, URL `VITE_API_URL`).
 
 Ressources pressenties (REST, montants en XOF, dates ISO) :
 
-| Ressource         | Opérations                                                                                                     |
-| ----------------- | -------------------------------------------------------------------------------------------------------------- |
-| `/properties`     | liste (filtres, pagination), détail, création, modification                                                    |
-| `/tenants`        | liste, détail, création, modification ; unicité du téléphone                                                   |
-| `/leases`         | liste, détail, création (contrôle des chevauchements), modification, `POST /leases/:id/terminate`              |
-| `/rent-dues`      | échéances calculées (par mois, impayés), indicateurs                                                           |
-| `/payments`       | création, annulation                                                                                           |
-| `/reminders`      | création, historique ; plus tard, envoi serveur (WhatsApp, SMS, e-mail)                                        |
-| `/exchange-rates` | taux XOF → EUR / GNF                                                                                           |
-| `/dashboard`      | agrégats (encaissements sur 12 mois, impayés, occupation)                                                      |
-| `/interventions`  | liste, détail, création, modification, transitions de statut (planifier, démarrer, terminer, annuler, rouvrir) |
-| `/providers`      | (plus tard) annuaire des prestataires                                                                          |
-| `/settings`       | paramètres du compte et de l'organisation (aujourd'hui dans le navigateur)                                     |
-| `/reports/*`      | agrégats par période et par bien ; exports CSV / PDF générés côté serveur                                      |
+| Ressource         | Opérations                                                                                                                                                                                                            |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/properties`     | liste (filtres, pagination), détail, création, modification                                                                                                                                                           |
+| `/tenants`        | liste, détail, création, modification ; unicité du téléphone                                                                                                                                                          |
+| `/leases`         | liste, détail, création (contrôle des chevauchements), modification, `POST /leases/:id/terminate`                                                                                                                     |
+| `/rent-dues`      | échéances calculées (par mois, impayés), indicateurs                                                                                                                                                                  |
+| `/payments`       | création, annulation                                                                                                                                                                                                  |
+| `/reminders`      | création, historique ; plus tard, envoi serveur (WhatsApp, SMS, e-mail)                                                                                                                                               |
+| `/exchange-rates` | taux XOF → EUR / GNF                                                                                                                                                                                                  |
+| `/dashboard`      | agrégats (encaissements sur 12 mois, impayés, occupation)                                                                                                                                                             |
+| `/interventions`  | liste, détail, création, modification, transitions de statut (planifier, démarrer, terminer, annuler, rouvrir)                                                                                                        |
+| `/providers`      | (plus tard) annuaire des prestataires                                                                                                                                                                                 |
+| `/auth/*`         | connexion (identifiant + mot de passe), déconnexion, inscription, envoi et vérification OTP (SMS), récupération (lien de réinitialisation, envoi de l'identifiant), réinitialisation, téléversement des justificatifs |
+| `/settings`       | paramètres du compte et de l'organisation (aujourd'hui dans le navigateur)                                                                                                                                            |
+| `/reports/*`      | agrégats par période et par bien ; exports CSV / PDF générés côté serveur                                                                                                                                             |
 
 Points à trancher côté API :
 
-- authentification et comptes (multi-utilisateur, agences) ;
+- authentification : jetons (cookie `httpOnly` recommandé), durée de session, hash des mots
+  de passe, limitation des tentatives, envoi réel des SMS et e-mails ; énumération des comptes
+  (la récupération signale aujourd'hui « aucun compte ne correspond ») ;
+- comptes multi-utilisateur d'une agence, rattachement propriétaire mandant ↔ professionnel ;
 - où sont calculées les échéances (serveur recommandé) et leur historisation ;
 - génération des quittances PDF ;
 - envoi des relances ;
@@ -572,8 +640,8 @@ Points à trancher côté API :
 
 ## 13. Limites connues et feuille de route
 
-**Déjà livré** : initialisation, PWA, thème clair et sombre, i18n, devises, tableau de bord, et
-tous les modules : Biens, Locataires, Contrats, Loyers (encaissement et relance),
+**Déjà livré** : initialisation, PWA, thème clair et sombre, i18n, devises, authentification
+(simulée), tableau de bord, et tous les modules : Biens, Locataires, Contrats, Loyers (encaissement et relance),
 Interventions, Rapports et Paramètres.
 
 Les limites ci-dessous sont **connues et assumées** à ce stade ; elles sont à traiter par la
@@ -583,7 +651,15 @@ suite. Quand une limite est levée, la retirer de cette liste et mettre à jour 
 
 - **Pas d'API** : données de démonstration en mémoire, perdues au rechargement (sauf les
   paramètres, dans le navigateur). Pas de synchronisation entre appareils ni de mode hors ligne.
-- **Pas de comptes** : ni authentification, ni utilisateurs multiples, ni droits.
+- **Authentification simulée** dans le navigateur : mots de passe en clair dans `localStorage`,
+  code OTP fixe `123456` (aucun SMS), aucun e-mail envoyé (lien de réinitialisation et
+  identifiant affichés à l'écran), justificatifs non envoyés (métadonnées seulement), pas
+  d'expiration de session ni de verrouillage après échecs.
+- Les données (biens, loyers…) sont **les mêmes pour tous les comptes** : pas de
+  cloisonnement par compte, ni de droits selon le profil ; les paramètres et le prénom du
+  tableau de bord ne viennent pas du compte connecté.
+- Pas de validation des justificatifs côté Domely (le statut reste « vérification en cours »),
+  pas de modification du mot de passe ni des informations du compte depuis l'application.
 - Cloche de **notifications** du header non branchée.
 - Pas de **suppression** ni d'**archivage** (biens, locataires, contrats, interventions).
 - Pas de **pièces jointes** (photos, baux signés, pièces d'identité, factures).

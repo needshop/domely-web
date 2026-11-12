@@ -1,6 +1,7 @@
 import { Button, Drawer, useOverlayState } from '@heroui/react'
 import { Menu, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { OrganizationBadge } from '@/features/auth/components/OrganizationBadge'
 import { SidebarContent } from './Sidebar'
 
 /** Menu mobile (< lg) : bouton ☰ dans l'en-tête, navigation dans un tiroir à gauche. */
@@ -37,7 +38,10 @@ export function MobileNav() {
             >
               <X className="size-5" aria-hidden />
             </Button>
-            <SidebarContent onNavigate={state.close} />
+            <SidebarContent
+              onNavigate={state.close}
+              beforeNav={<OrganizationBadge variant="sidebar" />}
+            />
           </Drawer.Dialog>
         </Drawer.Content>
       </Drawer.Backdrop>

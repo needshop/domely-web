@@ -25,12 +25,13 @@ export function CurrencySwitcher({ className }: { className?: string }) {
       onChange={(key) => {
         if (key) setCurrency(String(key) as Currency)
       }}
-      className={cn('w-[5.25rem]', className)}
+      className={cn('w-14 shrink-0 sm:w-[5.25rem]', className)}
     >
       <Select.Trigger className="h-8 min-h-8 px-2.5 font-display text-sm">
         {/* Seul le code (textValue) est affiché dans le champ ; le nom complet est dans la liste */}
         <Select.Value>{({ selectedText }) => selectedText}</Select.Value>
-        <Select.Indicator />
+        {/* Flèche masquée sur petit écran : l'en-tête mobile est très chargé */}
+        <Select.Indicator className="hidden sm:block" />
       </Select.Trigger>
       <Select.Popover className="min-w-56">
         <ListBox>

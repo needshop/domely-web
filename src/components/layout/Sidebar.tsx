@@ -1,4 +1,5 @@
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import logoWhite from '@/assets/brand/logo-white.svg'
 import symbolWhite from '@/assets/brand/symbol-white.svg'
@@ -13,10 +14,17 @@ interface SidebarContentProps {
   onToggle?: () => void
   /** Appelé après un clic sur un lien (ferme la sidebar mobile) */
   onNavigate?: () => void
+  /** Contenu affiché entre le logo et la navigation (menu mobile : nom de l'agence) */
+  beforeNav?: ReactNode
 }
 
 /** Contenu de la sidebar, partagé entre la version desktop et la version mobile. */
-export function SidebarContent({ collapsed = false, onToggle, onNavigate }: SidebarContentProps) {
+export function SidebarContent({
+  collapsed = false,
+  onToggle,
+  onNavigate,
+  beforeNav,
+}: SidebarContentProps) {
   const { t } = useTranslation()
   const ToggleIcon = collapsed ? PanelLeftOpen : PanelLeftClose
   const toggleLabel = collapsed ? t('sidebar.expandLabel') : t('sidebar.collapseLabel')
@@ -30,6 +38,8 @@ export function SidebarContent({ collapsed = false, onToggle, onNavigate }: Side
           <img src={logoWhite} alt="Domely" className="h-14 w-auto" />
         )}
       </div>
+
+      {beforeNav}
 
       <nav
         className="-mx-1 flex min-h-0 flex-col gap-1 overflow-y-auto px-1"

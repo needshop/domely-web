@@ -1155,5 +1155,232 @@
     "next": "Next",
     "page": "Page {{page}}",
     "summary": "{{from}}–{{to}} of {{total}}"
+  },
+  "auth": {
+    "layout": {
+      "home": "Domely — sign-in home",
+      "copyright": "© {{year}} Domely. All rights reserved."
+    },
+    "showcase": {
+      "eyebrow": "Property management",
+      "subtitle": "Properties, tenants, rents and maintenance in one place, designed for West Africa.",
+      "features": {
+        "portfolio": "Properties, units and leases in one place",
+        "rents": "Rents, Mobile Money and WhatsApp reminders",
+        "reports": "Real-time reports and indicators"
+      }
+    },
+    "fields": {
+      "identifier": "Identifier",
+      "identifierPlaceholder": "E.g. DMY4K7P",
+      "identifierHint": "7 letters and digits, emailed to you at sign-up.",
+      "password": "Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "emailHint": "Your sign-in identifier will be sent to this address.",
+      "phone": "Phone",
+      "dialCode": "Country code",
+      "phonePlaceholder": "77 123 45 67",
+      "agencyName": "Agency name",
+      "registrationNumber": "SIRET / SIREN",
+      "registrationNumberHint": "Or your country’s legal identifier: NINEA, RCCM, IFU…"
+    },
+    "passwordRules": {
+      "title": "Password rules",
+      "length": "At least 8 characters",
+      "letter": "One letter",
+      "digit": "One digit",
+      "met": "met",
+      "unmet": "not met"
+    },
+    "errors": {
+      "invalidCredentials": "Incorrect identifier or password.",
+      "emailTaken": "An account already exists with this email address.",
+      "phoneTaken": "An account already exists with this phone number.",
+      "accountNotFound": "No account matches this email and phone number.",
+      "otpInvalid": "Incorrect code. Check the text message and try again.",
+      "otpExpired": "This code has expired. Request a new one.",
+      "otpTooManyAttempts": "Too many attempts. Request a new code.",
+      "resetLinkInvalid": "This reset link is no longer valid.",
+      "generic": "Something went wrong. Please try again in a moment.",
+      "invalidIdentifier": "The identifier has 7 letters and digits.",
+      "invalidPhone": "Invalid number (8 to 10 digits, without the country code).",
+      "weakPassword": "The password must have at least 8 characters, including a letter and a digit.",
+      "passwordMismatch": "The two passwords do not match.",
+      "invalidRegistration": "Invalid registration number (5 to 30 characters)."
+    },
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Access your property management workspace.",
+      "remember": "Remember my identifier",
+      "submit": "Sign in",
+      "helpLabel": "Sign-in help",
+      "forgotPassword": "Forgot your password?",
+      "forgotIdentifier": "Forgot your identifier?",
+      "noAccount": "No account yet?",
+      "signup": "Create an account",
+      "demoTitle": "Demo accounts",
+      "demoDescription": "Owner {{owner}}, agency {{agency}}; password {{password}}."
+    },
+    "otp": {
+      "title": "Phone verification",
+      "description": "For your security, confirm your phone number.",
+      "sentTo": "Code sent by text message to",
+      "label": "Verification code (6 digits)",
+      "incomplete": "Enter the 6 digits of the code.",
+      "demoHint": "Demo: no text message is sent, use code {{code}}.",
+      "verify": "Verify",
+      "resendIn": "Resend the code in {{seconds}} s",
+      "resend": "Resend the code",
+      "resent": "A new code has been sent.",
+      "changeNumber": "Change the number",
+      "changeContact": "Change the email or number"
+    },
+    "profiles": {
+      "ownerManager": {
+        "title": "Self-managing owner",
+        "description": "I manage my properties and tenants myself."
+      },
+      "ownerPrincipal": {
+        "title": "Delegating owner",
+        "description": "An agency or agent manages my properties on my behalf."
+      },
+      "professional": {
+        "title": "Professional",
+        "description": "Real estate agency or agent: I manage my clients’ properties."
+      }
+    },
+    "professionalKinds": {
+      "agency": "Real estate agency",
+      "agent": "Independent agent"
+    },
+    "signup": {
+      "subtitle": "Getting started only takes a few minutes.",
+      "progress": "Sign-up progress",
+      "stepOf": "Step {{current}} of {{total}}",
+      "stepDone": "done",
+      "next": "Continue",
+      "back": "Back",
+      "create": "Verify and create my account",
+      "haveAccount": "Already have an account?",
+      "login": "Sign in",
+      "profile": {
+        "label": "Your profile",
+        "required": "Choose your profile to continue."
+      },
+      "details": {
+        "professionalKind": "You are",
+        "submit": "Continue"
+      },
+      "steps": {
+        "profile": {
+          "label": "Profile",
+          "title": "Create an account",
+          "description": "Choose the profile that fits you."
+        },
+        "details": {
+          "label": "Details",
+          "title": "Your details",
+          "description": "Used to create your account and contact you."
+        },
+        "verification": {
+          "label": "Verification",
+          "title": "Phone verification",
+          "description": "Enter the code sent by text message to confirm your number."
+        },
+        "documents": {
+          "label": "Documents",
+          "title": "Professional documents",
+          "description": "They allow us to verify your agency or professional status."
+        }
+      }
+    },
+    "documents": {
+      "formats": "PDF, JPG or PNG, {{size}} MB maximum per file.",
+      "required": "Required",
+      "optional": "Optional",
+      "choose": "Choose a file",
+      "chooseFor": "Choose a file: {{name}}",
+      "dropHint": "or drag and drop the file here",
+      "remove": "Remove the file: {{name}}",
+      "reviewNotice": "The Domely team reviews your documents within 48 business hours. You can use your account in the meantime.",
+      "submit": "Send and create my account",
+      "types": {
+        "businessRegistration": "Trade register extract (RCCM, Kbis)",
+        "professionalCard": "Professional card or licence",
+        "managerId": "Manager’s ID document",
+        "identity": "ID document",
+        "registrationCertificate": "Registration certificate (NINEA, RCCM, SIRET)",
+        "mandate": "Agency agreement or network certificate"
+      },
+      "hints": {
+        "businessRegistration": "Issued less than 3 months ago",
+        "professionalCard": "Valid card or licence",
+        "managerId": "ID card or passport, both sides",
+        "identity": "ID card or passport, both sides",
+        "registrationCertificate": "Official document in your name",
+        "mandate": "If you work for an agency or a network"
+      },
+      "errors": {
+        "type": "Unsupported format: PDF, JPG or PNG only.",
+        "size": "File too large (5 MB maximum).",
+        "missing": "Add the required documents to continue.",
+        "required": "This document is required."
+      }
+    },
+    "success": {
+      "title": "Welcome, {{name}}!",
+      "description": "Your account has been created. Your sign-in identifier has also been sent to {{email}}.",
+      "identifierHint": "Keep this identifier: you will need it, with your password, every time you sign in.",
+      "pendingTitle": "Verification in progress",
+      "pendingDescription": "We review your documents within 48 business hours. You will be notified by email.",
+      "login": "Sign in",
+      "copy": "Copy",
+      "copied": "Copied"
+    },
+    "recovery": {
+      "submit": "Continue",
+      "backToLogin": "Back to sign-in",
+      "demoTitle": "Demo",
+      "password": {
+        "title": "Forgot your password",
+        "description": "Enter your account’s email and phone. Once your phone is verified, you will receive a reset link by email.",
+        "verify": "Verify and get the link",
+        "doneTitle": "Check your email",
+        "doneDescription": "A reset link has been sent to {{email}}. It is valid for 30 minutes.",
+        "demoHint": "No email is sent yet:",
+        "demoLink": "open the reset link"
+      },
+      "identifier": {
+        "title": "Forgot your identifier",
+        "description": "Enter your account’s email and phone. Once your phone is verified, your identifier will be sent to you by email.",
+        "verify": "Verify and get my identifier",
+        "doneTitle": "Identifier sent",
+        "doneDescription": "Your sign-in identifier has been sent to {{email}}.",
+        "demoHint": "Demo (no email is sent yet):"
+      }
+    },
+    "reset": {
+      "title": "New password",
+      "description": "Choose a password you don’t use anywhere else.",
+      "submit": "Save password",
+      "done": "Password changed",
+      "doneHint": "Sign in with your new password.",
+      "invalidTitle": "Link expired or already used",
+      "invalidDescription": "For your security, a reset link is only valid once and for 30 minutes.",
+      "requestNew": "Request a new link"
+    },
+    "menu": {
+      "label": "My account ({{name}})",
+      "identifier": "Identifier {{identifier}}",
+      "pending": "Document verification in progress",
+      "actions": "Account actions",
+      "logout": "Sign out"
+    }
   }
 }

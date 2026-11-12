@@ -1155,5 +1155,232 @@
     "next": "Suivant",
     "page": "Page {{page}}",
     "summary": "{{from}}–{{to}} sur {{total}}"
+  },
+  "auth": {
+    "layout": {
+      "home": "Domely — accueil de la connexion",
+      "copyright": "© {{year}} Domely. Tous droits réservés."
+    },
+    "showcase": {
+      "eyebrow": "Gestion locative",
+      "subtitle": "Biens, locataires, loyers et interventions réunis en un seul endroit, pensé pour l’Afrique de l’Ouest.",
+      "features": {
+        "portfolio": "Patrimoine, lots et contrats centralisés",
+        "rents": "Loyers, Mobile Money et relances WhatsApp",
+        "reports": "Rapports et indicateurs en temps réel"
+      }
+    },
+    "fields": {
+      "identifier": "Identifiant",
+      "identifierPlaceholder": "Ex. : DMY4K7P",
+      "identifierHint": "7 lettres et chiffres, reçu par e-mail à l’inscription.",
+      "password": "Mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "E-mail",
+      "emailHint": "Votre identifiant de connexion vous sera envoyé à cette adresse.",
+      "phone": "Téléphone",
+      "dialCode": "Indicatif du pays",
+      "phonePlaceholder": "77 123 45 67",
+      "agencyName": "Nom de l’agence",
+      "registrationNumber": "SIRET / SIREN",
+      "registrationNumberHint": "Ou l’identifiant légal de votre pays : NINEA, RCCM, IFU…"
+    },
+    "passwordRules": {
+      "title": "Règles du mot de passe",
+      "length": "8 caractères minimum",
+      "letter": "Une lettre",
+      "digit": "Un chiffre",
+      "met": "respectée",
+      "unmet": "non respectée"
+    },
+    "errors": {
+      "invalidCredentials": "Identifiant ou mot de passe incorrect.",
+      "emailTaken": "Un compte existe déjà avec cette adresse e-mail.",
+      "phoneTaken": "Un compte existe déjà avec ce numéro de téléphone.",
+      "accountNotFound": "Aucun compte ne correspond à cet e-mail et à ce numéro de téléphone.",
+      "otpInvalid": "Code incorrect. Vérifiez le SMS reçu et réessayez.",
+      "otpExpired": "Ce code a expiré. Demandez un nouveau code.",
+      "otpTooManyAttempts": "Trop de tentatives. Demandez un nouveau code.",
+      "resetLinkInvalid": "Ce lien de réinitialisation n’est plus valide.",
+      "generic": "Une erreur est survenue. Réessayez dans un instant.",
+      "invalidIdentifier": "L’identifiant compte 7 lettres et chiffres.",
+      "invalidPhone": "Numéro invalide (8 à 10 chiffres, sans l’indicatif).",
+      "weakPassword": "Le mot de passe doit compter au moins 8 caractères, dont une lettre et un chiffre.",
+      "passwordMismatch": "Les deux mots de passe ne correspondent pas.",
+      "invalidRegistration": "Numéro d’immatriculation invalide (5 à 30 caractères)."
+    },
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Accédez à votre espace de gestion locative.",
+      "remember": "Mémoriser mon identifiant",
+      "submit": "Se connecter",
+      "helpLabel": "Aide à la connexion",
+      "forgotPassword": "Mot de passe oublié ?",
+      "forgotIdentifier": "Identifiant oublié ?",
+      "noAccount": "Pas encore de compte ?",
+      "signup": "Créer un compte",
+      "demoTitle": "Comptes de démonstration",
+      "demoDescription": "Propriétaire {{owner}}, agence {{agency}} ; mot de passe {{password}}."
+    },
+    "otp": {
+      "title": "Vérification du téléphone",
+      "description": "Pour votre sécurité, confirmez votre numéro de téléphone.",
+      "sentTo": "Code envoyé par SMS au",
+      "label": "Code de vérification (6 chiffres)",
+      "incomplete": "Saisissez les 6 chiffres du code.",
+      "demoHint": "Démo : aucun SMS n’est envoyé, utilisez le code {{code}}.",
+      "verify": "Vérifier",
+      "resendIn": "Renvoyer le code dans {{seconds}} s",
+      "resend": "Renvoyer le code",
+      "resent": "Un nouveau code a été envoyé.",
+      "changeNumber": "Modifier le numéro",
+      "changeContact": "Modifier l’e-mail ou le numéro"
+    },
+    "profiles": {
+      "ownerManager": {
+        "title": "Propriétaire gestionnaire",
+        "description": "Je gère moi-même mes biens et mes locataires."
+      },
+      "ownerPrincipal": {
+        "title": "Propriétaire mandant",
+        "description": "Je confie la gestion de mes biens à une agence ou à un mandataire."
+      },
+      "professional": {
+        "title": "Professionnel",
+        "description": "Agence immobilière ou mandataire : je gère les biens de mes clients."
+      }
+    },
+    "professionalKinds": {
+      "agency": "Agence immobilière",
+      "agent": "Mandataire indépendant"
+    },
+    "signup": {
+      "subtitle": "Quelques minutes suffisent pour démarrer.",
+      "progress": "Progression de l’inscription",
+      "stepOf": "Étape {{current}} sur {{total}}",
+      "stepDone": "terminée",
+      "next": "Continuer",
+      "back": "Retour",
+      "create": "Vérifier et créer mon compte",
+      "haveAccount": "Déjà un compte ?",
+      "login": "Se connecter",
+      "profile": {
+        "label": "Votre profil",
+        "required": "Choisissez votre profil pour continuer."
+      },
+      "details": {
+        "professionalKind": "Vous êtes",
+        "submit": "Continuer"
+      },
+      "steps": {
+        "profile": {
+          "label": "Profil",
+          "title": "Créer un compte",
+          "description": "Choisissez le profil qui vous correspond."
+        },
+        "details": {
+          "label": "Informations",
+          "title": "Vos informations",
+          "description": "Elles servent à créer votre compte et à vous contacter."
+        },
+        "verification": {
+          "label": "Vérification",
+          "title": "Vérification du téléphone",
+          "description": "Saisissez le code reçu par SMS pour confirmer votre numéro."
+        },
+        "documents": {
+          "label": "Documents",
+          "title": "Justificatifs professionnels",
+          "description": "Ils nous permettent de vérifier votre agence ou votre statut professionnel."
+        }
+      }
+    },
+    "documents": {
+      "formats": "PDF, JPG ou PNG, {{size}} Mo maximum par fichier.",
+      "required": "Obligatoire",
+      "optional": "Facultatif",
+      "choose": "Choisir un fichier",
+      "chooseFor": "Choisir un fichier : {{name}}",
+      "dropHint": "ou glissez-déposez le fichier ici",
+      "remove": "Retirer le fichier : {{name}}",
+      "reviewNotice": "Vos documents sont vérifiés par l’équipe Domely sous 48 heures ouvrées. Vous pouvez utiliser votre compte en attendant.",
+      "submit": "Envoyer et créer mon compte",
+      "types": {
+        "businessRegistration": "Registre du commerce (RCCM, Kbis)",
+        "professionalCard": "Carte professionnelle ou agrément",
+        "managerId": "Pièce d’identité du gérant",
+        "identity": "Pièce d’identité",
+        "registrationCertificate": "Attestation d’immatriculation (NINEA, RCCM, SIRET)",
+        "mandate": "Contrat de mandat ou attestation d’un réseau"
+      },
+      "hints": {
+        "businessRegistration": "Extrait de moins de 3 mois",
+        "professionalCard": "Carte ou agrément en cours de validité",
+        "managerId": "Carte d’identité ou passeport, recto verso",
+        "identity": "Carte d’identité ou passeport, recto verso",
+        "registrationCertificate": "Document officiel à votre nom",
+        "mandate": "Si vous exercez pour une agence ou un réseau"
+      },
+      "errors": {
+        "type": "Format non accepté : PDF, JPG ou PNG uniquement.",
+        "size": "Fichier trop volumineux (5 Mo maximum).",
+        "missing": "Ajoutez les documents obligatoires pour continuer.",
+        "required": "Ce document est obligatoire."
+      }
+    },
+    "success": {
+      "title": "Bienvenue, {{name}} !",
+      "description": "Votre compte est créé. Votre identifiant de connexion vous a aussi été envoyé à {{email}}.",
+      "identifierHint": "Conservez cet identifiant : il vous sera demandé à chaque connexion, avec votre mot de passe.",
+      "pendingTitle": "Vérification en cours",
+      "pendingDescription": "Nous vérifions vos justificatifs sous 48 heures ouvrées. Vous serez prévenu par e-mail.",
+      "login": "Se connecter",
+      "copy": "Copier",
+      "copied": "Copié"
+    },
+    "recovery": {
+      "submit": "Continuer",
+      "backToLogin": "Retour à la connexion",
+      "demoTitle": "Démonstration",
+      "password": {
+        "title": "Mot de passe oublié",
+        "description": "Indiquez l’e-mail et le téléphone de votre compte. Après vérification du téléphone, vous recevrez un lien de réinitialisation par e-mail.",
+        "verify": "Vérifier et recevoir le lien",
+        "doneTitle": "Consultez vos e-mails",
+        "doneDescription": "Un lien de réinitialisation a été envoyé à {{email}}. Il est valable 30 minutes.",
+        "demoHint": "Aucun e-mail n’est envoyé pour l’instant :",
+        "demoLink": "ouvrir le lien de réinitialisation"
+      },
+      "identifier": {
+        "title": "Identifiant oublié",
+        "description": "Indiquez l’e-mail et le téléphone de votre compte. Après vérification du téléphone, votre identifiant vous sera envoyé par e-mail.",
+        "verify": "Vérifier et recevoir l’identifiant",
+        "doneTitle": "Identifiant envoyé",
+        "doneDescription": "Votre identifiant de connexion a été envoyé à {{email}}.",
+        "demoHint": "Démonstration (aucun e-mail n’est envoyé pour l’instant) :"
+      }
+    },
+    "reset": {
+      "title": "Nouveau mot de passe",
+      "description": "Choisissez un mot de passe que vous n’utilisez pas ailleurs.",
+      "submit": "Enregistrer le mot de passe",
+      "done": "Mot de passe modifié",
+      "doneHint": "Connectez-vous avec votre nouveau mot de passe.",
+      "invalidTitle": "Lien expiré ou déjà utilisé",
+      "invalidDescription": "Pour votre sécurité, un lien de réinitialisation n’est valable que 30 minutes et une seule fois.",
+      "requestNew": "Demander un nouveau lien"
+    },
+    "menu": {
+      "label": "Mon compte ({{name}})",
+      "identifier": "Identifiant {{identifier}}",
+      "pending": "Vérification des justificatifs en cours",
+      "actions": "Actions du compte",
+      "logout": "Se déconnecter"
+    }
   }
 }
